@@ -1,10 +1,10 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
+import 'package:flutterapp/data/manager/data_manager.dart';
 
-import 'data/remote/remote_api.dart';
+import 'di/inject.dart';
 
 void main() {
+  setInjection();
   runApp(MyApp());
 }
 
@@ -55,12 +55,17 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  final manager = getIt.get<DataManager>();
 
   void _testApi() {
-    final logger = Logger();
-    final dio = Dio();
-    final client = ApiClient(dio);
-    client.getRepositories().then((it) => logger.e(it));
+    var data = manager.getRepositories();
+    data.then((value) {
+      value.fold(
+          (l) => print("exception: $l"),
+          (r) => r.forEach((element) {
+                print(element);
+              }));
+    });
   }
 
   void _incrementCounter() {

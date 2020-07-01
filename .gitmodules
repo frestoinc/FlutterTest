@@ -1,3 +1,6 @@
 [submodule "vendor/inject.dart"]
 	path = vendor/inject.dart
 	url = https://github.com/google/inject.dart
+[submodule "vendor/--force"]
+	path = vendor/--force
+	url = https://github.com/google/inject.dart

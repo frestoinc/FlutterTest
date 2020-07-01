@@ -162,13 +162,27 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.6"
-  dio:
-    dependency: transitive
+  dartz:
+    dependency: "direct main"
     description:
-      name: dio
+      name: dartz
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.9"
+    version: "0.9.1"
+  disposebag:
+    dependency: "direct main"
+    description:
+      name: disposebag
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.2"
+  distinct_value_connectable_stream:
+    dependency: "direct main"
+    description:
+      name: distinct_value_connectable_stream
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.1"
   fixnum:
     dependency: transitive
     description:
@@ -186,6 +200,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  get_it:
+    dependency: "direct main"
+    description:
+      name: get_it
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.2"
   glob:
     dependency: transitive
     description:
@@ -250,26 +271,19 @@ packages:
     source: hosted
     version: "0.6.2"
   json_annotation:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: json_annotation
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1"
   json_serializable:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: json_serializable
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.3.0"
-  logger:
-    dependency: "direct main"
-    description:
-      name: logger
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.9.1"
   logging:
     dependency: transitive
     description:
@@ -298,13 +312,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.9.6+3"
-  nested:
-    dependency: transitive
-    description:
-      name: nested
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.4"
   node_interop:
     dependency: transitive
     description:
@@ -354,13 +361,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.4.0"
-  provider:
-    dependency: "direct main"
-    description:
-      name: provider
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.1.3"
   pub_semver:
     dependency: transitive
     description:
@@ -382,20 +382,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.3"
-  retrofit:
+  rxdart:
     dependency: "direct main"
     description:
-      name: retrofit
+      name: rxdart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.3.4"
-  retrofit_generator:
-    dependency: "direct dev"
-    description:
-      name: retrofit_generator
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.3.7+2"
+    version: "0.24.1"
   shelf:
     dependency: transitive
     description:
@@ -478,13 +471,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.1+2"
-  tuple:
-    dependency: transitive
-    description:
-      name: tuple
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.3"
   typed_data:
     dependency: transitive
     description:
@@ -529,4 +515,3 @@ packages:
     version: "2.2.1"
 sdks:
   dart: ">=2.7.0 <3.0.0"
-  flutter: ">=1.16.0"
