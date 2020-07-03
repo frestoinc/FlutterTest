@@ -1,7 +1,6 @@
+import 'package:flutterapp/data/entities/model_child.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
-
-import 'model_child.dart';
 
 part 'model_entity.g.dart';
 
@@ -31,18 +30,17 @@ class ModelEntity {
   @JsonKey(name: 'builtBy')
   final List<ModelChild> builtBy;
 
-  ModelEntity(
-      {this.author,
-      this.name,
-      this.avatar,
-      this.url,
-      this.description,
-      this.language,
-      this.languageColor,
-      this.stars,
-      this.forks,
-      this.currentPeriodStars,
-      this.builtBy});
+  ModelEntity({this.author,
+    this.name,
+    this.avatar,
+    this.url,
+    this.description,
+    this.language,
+    this.languageColor,
+    this.stars,
+    this.forks,
+    this.currentPeriodStars,
+    this.builtBy});
 
   factory ModelEntity.fromJson(Map<String, dynamic> json) =>
       _$ModelEntityFromJson(json);
@@ -59,16 +57,16 @@ class ModelEntity {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ModelEntity &&
-          author == other.author &&
-          name == other.name &&
-          avatar == other.avatar &&
-          url == other.url &&
-          description == other.description &&
-          language == other.language &&
-          languageColor == other.languageColor &&
-          stars == other.stars &&
-          forks == other.forks &&
-          currentPeriodStars == other.currentPeriodStars &&
-          builtBy == other.builtBy;
+          other is ModelEntity &&
+              author == other.author &&
+              name == other.name &&
+              avatar == other.avatar &&
+              url == other.url &&
+              description == other.description &&
+              language == other.language &&
+              languageColor == other.languageColor &&
+              stars == other.stars &&
+              forks == other.forks &&
+              currentPeriodStars == other.currentPeriodStars &&
+              builtBy == other.builtBy;
 }

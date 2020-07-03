@@ -1,5 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterapp/extension/extension.dart';
+import 'package:functional_widget_annotation/functional_widget_annotation.dart';
+
+import 'extension/widget_extension.dart';
+import 'login/ui_login.dart';
 
 class SplashPage extends StatefulWidget {
   @override
@@ -9,37 +13,31 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        Image.asset(
-          "assets/images/background.png",
+    navigateTo(context, 2, new LoginPage());
+    return Container(
+      decoration: const BoxDecoration(
+        image: const DecorationImage(
+          image: const AssetImage('assets/images/background.jpg'),
           fit: BoxFit.cover,
         ),
-        Scaffold(
-          appBar: splashAppBar,
-          body: Center(
-            child: splashText,
-          ),
-        ),
-      ],
+      ),
+      child: Scaffold(
+          appBar: buildAppBar(title: "Splash Page"),
+          backgroundColor: Colors.transparent,
+          body: _buildSplashText(message: "Flutter App Demo")),
     );
   }
 }
 
-Widget splashText = Text(
-  'Flutter Test Demo',
-  softWrap: true,
-  textAlign: TextAlign.center,
-  style: TextStyle(
-      color: Color(0xFF52575C), fontSize: 40, fontFamily: 'RobotoBold'),
-);
-
-Widget splashAppBar = AppBar(
-  title: Text(
-    "SplashPage",
-    style: TextStyle(color: Color(0xFF25282B)),
-  ),
-  centerTitle: true,
-  backgroundColor: Colors.white,
-  elevation: 8.0,
-);
+@widget
+Widget _buildSplashText({String message}) {
+  return Center(
+    child: Text(
+      message,
+      softWrap: true,
+      textAlign: TextAlign.center,
+      style: const TextStyle(
+          color: Color(0xFF52575C), fontSize: 40, fontFamily: 'RobotoBold'),
+    ),
+  );
+}

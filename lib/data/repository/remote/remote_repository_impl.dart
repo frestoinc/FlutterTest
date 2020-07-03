@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:flutterapp/data/api/remote_api.dart';
-import 'package:flutterapp/data/remote/remote_repository.dart';
-import 'package:flutterapp/model/model_entity.dart';
+import 'package:flutterapp/data/entities/model_entity.dart';
+import 'package:flutterapp/data/repository/remote/remote_repository.dart';
+import 'package:flutterapp/services/remote_api.dart';
 
 class RemoteRepositoryImpl implements RemoteRepository {
   final ApiClient _apiClient;

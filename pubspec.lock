@@ -195,11 +195,39 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_animation_set:
+    dependency: "direct main"
+    description:
+      name: flutter_animation_set
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.4"
+  flutter_hooks:
+    dependency: "direct main"
+    description:
+      name: flutter_hooks
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.10.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
     source: sdk
     version: "0.0.0"
+  functional_widget:
+    dependency: "direct dev"
+    description:
+      name: functional_widget
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.7.3"
+  functional_widget_annotation:
+    dependency: "direct main"
+    description:
+      name: functional_widget_annotation
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.1"
   get_it:
     dependency: "direct main"
     description:

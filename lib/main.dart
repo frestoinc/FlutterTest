@@ -11,21 +11,10 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return new MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      home: SplashPage(),
+      home: new SplashPage(),
     );
   }
 }
-
-/*void _testApi() {
-  final _manager = getIt.get<DataManager>();
-  var data = _manager.getRepositories();
-  data.then((value) {
-    value.fold(
-            (l) => print("exception: $l"),
-            (r) => r.forEach((element) {
-          print(element);
-        }));
-  });
-}*/

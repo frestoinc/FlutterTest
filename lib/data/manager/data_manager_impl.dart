@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
-import 'package:flutterapp/data/remote/remote_repository.dart';
-import 'package:flutterapp/model/model_entity.dart';
+import 'package:flutterapp/data/entities/model_entity.dart';
+import 'package:flutterapp/data/repository/remote/remote_repository.dart';
 
 import 'data_manager.dart';
 

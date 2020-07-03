@@ -29,6 +29,8 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.3
   http: ^0.12.1
+  #hooks
+  flutter_hooks: ^0.10.0
 
   #di
   get_it: ^4.0.2
@@ -42,10 +44,16 @@ dependencies:
   dartz: ^0.9.1
   json_serializable: 3.3.0  #flutter packages pub run build_runner build
 
+  #widgets
+  functional_widget_annotation: ^0.5.1
+  flutter_animation_set: ^0.0.4
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
   build_runner: ^1.10.0
+  functional_widget: ^0.7.3
 
 
 # For information on the generic Dart part of this file, see the
