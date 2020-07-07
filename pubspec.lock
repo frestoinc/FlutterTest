@@ -36,6 +36,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.4.1"
+  bloc:
+    dependency: "direct main"
+    description:
+      name: bloc
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.0.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -93,7 +100,7 @@ packages:
     source: hosted
     version: "4.3.2"
   built_value:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: built_value
       url: "https://pub.dartlang.org"
@@ -148,6 +155,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.16.1"
+  cubit:
+    dependency: transitive
+    description:
+      name: cubit
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -169,20 +183,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.9.1"
-  disposebag:
+  equatable:
     dependency: "direct main"
     description:
-      name: disposebag
+      name: equatable
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.2"
-  distinct_value_connectable_stream:
-    dependency: "direct main"
-    description:
-      name: distinct_value_connectable_stream
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.1"
+    version: "1.2.0"
   fixnum:
     dependency: transitive
     description:
@@ -195,20 +202,27 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_animation_set:
+  flutter_bloc:
     dependency: "direct main"
     description:
-      name: flutter_animation_set
+      name: flutter_bloc
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.4"
+    version: "5.0.0"
+  flutter_cubit:
+    dependency: transitive
+    description:
+      name: flutter_cubit
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
   flutter_hooks:
     dependency: "direct main"
     description:
       name: flutter_hooks
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.10.0"
+    version: "0.9.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -340,6 +354,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.9.6+3"
+  nested:
+    dependency: transitive
+    description:
+      name: nested
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.4"
   node_interop:
     dependency: transitive
     description:
@@ -354,6 +375,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.1"
+  observable_ish:
+    dependency: transitive
+    description:
+      name: observable_ish
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.4"
   package_config:
     dependency: transitive
     description:
@@ -389,6 +417,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.4.0"
+  provider:
+    dependency: transitive
+    description:
+      name: provider
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.1.3"
   pub_semver:
     dependency: transitive
     description:
@@ -457,6 +492,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.9.3"
+  stacked:
+    dependency: "direct main"
+    description:
+      name: stacked
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.6.1+1"
+  stacked_hooks:
+    dependency: "direct main"
+    description:
+      name: stacked_hooks
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.2"
   stream_channel:
     dependency: transitive
     description:
@@ -543,3 +592,4 @@ packages:
     version: "2.2.1"
 sdks:
   dart: ">=2.7.0 <3.0.0"
+  flutter: ">=1.16.0"

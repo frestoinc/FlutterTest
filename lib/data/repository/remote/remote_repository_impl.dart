@@ -4,12 +4,12 @@ import 'package:flutterapp/data/repository/remote/remote_repository.dart';
 import 'package:flutterapp/services/remote_api.dart';
 
 class RemoteRepositoryImpl implements RemoteRepository {
-  final ApiClient _apiClient;
+  final ApiClient apiClient;
 
-  const RemoteRepositoryImpl(this._apiClient);
+  RemoteRepositoryImpl(this.apiClient);
 
   @override
   Future<Either<Exception, List<ModelEntity>>> getRepositories() {
-    return _apiClient.getRepositories();
+    return apiClient.getRepositories();
   }
 }

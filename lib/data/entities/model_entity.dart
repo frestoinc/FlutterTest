@@ -1,12 +1,13 @@
+import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutterapp/data/entities/model_child.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:meta/meta.dart';
 
 part 'model_entity.g.dart';
 
 @JsonSerializable()
 @immutable
-class ModelEntity {
+class ModelEntity extends Equatable {
   @JsonKey(name: 'author')
   final String author;
   @JsonKey(name: 'name')
@@ -30,17 +31,18 @@ class ModelEntity {
   @JsonKey(name: 'builtBy')
   final List<ModelChild> builtBy;
 
-  ModelEntity({this.author,
-    this.name,
-    this.avatar,
-    this.url,
-    this.description,
-    this.language,
-    this.languageColor,
-    this.stars,
-    this.forks,
-    this.currentPeriodStars,
-    this.builtBy});
+  ModelEntity(
+      {this.author,
+      this.name,
+      this.avatar,
+      this.url,
+      this.description,
+      this.language,
+      this.languageColor,
+      this.stars,
+      this.forks,
+      this.currentPeriodStars,
+      this.builtBy});
 
   factory ModelEntity.fromJson(Map<String, dynamic> json) =>
       _$ModelEntityFromJson(json);
@@ -48,25 +50,20 @@ class ModelEntity {
   Map<String, dynamic> toJson() => _$ModelEntityToJson(this);
 
   @override
-  String toString() => 'ModelEntity{'
-      'author: $author, name: $name, avatar: $avatar, '
-      'url: $url, description: $description, language: $language, '
-      'languageColor: $languageColor, stars: $stars, forks: $forks, '
-      'currentPeriodStars: $currentPeriodStars, builtBy: $builtBy}';
+  List<Object> get props => [
+        author,
+        name,
+        avatar,
+        url,
+        description,
+        language,
+        languageColor,
+        stars,
+        forks,
+        currentPeriodStars,
+        builtBy
+      ];
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-          other is ModelEntity &&
-              author == other.author &&
-              name == other.name &&
-              avatar == other.avatar &&
-              url == other.url &&
-              description == other.description &&
-              language == other.language &&
-              languageColor == other.languageColor &&
-              stars == other.stars &&
-              forks == other.forks &&
-              currentPeriodStars == other.currentPeriodStars &&
-              builtBy == other.builtBy;
+  bool get stringify => true;
 }

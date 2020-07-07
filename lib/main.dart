@@ -3,8 +3,9 @@ import 'package:flutterapp/ui/ui_splash.dart';
 
 import 'di/inject.dart';
 
-void main() {
+Future<void> main() async {
   setInjection();
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 

@@ -1,11 +1,12 @@
+import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:meta/meta.dart';
 
 part 'model_child.g.dart';
 
 @JsonSerializable()
 @immutable
-class ModelChild {
+class ModelChild extends Equatable {
   @JsonKey(name: 'username')
   final String username;
   @JsonKey(name: 'href')
@@ -21,14 +22,8 @@ class ModelChild {
   Map<String, dynamic> toJson() => _$ModelChildToJson(this);
 
   @override
-  String toString() =>
-      'ModelChild{username: $username, href: $href, avatar: $avatar}';
+  List<Object> get props => [username, href, avatar];
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ModelChild &&
-          username == other.username &&
-          href == other.href &&
-          avatar == other.avatar;
+  bool get stringify => true;
 }

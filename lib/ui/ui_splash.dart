@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutterapp/extension/extension.dart';
+import 'package:flutterapp/extension/constants.dart';
 import 'package:functional_widget_annotation/functional_widget_annotation.dart';
 
 import 'extension/widget_extension.dart';
@@ -10,10 +10,18 @@ class SplashPage extends StatefulWidget {
   State<StatefulWidget> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage> {
+AnimationController _controller;
+bool _loaded = false;
+
+class _SplashPageState extends State<SplashPage>
+    with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
-    navigateTo(context, 2, new LoginPage());
+    Future.delayed(Duration(seconds: 6), () {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (_) => LoginPage()));
+    });
+
     return Container(
       decoration: const BoxDecoration(
         image: const DecorationImage(
@@ -22,11 +30,63 @@ class _SplashPageState extends State<SplashPage> {
         ),
       ),
       child: Scaffold(
-          appBar: buildAppBar(title: "Splash Page"),
-          backgroundColor: Colors.transparent,
-          body: _buildSplashText(message: "Flutter App Demo")),
+        appBar: buildAppBar(title: SPLASH_TITLE),
+        backgroundColor: Colors.transparent,
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            _buildSplashText(message: SPLASH_BODY),
+            _buildAnimation(),
+          ],
+        ),
+      ),
     );
   }
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+        duration: const Duration(milliseconds: 1000), vsync: this)
+      ..addStatusListener((status) {
+        setState(() {});
+        if (status == AnimationStatus.completed) {
+          toggleState();
+        } else if (status == AnimationStatus.dismissed) {
+          Future.delayed(const Duration(milliseconds: 500), () async {
+            toggleState();
+          });
+        }
+      });
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+}
+
+void toggleState() {
+  _loaded = !_loaded;
+  if (_loaded)
+    _controller.reverse();
+  else
+    _controller.forward();
+}
+
+@widget
+Widget _buildAnimation() {
+  return AnimatedSwitcher(
+    duration: const Duration(milliseconds: 250),
+    switchInCurve: Curves.easeIn,
+    switchOutCurve: Curves.easeOut,
+    child: new Image.asset(
+      _loaded ? "assets/images/door1.png" : "assets/images/door2.png",
+      key: ValueKey<bool>(_loaded),
+    ),
+  );
 }
 
 @widget

@@ -29,24 +29,36 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.3
   http: ^0.12.1
+
+  #built
+  built_value: ^7.1.0
+
+  #bloc
+  bloc: ^5.0.0
+  flutter_bloc: ^5.0.0
+
+  stacked: ^1.6.1+1
+  stacked_hooks: ^0.1.2
+
   #hooks
-  flutter_hooks: ^0.10.0
+  flutter_hooks: ^0.9.0
 
   #di
   get_it: ^4.0.2
 
   # rxdart
-  distinct_value_connectable_stream: ^1.1.1
   rxdart: ^0.24.1
-  disposebag: ^1.1.2
 
   #util
+  #Either<L,R>
   dartz: ^0.9.1
   json_serializable: 3.3.0  #flutter packages pub run build_runner build
 
+  #json overrides == and hashCode
+  equatable: ^1.2.0
+
   #widgets
   functional_widget_annotation: ^0.5.1
-  flutter_animation_set: ^0.0.4
 
 
 dev_dependencies:

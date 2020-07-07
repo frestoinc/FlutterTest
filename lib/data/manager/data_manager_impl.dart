@@ -5,12 +5,12 @@ import 'package:flutterapp/data/repository/remote/remote_repository.dart';
 import 'data_manager.dart';
 
 class DataManagerImpl implements DataManager {
-  final RemoteRepository _remoteRepo;
+  final RemoteRepository remoteRepo;
 
-  const DataManagerImpl(this._remoteRepo);
+  const DataManagerImpl(this.remoteRepo);
 
   @override
   Future<Either<Exception, List<ModelEntity>>> getRepositories() {
-    return _remoteRepo.getRepositories();
+    return remoteRepo.getRepositories();
   }
 }
