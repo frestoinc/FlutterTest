@@ -6,6 +6,7 @@ import 'package:flutterapp/extension/string.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:stacked/stacked.dart';
 
+/// SAMPLE VIEWMODEL IF DECIDES TO USE MVVM. TO BE USED WITH {@LINK https://pub.dev/packages/stacked}
 class LoginViewModel extends BaseViewModel {
   /*String _emailAddress;
   String _password;

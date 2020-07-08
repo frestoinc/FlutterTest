@@ -86,6 +86,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         _list[1] = PWD_ERROR;
       }
       yield LoginFailure(error: [_list[0], _list[1]]);
+      yield LoginFormFailure();
     }
   }
 

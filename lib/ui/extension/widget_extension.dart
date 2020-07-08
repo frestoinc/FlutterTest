@@ -19,3 +19,12 @@ Widget buildSpacer(double height) {
     height: height,
   );
 }
+
+@widget
+UnderlineInputBorder buildBorder() {
+  return UnderlineInputBorder(
+    borderSide: new BorderSide(
+      color: const Color(0xFF31B057),
+    ),
+  );
+}

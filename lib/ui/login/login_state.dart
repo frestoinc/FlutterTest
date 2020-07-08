@@ -21,3 +21,5 @@ class LoginFailure extends LoginState {
 
   const LoginFailure({@required this.error});
 }
+
+class LoginFormFailure extends LoginState {}

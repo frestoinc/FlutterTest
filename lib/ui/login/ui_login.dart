@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterapp/extension/constants.dart';
 import 'package:flutterapp/ui/extension/widget_extension.dart';
-import 'package:flutterapp/ui/login/login/login_bloc.dart';
+import 'package:flutterapp/ui/login/login_bloc.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -34,63 +34,82 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (BuildContext context) => _loginBloc,
-      child: Container(
-        decoration: const BoxDecoration(
-          image: const DecorationImage(
-            image: const AssetImage('assets/images/background.jpg'),
-            fit: BoxFit.cover,
-          ),
+    return Container(
+      decoration: const BoxDecoration(
+        image: const DecorationImage(
+          image: const AssetImage('assets/images/background.jpg'),
+          fit: BoxFit.cover,
         ),
-        child: FractionallySizedBox(
-          alignment: Alignment.center,
-          widthFactor: 0.9,
-          heightFactor: 0.6,
-          child: SingleChildScrollView(
-            child: Card(
-              shadowColor: Colors.white60,
-              semanticContainer: true,
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              color: Colors.white,
-              elevation: 8.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0),
-              ),
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Text(
-                      LOGIN_BODY,
-                      softWrap: true,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                          color: const Color(0xFF52575C),
-                          fontSize: 28,
-                          fontFamily: 'RobotoBold'),
+      ),
+      child: Scaffold(
+        appBar: buildAppBar(title: LOGIN_TITLE),
+        backgroundColor: Colors.transparent,
+        body: BlocProvider<LoginBloc>(
+          create: (context) => _loginBloc,
+          child: BlocListener<LoginBloc, LoginState>(
+            listener: (context, state) {
+              if (state is LoginFormFailure) {
+                Scaffold.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                    "Invalid Credentials",
+                    style: TextStyle(
+                      color: Colors.red,
                     ),
                   ),
-                  const Divider(
-                    color: Colors.black54,
-                    thickness: 1.0,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
+                ));
+              }
+            },
+            child: Center(
+              child: FractionallySizedBox(
+                alignment: Alignment.center,
+                widthFactor: 0.9,
+                heightFactor: 0.6,
+                child: SingleChildScrollView(
+                  child: Card(
+                    shadowColor: Colors.white60,
+                    semanticContainer: true,
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    color: Colors.white,
+                    elevation: 8.0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        _buildEmailField(),
-                        _buildPasswordField(),
-                        buildSpacer(22.0),
-                        _buildLoginButton(),
-                        buildSpacer(30.0),
-//                        Text(widget)
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text(
+                            LOGIN_BODY,
+                            softWrap: true,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                                color: const Color(0xFF52575C),
+                                fontSize: 28,
+                                fontFamily: 'RobotoBold'),
+                          ),
+                        ),
+                        const Divider(
+                          color: Colors.black54,
+                          thickness: 1.0,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              _buildEmailField(),
+                              _buildPasswordField(),
+                              buildSpacer(22.0),
+                              _buildLoginButton(),
+                              buildSpacer(30.0),
+                            ],
+                          ),
+                        )
                       ],
                     ),
-                  )
-                ],
+                  ),
+                ),
               ),
             ),
           ),
@@ -193,13 +212,5 @@ class _LoginPageState extends State<LoginPage> {
         );
       }
     });
-  }
-
-  UnderlineInputBorder buildBorder() {
-    return UnderlineInputBorder(
-      borderSide: new BorderSide(
-        color: const Color(0xFF31B057),
-      ),
-    );
   }
 }
