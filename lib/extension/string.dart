@@ -1,6 +1,6 @@
 extension ValidationExtension on String {
   bool isPasswordValid() {
-    return this != null && this.length >= 6;
+    return this.length >= 6;
   }
 
   bool isEmailValid() {

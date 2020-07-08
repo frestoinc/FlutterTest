@@ -5,9 +5,9 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterapp/extension/constants.dart';
 import 'package:flutterapp/extension/string.dart';
+import 'package:rxdart/rxdart.dart';
 
 part 'login_event.dart';
-
 part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
@@ -18,7 +18,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   String get _pwd => passwordController.text.trim();
 
-  //maybe need to store error here
+  final List<String> _list = new List(2);
 
   LoginBloc.init() : super(LoginInitial()) {
     emailController.addListener(() {
@@ -41,11 +41,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       return (event is LoginEmailChanged || event is LoginPasswordChanged);
     }).timeout(Duration(milliseconds: 500));
 
-    /*return super.transformEvents(
+    return super.transformEvents(
       nonDebounceStream.mergeWith([debounceStream]),
       transitionFn,
-    );*/
-    return super.transformEvents(events, transitionFn);
+    );
   }
 
   @override
@@ -60,46 +59,35 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   Stream<LoginState> _mapStateOfLoginEmailChanged() async* {
-    print("_mapStateOfLoginEmailChanged: $_email");
+    _list[0] = !_email.isEmailValid() ? EMAIL_ERROR : null;
     yield !_email.isEmailValid()
-        ? LoginFailure(error: [EMAIL_ERROR, null]) //todo
+        ? LoginFailure(error: [_list[0], _list[1]])
         : LoginEditing();
   }
 
   Stream<LoginState> _mapStateOfPasswordEmailChanged() async* {
-    print("_mapStateOfPasswordEmailChanged: $_pwd");
+    _list[1] = !_pwd.isPasswordValid() ? PWD_ERROR : null;
     yield !_pwd.isPasswordValid()
-        ? LoginFailure(error: [null, PWD_ERROR]) //todo
+        ? LoginFailure(error: [_list[0], _list[1]])
         : LoginEditing();
   }
 
   Stream<LoginState> _mapStateOnButtonPressed() async* {
-    print("_mapStateOnButtonPressed: $_email, $_pwd");
     yield LoginLoading();
-    await Future.delayed(Duration(seconds: 3), () {});
-
-    if (_email == "root@gmail.com" && _pwd == "1q2w3e4r") {
+    await Future.delayed(Duration(seconds: 3), () {}); // simulation
+    if (_email == LOGIN_EMAIL_HINT && _pwd == LOGIN_PASSWORD_HINT) {
       print("ALL OK!");
       yield LoginSuccess();
     } else {
-      var list = new List<String>(2);
       if (!_email.isEmailValid()) {
-        list[0] = EMAIL_ERROR;
+        _list[0] = EMAIL_ERROR;
       }
       if (!_pwd.isPasswordValid()) {
-        list[1] = PWD_ERROR;
+        _list[1] = PWD_ERROR;
       }
-      yield LoginFailure(error: list);
+      yield LoginFailure(error: [_list[0], _list[1]]);
     }
   }
-
-  /* Stream<LoginState> _mapStateOfError(
-      String emailError, String passwordError) async* {
-    print("error: $emailError, $passwordError");
-    _emailError.add(emailError);
-    _passwordError.add(passwordError);
-    yield LoginFailure(null);
-  }*/
 
   void onLoginEmailChanged() {
     this.add(LoginEmailChanged());

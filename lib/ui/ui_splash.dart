@@ -17,11 +17,6 @@ class _SplashPageState extends State<SplashPage>
     with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
-    Future.delayed(Duration(seconds: 6), () {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (_) => LoginPage()));
-    });
-
     return Container(
       decoration: const BoxDecoration(
         image: const DecorationImage(
@@ -59,6 +54,10 @@ class _SplashPageState extends State<SplashPage>
         }
       });
     _controller.forward();
+    Future.delayed(Duration(seconds: 6), () {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => LoginPage()));
+    });
   }
 
   @override
