@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutterapp/ui/ui_splash.dart';
+import 'package:flutterapp/ui/home/home_ui.dart';
 
 import 'di/inject.dart';
 
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SplashPage(),
+      home: /*SplashPage()*/ HomePage(), //todo
     );
   }
 }

@@ -12,6 +12,11 @@ const LOGIN_PASSWORD_HINT = "1q2w3e4r";
 const LOGIN_PASSWORD_LABEL = "Password";
 const LOGIN_BUTTON = "LOGIN";
 
+const HOME_TITLE = "Home Page";
+const HOME_ERROR_TITLE = "Something went wrong";
+const HOME_ERROR_SUBTITLE = "An alien is probably blocking your signal";
+const HOME_ERROR_BUTTON = "RETRY";
+
 const FIELD_EMPTY_ERROR = "Field is required";
 const EMAIL_ERROR = "Email is invalid";
 const PWD_ERROR = "Password must be at least 6 characters";

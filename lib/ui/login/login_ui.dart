@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterapp/extension/constants.dart';
 import 'package:flutterapp/ui/extension/widget_extension.dart';
+import 'package:flutterapp/ui/home/home_ui.dart';
 import 'package:flutterapp/ui/login/login_bloc.dart';
 
 class LoginPage extends StatefulWidget {
@@ -11,7 +12,6 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   LoginBloc _loginBloc;
-
   bool obscure = true;
 
   void _toggle() {
@@ -22,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
-    _loginBloc = LoginBloc.init();
+    _loginBloc = LoginBloc();
     super.initState();
   }
 
@@ -48,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
           create: (context) => _loginBloc,
           child: BlocListener<LoginBloc, LoginState>(
             listener: (context, state) {
-              if (state is LoginFormFailure) {
+              if (state is LoginFormFailureState) {
                 Scaffold.of(context).showSnackBar(SnackBar(
                   content: Text(
                     "Invalid Credentials",
@@ -137,7 +137,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
           enabledBorder: buildBorder(),
           focusedBorder: buildBorder(),
-          errorText: (state is LoginFailure) ? state.error[1] : null,
+          errorText: (state is LoginFailureState) ? state.error[1] : null,
           suffixIcon: IconButton(
             onPressed: () => _toggle(),
             icon: Icon(
@@ -168,7 +168,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
           enabledBorder: buildBorder(),
           focusedBorder: buildBorder(),
-          errorText: (state is LoginFailure) ? state.error[0] : null,
+          errorText: (state is LoginFailureState) ? state.error[0] : null,
         ),
       );
     });
@@ -176,12 +176,13 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _buildLoginButton() {
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
-      if (state is LoginLoading) {
+      if (state is LoginLoadingState) {
         return CircularProgressIndicator(
           valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF31B057)),
         );
-      } else if (state is LoginSuccess) {
-        print("all ok");
+      } else if (state is LoginSuccessState) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => HomePage()));
         return Container();
       } else {
         return SizedBox(

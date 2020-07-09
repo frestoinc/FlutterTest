@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutterapp/ui/ui_splash.dart';
+import 'package:flutterapp/ui/splash_ui.dart';
 
 void main() {
   testWidgets('Test UI attached', (WidgetTester tester) async {

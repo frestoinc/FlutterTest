@@ -3,7 +3,7 @@ import 'package:flutterapp/extension/constants.dart';
 import 'package:functional_widget_annotation/functional_widget_annotation.dart';
 
 import 'extension/widget_extension.dart';
-import 'login/ui_login.dart';
+import 'login/login_ui.dart';
 
 class SplashPage extends StatefulWidget {
   @override

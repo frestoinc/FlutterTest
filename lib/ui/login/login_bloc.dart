@@ -20,7 +20,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   final List<String> _list = new List(2);
 
-  LoginBloc.init() : super(LoginInitial()) {
+  LoginBloc() : super(LoginInitialState()) {
     emailController.addListener(() {
       this.onLoginEmailChanged();
     });
@@ -34,11 +34,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       Stream<LoginEvent> events,
       TransitionFunction<LoginEvent, LoginState> transitionFn) {
     final nonDebounceStream = events.where((event) {
-      return (event is! LoginEmailChanged && event is! LoginPasswordChanged);
+      return (event is! LoginEmailChangedEvent &&
+          event is! LoginPasswordChangedEvent);
     });
 
     final debounceStream = events.where((event) {
-      return (event is LoginEmailChanged || event is LoginPasswordChanged);
+      return (event is LoginEmailChangedEvent ||
+          event is LoginPasswordChangedEvent);
     }).timeout(Duration(milliseconds: 500));
 
     return super.transformEvents(
@@ -49,11 +51,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   @override
   Stream<LoginState> mapEventToState(LoginEvent event) async* {
-    if (event is LoginEmailChanged) {
+    if (event is LoginEmailChangedEvent) {
       yield* _mapStateOfLoginEmailChanged();
-    } else if (event is LoginPasswordChanged) {
+    } else if (event is LoginPasswordChangedEvent) {
       yield* _mapStateOfPasswordEmailChanged();
-    } else if (event is LoginButtonPressed) {
+    } else if (event is LoginButtonPressedEvent) {
       yield* _mapStateOnButtonPressed();
     }
   }
@@ -61,23 +63,22 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   Stream<LoginState> _mapStateOfLoginEmailChanged() async* {
     _list[0] = !_email.isEmailValid() ? EMAIL_ERROR : null;
     yield !_email.isEmailValid()
-        ? LoginFailure(error: [_list[0], _list[1]])
-        : LoginEditing();
+        ? LoginFailureState(error: [_list[0], _list[1]])
+        : LoginEditingState();
   }
 
   Stream<LoginState> _mapStateOfPasswordEmailChanged() async* {
     _list[1] = !_pwd.isPasswordValid() ? PWD_ERROR : null;
     yield !_pwd.isPasswordValid()
-        ? LoginFailure(error: [_list[0], _list[1]])
-        : LoginEditing();
+        ? LoginFailureState(error: [_list[0], _list[1]])
+        : LoginEditingState();
   }
 
   Stream<LoginState> _mapStateOnButtonPressed() async* {
-    yield LoginLoading();
+    yield LoginLoadingState();
     await Future.delayed(Duration(seconds: 3), () {}); // simulation
     if (_email == LOGIN_EMAIL_HINT && _pwd == LOGIN_PASSWORD_HINT) {
-      print("ALL OK!");
-      yield LoginSuccess();
+      yield LoginSuccessState();
     } else {
       if (!_email.isEmailValid()) {
         _list[0] = EMAIL_ERROR;
@@ -85,22 +86,22 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       if (!_pwd.isPasswordValid()) {
         _list[1] = PWD_ERROR;
       }
-      yield LoginFailure(error: [_list[0], _list[1]]);
-      yield LoginFormFailure();
+      yield LoginFailureState(error: [_list[0], _list[1]]);
+      yield LoginFormFailureState();
     }
   }
 
   void onLoginEmailChanged() {
-    this.add(LoginEmailChanged());
+    this.add(LoginEmailChangedEvent());
   }
 
   void onLoginPasswordChanged() {
-    this.add(LoginPasswordChanged());
+    this.add(LoginPasswordChangedEvent());
   }
 
   void onFormSubmitted() {
-    if (state is! LoginLoading) {
-      this.add(LoginButtonPressed());
+    if (state is! LoginLoadingState) {
+      this.add(LoginButtonPressedEvent());
     }
   }
 
