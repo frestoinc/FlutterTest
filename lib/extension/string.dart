@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 extension ValidationExtension on String {
   bool isPasswordValid() {
     return this.length >= 6;
@@ -8,5 +10,9 @@ extension ValidationExtension on String {
         r'[a-zA-Z0-9\-]{0,64}(\.[a-zA-Z0-9][a-zA-Z0-9\-]{0,25})+';
     return this != null &&
         RegExp(_emailRegExpString, caseSensitive: false).hasMatch(this);
+  }
+
+  Color parseColor() {
+    return Color(int.parse(this.replaceFirst(new RegExp(r'#'), "0x")));
   }
 }

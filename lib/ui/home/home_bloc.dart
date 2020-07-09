@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutterapp/data/entities/model_entity.dart';
 import 'package:flutterapp/data/manager/data_manager.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'home_event.dart';
-
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
@@ -17,7 +17,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   /* @override
   get initialState => HomeInitialState();*/
 
-  HomeBloc({@required this.manager}) : super(HomeLoadingState());
+  HomeBloc({@required this.manager}) : super(HomeInitialState());
 
   @override
   Stream<Transition<HomeEvent, HomeState>> transformEvents(
@@ -42,11 +42,27 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   Stream<HomeState> _mapStateOfFetchedData() async* {
+    print("_mapStateOfFetchedData");
     yield HomeLoadingState();
-    /*await manager.getRepositories().then((value) => {
-          value.fold((l) => {this.add(HomeErrorEvent(error: l))},
-              (r) => {this.add(HomeSuccessEvent(list: r))})
-        });*/
+    print("current state: $state");
+    await manager.getRepositories().then((value) => {
+          if (value.isLeft())
+            {
+              value.leftMap((l) {
+                this.add(HomeErrorEvent(error: l));
+                print("exception occurred: $l");
+              })
+            }
+          else
+            {
+              value.map((r) {
+                this.add(HomeSuccessEvent(list: r));
+                print("all ok: ${r.length}");
+              })
+            }
+        });
+
+    print("end");
   }
 
   Stream<HomeState> _mapStateOfErrorEvent(Exception e) async* {
