@@ -16,6 +16,7 @@ const HOME_TITLE = "Home Page";
 const HOME_ERROR_TITLE = "Something went wrong";
 const HOME_ERROR_SUBTITLE = "An alien is probably blocking your signal";
 const HOME_ERROR_BUTTON = "RETRY";
+const HOME_EMPTY_SUBTITLE = "Online result returns empty. Try again later";
 
 const FIELD_EMPTY_ERROR = "Field is required";
 const EMAIL_ERROR = "Email is invalid";

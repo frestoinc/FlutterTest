@@ -33,6 +33,12 @@ dependencies:
   #built
   built_value: ^7.1.0
 
+  #webview
+  webview_flutter: ^0.3.22+1
+
+  #toast
+  fluttertoast: ^6.0.1
+
   #bloc
   bloc: ^5.0.0
   flutter_bloc: ^5.0.0

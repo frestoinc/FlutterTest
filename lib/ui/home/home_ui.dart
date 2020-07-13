@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterapp/data/entities/model_entity.dart';
 import 'package:flutterapp/data/manager/data_manager.dart';
@@ -8,7 +6,8 @@ import 'package:flutterapp/di/inject.dart';
 import 'package:flutterapp/extension/constants.dart';
 import 'package:flutterapp/extension/string.dart';
 import 'package:flutterapp/ui/extension/widget_extension.dart';
-import 'package:flutterapp/ui/home/home_bloc.dart';
+
+import 'home_bloc.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -49,12 +48,7 @@ class _HomePageState extends State<HomePage> {
             child: Container(
               child: RefreshIndicator(
                 onRefresh: () => _homeBloc.fetchData(),
-                child: Stack(
-                  children: <Widget>[
-                    ListView(),
-                    _buildStateView(),
-                  ],
-                ),
+                child: _buildStateView(),
               ),
             ),
           ),
@@ -68,7 +62,7 @@ class _HomePageState extends State<HomePage> {
       if (state is HomeLoadingState) {
         return _buildLoadingProgress();
       } else if (state is HomeFailureState) {
-        return _buildError();
+        return _buildError(true);
       } else if (state is HomeSuccessState) {
         return _buildListView();
       } else {
@@ -90,17 +84,17 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildError() {
+  Widget _buildError(bool isError) {
     return Container(
       padding: const EdgeInsets.all(18.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          _buildImageError(),
+          _buildImageError(isError),
           buildSpacer(22),
           _buildTitleError(),
           buildSpacer(18),
-          _buildSubtitleError(),
+          _buildSubtitleError(isError),
           buildSpacer(22),
           _buildButtonError(),
         ],
@@ -111,61 +105,42 @@ class _HomePageState extends State<HomePage> {
   Widget _buildListView() {
     final data = (_homeBloc.state as HomeSuccessState).entities;
     if (data.isEmpty) {
-      return Container(); //todo
+      return _buildError(false);
     }
     return Scaffold(
       backgroundColor: Colors.white,
       body: ListView.builder(
-        itemBuilder: (context, index) {
-          return InkWell(
-            onTap: () {},
-            child: SizedBox(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    _buildAvatarViewHolder(data[index]),
-                    Expanded(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          _buildAuthorViewHolder(data[index]),
-                          _buildExpansionViewHolder(data[index]),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
-        itemCount: data.length,
-        shrinkWrap: true,
-        physics: ClampingScrollPhysics(),
-      ),
+          itemCount: data.length,
+          itemBuilder: (context, index) {
+            return ExpansionTile(
+              trailing: Icon(Icons.more_vert),
+              leading: _buildAvatarViewHolder(data[index]),
+              title: _buildAuthorViewHolder(data[index]),
+              subtitle: _buildNameViewHolder(data[index]),
+              children: <Widget>[
+                _buildBody(data[index]),
+              ],
+            );
+          }),
     );
   }
 
   Widget _buildAvatarViewHolder(ModelEntity model) {
-    return Container(
-        margin: const EdgeInsets.all(5.0),
-        width: 32,
-        height: 32,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: NetworkImage(model.avatar),
-            fit: BoxFit.fill,
-          ),
-          shape: BoxShape.circle,
-        ));
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20.0),
+      child: FadeInImage.assetNetwork(
+        fit: BoxFit.cover,
+        width: 40,
+        height: 40,
+        placeholder: "assets/images/image_error.png",
+        image: model.avatar,
+      ),
+    );
   }
 
   Widget _buildAuthorViewHolder(ModelEntity model) {
     return Container(
-      margin: const EdgeInsets.all(5.0),
+      alignment: Alignment.topLeft,
       child: Text(
         model.author,
         maxLines: 1,
@@ -178,60 +153,70 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildExpansionViewHolder(ModelEntity model) {
-    return ExpansionTile(
-      trailing: null,
-      title: _buildNameViewHolder(model),
-      /*children: <Widget>[
+  Widget _buildNameViewHolder(ModelEntity model) {
+    return Container(
+      alignment: Alignment.topLeft,
+      margin: const EdgeInsets.fromLTRB(0.0, 5.0, 5.0, 5.0),
+      child: Text(
+        model.name,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        textAlign: TextAlign.start,
+        style: TextStyle(
+            color: const Color(0xFF52575C),
+            fontSize: 16,
+            fontFamily: 'RobotoReg'),
+      ),
+    );
+  }
+
+  Widget _buildBody(ModelEntity model) {
+    return Column(
+      children: <Widget>[
+        _buildDescriptionViewHolder(model),
         Row(
           children: <Widget>[
             _buildLanguageViewHolder(model),
             _buildStarsViewHolder(model),
             _buildForksViewHolder(model),
           ],
-        )
-      ],*/
-    );
-  }
-
-  Widget _buildNameViewHolder(ModelEntity model) {
-    return Text(
-      model.name,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      textAlign: TextAlign.start,
-      style: TextStyle(
-          color: const Color(0xFF52575C),
-          fontSize: 16,
-          fontFamily: 'RobotoReg'),
+        ),
+      ],
     );
   }
 
   Widget _buildDescriptionViewHolder(ModelEntity model) {
-    return Text(
-      model.description,
-      textAlign: TextAlign.start,
-      style: TextStyle(
-        color: const Color(0xFF52575C),
-        fontSize: 12,
-        fontFamily: 'PingFang',
+    return Container(
+      alignment: Alignment.centerLeft,
+      padding: const EdgeInsets.fromLTRB(60.0, 5.0, 20.0, 5.0),
+      child: Text(
+        model.description,
+        textAlign: TextAlign.start,
+        style: TextStyle(
+          color: const Color(0xFF52575C),
+          fontSize: 12,
+          fontFamily: 'PingFang',
+        ),
       ),
     );
   }
 
   Widget _buildLanguageViewHolder(ModelEntity model) {
-    return Row(
-      children: <Widget>[
-        Container(
-            width: 16,
-            height: 16,
-            decoration: BoxDecoration(
-              color: model.languageColor.parseColor(),
-              shape: BoxShape.circle,
-            )),
-        Expanded(
-          child: Text(
-            model.language,
+    return Container(
+      alignment: Alignment.topLeft,
+      margin: const EdgeInsets.fromLTRB(60.0, 0.0, 5.0, 5.0),
+      child: Row(
+        children: <Widget>[
+          Container(
+              margin: EdgeInsets.all(5.0),
+              width: 16,
+              height: 16,
+              decoration: BoxDecoration(
+                color: model.languageColor.parseColorFromHex(),
+                shape: BoxShape.circle,
+              )),
+          Text(
+            model.language == null ? "Unknown" : model.language,
             textAlign: TextAlign.start,
             style: TextStyle(
               color: const Color(0xFF52575C),
@@ -239,26 +224,28 @@ class _HomePageState extends State<HomePage> {
               fontFamily: 'RobotoReg',
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   Widget _buildStarsViewHolder(ModelEntity model) {
-    return Row(
-      children: <Widget>[
-        Container(
-            width: 16,
-            height: 16,
-            decoration: const BoxDecoration(
-              image: const DecorationImage(
-                image: const AssetImage('assets/images/star.png'),
-                fit: BoxFit.fill,
-              ),
-              shape: BoxShape.rectangle,
-            )),
-        Expanded(
-          child: Text(
+    return Container(
+      alignment: Alignment.topLeft,
+      margin: const EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 5.0),
+      child: Row(
+        children: <Widget>[
+          Container(
+              width: 16,
+              height: 16,
+              decoration: const BoxDecoration(
+                image: const DecorationImage(
+                  image: const AssetImage('assets/images/star.png'),
+                  fit: BoxFit.fill,
+                ),
+                shape: BoxShape.rectangle,
+              )),
+          Text(
             model.stars.toString(),
             textAlign: TextAlign.start,
             style: TextStyle(
@@ -267,26 +254,28 @@ class _HomePageState extends State<HomePage> {
               fontFamily: 'RobotoReg',
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   Widget _buildForksViewHolder(ModelEntity model) {
-    return Row(
-      children: <Widget>[
-        Container(
-            width: 16,
-            height: 16,
-            decoration: const BoxDecoration(
-              image: const DecorationImage(
-                image: const AssetImage('assets/images/fork.png'),
-                fit: BoxFit.fill,
-              ),
-              shape: BoxShape.rectangle,
-            )),
-        Expanded(
-          child: Text(
+    return Container(
+      alignment: Alignment.topLeft,
+      margin: const EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 5.0),
+      child: Row(
+        children: <Widget>[
+          Container(
+              width: 16,
+              height: 16,
+              decoration: const BoxDecoration(
+                image: const DecorationImage(
+                  image: const AssetImage('assets/images/fork.png'),
+                  fit: BoxFit.fill,
+                ),
+                shape: BoxShape.rectangle,
+              )),
+          Text(
             model.forks.toString(),
             textAlign: TextAlign.start,
             style: TextStyle(
@@ -295,18 +284,20 @@ class _HomePageState extends State<HomePage> {
               fontFamily: 'RobotoReg',
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
-  Widget _buildImageError() {
+  Widget _buildImageError(bool isError) {
     return Container(
         width: 250,
         height: 250,
-        decoration: const BoxDecoration(
-          image: const DecorationImage(
-            image: const AssetImage('assets/images/error.png'),
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(isError
+                ? 'assets/images/error.png'
+                : 'assets/images/empty_json.png'),
             fit: BoxFit.fill,
           ),
           shape: BoxShape.rectangle,
@@ -323,9 +314,9 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildSubtitleError() {
+  Widget _buildSubtitleError(bool isError) {
     return Text(
-      HOME_ERROR_SUBTITLE,
+      isError ? HOME_ERROR_SUBTITLE : HOME_EMPTY_SUBTITLE,
       style: TextStyle(
           color: const Color(0xFF4A4A4A),
           fontSize: 16,

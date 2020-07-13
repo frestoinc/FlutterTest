@@ -12,7 +12,11 @@ extension ValidationExtension on String {
         RegExp(_emailRegExpString, caseSensitive: false).hasMatch(this);
   }
 
-  Color parseColor() {
-    return Color(int.parse(this.replaceFirst(new RegExp(r'#'), "0x")));
+  Color parseColorFromHex() {
+    if (this == null) return Colors.black;
+    final buffer = StringBuffer();
+    if (this.length == 6 || this.length == 7) buffer.write('ff');
+    buffer.write(this.replaceFirst('#', ''));
+    return Color(int.parse(buffer.toString(), radix: 16));
   }
 }

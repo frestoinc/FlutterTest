@@ -44,7 +44,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Stream<HomeState> _mapStateOfFetchedData() async* {
     print("_mapStateOfFetchedData");
     yield HomeLoadingState();
-    print("current state: $state");
     await manager.getRepositories().then((value) => {
           if (value.isLeft())
             {
