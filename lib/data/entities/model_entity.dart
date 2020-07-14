@@ -5,7 +5,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'model_entity.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 @immutable
 class ModelEntity extends Equatable {
   @JsonKey(name: 'author')

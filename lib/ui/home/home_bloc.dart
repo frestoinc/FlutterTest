@@ -42,26 +42,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   Stream<HomeState> _mapStateOfFetchedData() async* {
-    print("_mapStateOfFetchedData");
     yield HomeLoadingState();
     await manager.getRepositories().then((value) => {
           if (value.isLeft())
-            {
-              value.leftMap((l) {
-                this.add(HomeErrorEvent(error: l));
-                print("exception occurred: $l");
-              })
-            }
+            {value.leftMap((l) => this.add(HomeErrorEvent(error: l)))}
           else
-            {
-              value.map((r) {
-                this.add(HomeSuccessEvent(list: r));
-                print("all ok: ${r.length}");
-              })
-            }
+            {value.map((r) => this.add(HomeSuccessEvent(list: r)))}
         });
-
-    print("end");
   }
 
   Stream<HomeState> _mapStateOfErrorEvent(Exception e) async* {

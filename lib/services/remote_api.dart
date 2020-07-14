@@ -11,7 +11,7 @@ class ApiClient {
       final _response = await http.get(WEB_API + WEB_API_TOKEN);
       final _bodyList = jsonDecode(_response.body) as List;
       return Right(_bodyList.map((e) => ModelEntity.fromJson(e)).toList());
-    } catch (e) {
+    } on Exception catch (e) {
       return Left(e);
     }
   }

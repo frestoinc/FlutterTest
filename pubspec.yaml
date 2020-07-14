@@ -36,6 +36,9 @@ dependencies:
   #webview
   webview_flutter: ^0.3.22+1
 
+  #secure_storage
+  flutter_secure_storage: ^3.3.3
+
   #toast
   fluttertoast: ^6.0.1
 
@@ -55,9 +58,10 @@ dependencies:
   # rxdart
   rxdart: ^0.24.1
 
-  #util
   #Either<L,R>
   dartz: ^0.9.1
+
+  #serialization
   json_serializable: 3.3.0  #flutter packages pub run build_runner build
 
   #json overrides == and hashCode

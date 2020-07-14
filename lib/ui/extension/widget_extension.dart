@@ -20,7 +20,6 @@ Widget buildSpacer(double height) {
   );
 }
 
-@widget
 UnderlineInputBorder buildBorder() {
   return UnderlineInputBorder(
     borderSide: new BorderSide(

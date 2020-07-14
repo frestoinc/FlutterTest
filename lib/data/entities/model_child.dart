@@ -4,7 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'model_child.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 @immutable
 class ModelChild extends Equatable {
   @JsonKey(name: 'username')

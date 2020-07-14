@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterapp/extension/constants.dart';
 import 'package:flutterapp/ui/extension/widget_extension.dart';
-import 'package:flutterapp/ui/home/home_ui.dart';
 import 'package:flutterapp/ui/login/login_bloc.dart';
 
 class LoginPage extends StatefulWidget {
@@ -181,8 +180,7 @@ class _LoginPageState extends State<LoginPage> {
           valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF31B057)),
         );
       } else if (state is LoginSuccessState) {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => HomePage()));
+        _loginBloc.navigate(context);
         return Container();
       } else {
         return SizedBox(

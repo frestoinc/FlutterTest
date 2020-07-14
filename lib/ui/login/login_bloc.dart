@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterapp/extension/constants.dart';
 import 'package:flutterapp/extension/string.dart';
+import 'package:flutterapp/ui/home/home_ui.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'login_event.dart';
@@ -103,6 +104,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     if (state is! LoginLoadingState) {
       this.add(LoginButtonPressedEvent());
     }
+  }
+
+  void navigate(BuildContext context) {
+    //todo save details to shared preference
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => HomePage()));
   }
 
   @override

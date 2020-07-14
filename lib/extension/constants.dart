@@ -21,3 +21,5 @@ const HOME_EMPTY_SUBTITLE = "Online result returns empty. Try again later";
 const FIELD_EMPTY_ERROR = "Field is required";
 const EMAIL_ERROR = "Email is invalid";
 const PWD_ERROR = "Password must be at least 6 characters";
+
+const USER_PREF_KEY = "USER_PREF_KEY";

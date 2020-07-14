@@ -39,10 +39,56 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       child: Scaffold(
-        appBar: buildAppBar(title: HOME_TITLE),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              UserAccountsDrawerHeader(
+                decoration: const BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage('assets/images/background.jpg'),
+                        fit: BoxFit.cover)),
+              ),
+              ListTile()
+            ],
+          ),
+        ),
+        appBar: AppBar(
+          title: Text(
+            HOME_TITLE,
+            style: const TextStyle(color: const Color(0xFF25282B)),
+          ),
+          centerTitle: true,
+          backgroundColor: Colors.white,
+          iconTheme: IconThemeData(
+            color: Color(0xFF25282B),
+          ),
+          actions: [
+            PopupMenuButton<String>(
+              padding: EdgeInsets.zero,
+              /*onSelected: (value) => showInSnackBar(GalleryLocalizations.of(context).demoMenuSelected(value)),*/
+              itemBuilder: (context) => <PopupMenuEntry<String>>[
+                PopupMenuItem<String>(
+                  value: "",
+                  child: Text("ABC"),
+                ),
+                PopupMenuItem<String>(
+                  enabled: false,
+                  value: "",
+                  child: Text("DEF"),
+                ),
+                PopupMenuItem<String>(
+                  enabled: false,
+                  value: "",
+                  child: Text("GHI"),
+                ),
+              ],
+            )
+          ],
+        ),
         backgroundColor: Colors.transparent,
         body: BlocProvider<HomeBloc>(
-          create: (context) => _homeBloc..add(HomeFetchedDataEvent()), //todo
+          create: (context) => _homeBloc..add(HomeFetchedDataEvent()),
           child: BlocListener<HomeBloc, HomeState>(
             listener: (context, state) {},
             child: Container(
