@@ -2,11 +2,12 @@
 
 ## Features:
 - Bloc Architecture
+- Dependency Injection
+- Form Validation
 - Drag-And-Drop
 - List Re-Ordering
 - SharedPreferences
 - Repository 
-- Dependency Injection
 
 - And More...
 
