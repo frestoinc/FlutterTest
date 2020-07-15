@@ -1,20 +1,14 @@
-import 'dart:async';
-
-import 'package:flutter/cupertino.dart';
-import 'package:flutterapp/extension/constants.dart';
-import 'package:flutterapp/extension/string.dart';
-import 'package:rxdart/rxdart.dart';
-import 'package:stacked/stacked.dart';
+/*import 'package:stacked/stacked.dart';*/
 
 /// SAMPLE VIEWMODEL IF DECIDES TO USE MVVM. TO BE USED WITH {@LINK https://pub.dev/packages/stacked}
-class LoginViewModel extends BaseViewModel {
+class LoginViewModel /*extends BaseViewModel*/ {
   /*String _emailAddress;
   String _password;
 
   String emailError;
   String passwordError;*/
 
-  final emailAddress = TextEditingController();
+  /*final emailAddress = TextEditingController();
   final password = TextEditingController();
 
   final _emailError = BehaviorSubject<String>();
@@ -67,5 +61,5 @@ class LoginViewModel extends BaseViewModel {
     password.dispose();
     _visibilityPwdController.close();
     super.dispose();
-  }
+  }*/
 }

@@ -100,7 +100,7 @@ packages:
     source: hosted
     version: "4.3.2"
   built_value:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: built_value
       url: "https://pub.dartlang.org"
@@ -216,13 +216,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.0"
-  flutter_hooks:
-    dependency: "direct main"
-    description:
-      name: flutter_hooks
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.9.0"
   flutter_secure_storage:
     dependency: "direct main"
     description:
@@ -389,13 +382,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.1"
-  observable_ish:
-    dependency: transitive
-    description:
-      name: observable_ish
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.4"
   package_config:
     dependency: transitive
     description:
@@ -506,20 +492,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.9.3"
-  stacked:
-    dependency: "direct main"
-    description:
-      name: stacked
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.6.1+1"
-  stacked_hooks:
-    dependency: "direct main"
-    description:
-      name: stacked_hooks
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.2"
   stream_channel:
     dependency: transitive
     description:
