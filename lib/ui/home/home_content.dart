@@ -63,23 +63,7 @@ class _HomeContentState extends State<HomeContent> {
           color: Color(0xFF25282B),
         ),
         actions: [
-          PopupMenuButton<int>(
-            padding: EdgeInsets.zero,
-            onSelected: (int) => {
-              //todo
-              int == 2 ? _authBloc.onLoggedOutPressed() : print("todo"),
-            },
-            itemBuilder: (context) => <PopupMenuEntry<int>>[
-              PopupMenuItem<int>(
-                value: 1,
-                child: Text("Sort"),
-              ),
-              PopupMenuItem<int>(
-                value: 2,
-                child: Text("LOG OUT"),
-              ),
-            ],
-          )
+          _buildPopUpMenu(),
         ],
       ),
       body: BlocListener<HomeBloc, HomeState>(
@@ -110,6 +94,88 @@ class _HomeContentState extends State<HomeContent> {
 
       return Container();
     });
+  }
+
+  Widget _buildPopUpMenu() {
+    return PopupMenuButton<int>(
+      padding: EdgeInsets.zero,
+      onSelected: (value) => _homeBloc.handleOptionsMenu(value),
+      itemBuilder: (context) => <PopupMenuEntry<int>>[
+        PopupMenuItem<int>(
+          value: 1,
+          textStyle: TextStyle(
+              color: const Color(0xFF52575C), fontFamily: 'RobotoBold'),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Icon(
+                Icons.stars,
+                color: const Color(0xFF52575C),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(6, 0, 0, 0),
+                child: Text("Sort By Stars"),
+              ),
+            ],
+          ),
+        ),
+        PopupMenuItem<int>(
+          value: 2,
+          textStyle: TextStyle(
+              color: const Color(0xFF52575C), fontFamily: 'RobotoBold'),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Icon(
+                Icons.build,
+                color: const Color(0xFF52575C),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(6, 0, 0, 0),
+                child: Text("Sort By Forks"),
+              ),
+            ],
+          ),
+        ),
+        PopupMenuItem<int>(
+          value: 3,
+          textStyle: TextStyle(
+              color: const Color(0xFF52575C), fontFamily: 'RobotoBold'),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Icon(
+                Icons.shuffle,
+                color: const Color(0xFF52575C),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(6, 0, 0, 0),
+                child: Text("Sort Randomly"),
+              ),
+            ],
+          ),
+        ),
+        const PopupMenuDivider(),
+        PopupMenuItem<int>(
+          value: 0,
+          textStyle: TextStyle(
+              color: const Color(0xFF52575C), fontFamily: 'RobotoBold'),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Icon(
+                Icons.exit_to_app,
+                color: const Color(0xFF52575C),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(6, 2, 0, 2),
+                child: Text("Log Out"),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _buildUserEmail() {

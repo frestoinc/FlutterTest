@@ -43,13 +43,37 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     if (event is HomeSuccessEvent) {
       yield* _mapStateOfSuccessEvent(event.list);
     }
+
+    if (event is HomeSortedEvent) {
+      yield* _mapStateOfSortedEvent(event.type, event.list);
+    }
   }
 
   Stream<HomeState> _mapStateOfFetchedData() async* {
     yield HomeLoadingState();
-    await manager.getRepositories().then((value) => value.fold(
-        (l) => this.add(HomeErrorEvent(error: l)),
-        (r) => this.add(HomeSuccessEvent(list: r))));
+    await manager.getRepositories().then(
+        (value) => value.fold((l) => this.add(HomeErrorEvent(error: l)), (r) {
+              r.shuffle();
+              this.add(HomeSuccessEvent(list: r));
+            }));
+  }
+
+  Stream<HomeState> _mapStateOfSortedEvent(
+      int type, List<ModelEntity> list) async* {
+    yield HomeLoadingState();
+    List<ModelEntity> clone = list;
+    switch (type) {
+      case 1:
+        clone.sort((a, b) => b.stars.compareTo(a.stars));
+        break;
+      case 2:
+        clone.sort((a, b) => b.forks.compareTo(a.forks));
+        break;
+      default:
+        clone.shuffle();
+        break;
+    }
+    this.add(HomeSuccessEvent(list: clone));
   }
 
   Stream<HomeState> _mapStateOfErrorEvent(Exception e) async* {
@@ -64,6 +88,20 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     if (state is! HomeLoadingState) {
       this.add(HomeFetchedDataEvent());
     }
+  }
+
+  void handleOptionsMenu(int type) {
+    if (type == 0) {
+      authBloc.onLoggedOutPressed();
+    } else {
+      _sortList(type);
+    }
+  }
+
+  void _sortList(int type) async {
+    await manager.getRepositories().then((value) => value.fold(
+        (l) => this.add(HomeErrorEvent(error: l)),
+        (r) => this.add(HomeSortedEvent(type: type, list: r))));
   }
 }
 
@@ -80,13 +118,20 @@ class HomeFetchedDataEvent extends HomeEvent {}
 class HomeErrorEvent extends HomeEvent {
   final Exception error;
 
-  const HomeErrorEvent({this.error});
+  const HomeErrorEvent({@required this.error});
 }
 
 class HomeSuccessEvent extends HomeEvent {
   final List<ModelEntity> list;
 
-  const HomeSuccessEvent({this.list});
+  const HomeSuccessEvent({@required this.list});
+}
+
+class HomeSortedEvent extends HomeEvent {
+  final int type;
+  final List<ModelEntity> list;
+
+  const HomeSortedEvent({@required this.type, @required this.list});
 }
 
 @immutable
@@ -104,11 +149,17 @@ class HomeLoadingState extends HomeState {}
 class HomeSuccessState extends HomeState {
   final List<ModelEntity> entities;
 
-  const HomeSuccessState({this.entities});
+  const HomeSuccessState({@required this.entities});
 }
 
 class HomeFailureState extends HomeState {
   final Exception error;
 
   const HomeFailureState({@required this.error});
+}
+
+class HomeSortedState extends HomeState {
+  final List<ModelEntity> list;
+
+  const HomeSortedState({@required this.list});
 }
