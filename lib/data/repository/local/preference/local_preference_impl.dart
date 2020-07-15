@@ -22,10 +22,10 @@ class LocalPreferenceImpl implements LocalPreference {
   }
 
   @override
-  Future<Either<Exception, User>> readCredentials() async {
+  Future<Either<Exception, String>> readCredentials() async {
     try {
       final _response = await _storage.read(key: USER_PREF_KEY);
-      return Right(User.fromJson(jsonDecode(_response)));
+      return Right(User.fromJson(jsonDecode(_response)).emailAddress);
     } on Exception catch (e) {
       return Left(e);
     }
@@ -44,11 +44,8 @@ class LocalPreferenceImpl implements LocalPreference {
 
   @override
   Future<bool> validCredentials() async {
-    try {
-      final credentials = await _storage.read(key: USER_PREF_KEY);
-      return null != credentials && credentials.isNotEmpty;
-    } on Exception catch (_) {
-      return false;
-    }
+    return await readCredentials().then(
+            (value) =>
+            value.fold((l) => false, (r) => r != null && r.isNotEmpty));
   }
 }

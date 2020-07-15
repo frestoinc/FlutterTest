@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterapp/data/entities/model_entity.dart';
 import 'package:flutterapp/extension/constants.dart';
 import 'package:flutterapp/extension/string.dart';
+import 'package:flutterapp/ui/authentication/authentication.dart';
 import 'package:flutterapp/ui/extension/widget_extension.dart';
 
 import 'home_bloc.dart';
@@ -14,27 +15,80 @@ class HomeContent extends StatefulWidget {
 
 class _HomeContentState extends State<HomeContent> {
   HomeBloc _homeBloc;
+  AuthenticationBloc _authBloc;
 
   @override
   void initState() {
     _homeBloc = BlocProvider.of(context);
+    _authBloc = BlocProvider.of(context);
     super.initState();
   }
 
   @override
   void dispose() {
     _homeBloc.close();
+    _authBloc.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<HomeBloc, HomeState>(
-      listener: (context, state) {},
-      child: Container(
-        child: RefreshIndicator(
-          onRefresh: () => _homeBloc.fetchData(),
-          child: _buildStateView(),
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            UserAccountsDrawerHeader(
+              currentAccountPicture: _buildUserAvatar(),
+              accountName: _buildUserName(),
+              accountEmail: _buildUserEmail(),
+              decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage('assets/images/background.jpg'),
+                      fit: BoxFit.cover)),
+            ),
+            ListTile()
+          ],
+        ),
+      ),
+      appBar: AppBar(
+        title: Text(
+          HOME_TITLE,
+          style: const TextStyle(color: const Color(0xFF25282B)),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(
+          color: Color(0xFF25282B),
+        ),
+        actions: [
+          PopupMenuButton<int>(
+            padding: EdgeInsets.zero,
+            onSelected: (int) => {
+              //todo
+              int == 2 ? _authBloc.onLoggedOutPressed() : print("todo"),
+            },
+            itemBuilder: (context) => <PopupMenuEntry<int>>[
+              PopupMenuItem<int>(
+                value: 1,
+                child: Text("Sort"),
+              ),
+              PopupMenuItem<int>(
+                value: 2,
+                child: Text("LOG OUT"),
+              ),
+            ],
+          )
+        ],
+      ),
+      body: BlocListener<HomeBloc, HomeState>(
+        listener: (context, state) {},
+        child: Container(
+          child: RefreshIndicator(
+            onRefresh: () => _homeBloc.fetchData(),
+            child: _buildStateView(),
+          ),
         ),
       ),
     );
@@ -56,6 +110,41 @@ class _HomeContentState extends State<HomeContent> {
 
       return Container();
     });
+  }
+
+  Widget _buildUserEmail() {
+    return BlocBuilder<AuthenticationBloc, AuthenticationState>(
+      builder: (context, state) {
+        return _buildUserText(state is AuthenticationSuccessState
+            ? "Email: ${state.emailAddress}"
+            : "Email: Unknown");
+      },
+    );
+  }
+
+  Widget _buildUserName() {
+    return _buildUserText("Username: root");
+  }
+
+  Widget _buildUserText(String text) {
+    return Text(
+      text,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: TextStyle(
+          color: const Color(0xFF52575C),
+          fontSize: 16,
+          fontFamily: 'RobotoBold'),
+    );
+  }
+
+  Widget _buildUserAvatar() {
+    return CircleAvatar(
+      backgroundColor: Colors.black,
+      child: ClipRRect(
+        child: Image.asset("assets/images/user.png"),
+      ),
+    );
   }
 
   Widget _buildLoadingProgress() {

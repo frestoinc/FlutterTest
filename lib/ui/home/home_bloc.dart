@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutterapp/data/entities/entities.dart';
 import 'package:flutterapp/data/entities/model_entity.dart';
 import 'package:flutterapp/data/manager/data_manager.dart';
 import 'package:flutterapp/ui/authentication/authentication.dart';
@@ -44,10 +45,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   Stream<HomeState> _mapStateOfFetchedData() async* {
     yield HomeLoadingState();
-    await manager.getRepositories().then((value) =>
-        value.fold(
-                (l) => this.add(HomeErrorEvent(error: l)),
-                (r) => this.add(HomeSuccessEvent(list: r))));
+    await manager.getRepositories().then((value) => value.fold(
+        (l) => this.add(HomeErrorEvent(error: l)),
+        (r) => this.add(HomeSuccessEvent(list: r))));
   }
 
   Stream<HomeState> _mapStateOfErrorEvent(Exception e) async* {
@@ -62,10 +62,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     if (state is! HomeLoadingState) {
       this.add(HomeFetchedDataEvent());
     }
-  }
-
-  void onLoggedOut() {
-    authBloc.add(AuthenticationLoggedOutEvent());
   }
 }
 

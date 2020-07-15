@@ -19,12 +19,15 @@ class AuthenticationBloc
     yield AuthenticationInProgressState();
 
     if (event is AuthenticationStartedEvent) {
-      final bool valid = await manager.validCredentials();
+      final valid = await manager.validCredentials();
+      final credentials = await manager
+          .readCredentials()
+          .then((value) => value.fold((l) => "Unknown", (r) => r));
 
       await Future.delayed(Duration(seconds: 6), () {});
 
       if (valid) {
-        yield AuthenticationSuccessState();
+        yield AuthenticationSuccessState(emailAddress: credentials);
       } else {
         yield AuthenticationFailureState();
       }
@@ -33,7 +36,7 @@ class AuthenticationBloc
     if (event is AuthenticationLoggedInEvent) {
       yield AuthenticationInProgressState();
       await manager.saveCredentials(event.user);
-      yield AuthenticationSuccessState();
+      yield AuthenticationSuccessState(emailAddress: event.user.emailAddress);
     }
 
     if (event is AuthenticationLoggedOutEvent) {
@@ -41,6 +44,10 @@ class AuthenticationBloc
       await manager.deleteCredentials();
       yield AuthenticationFailureState();
     }
+  }
+
+  void onLoggedOutPressed() {
+    this.add(AuthenticationLoggedOutEvent());
   }
 }
 
@@ -80,7 +87,11 @@ abstract class AuthenticationState extends Equatable {
 
 class AuthenticationInitialState extends AuthenticationState {}
 
-class AuthenticationSuccessState extends AuthenticationState {}
+class AuthenticationSuccessState extends AuthenticationState {
+  final String emailAddress;
+
+  const AuthenticationSuccessState({@required this.emailAddress});
+}
 
 class AuthenticationFailureState extends AuthenticationState {}
 

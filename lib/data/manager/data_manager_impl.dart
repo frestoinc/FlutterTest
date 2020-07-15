@@ -23,7 +23,7 @@ class DataManagerImpl implements DataManager {
   }
 
   @override
-  Future<Either<Exception, User>> readCredentials() {
+  Future<Either<Exception, String>> readCredentials() {
     return _localPref.readCredentials();
   }
 
