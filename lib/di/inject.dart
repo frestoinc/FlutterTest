@@ -8,11 +8,14 @@ import 'package:flutterapp/data/repository/remote/remote_repository_impl.dart';
 import 'package:flutterapp/services/remote_api.dart';
 import 'package:get_it/get_it.dart';
 
+import 'file:///C:/Users/root/Documents/AndroidStudioProjects/Projects/flutter_app/lib/extension/dialogs/dialog.dart';
+
 GetIt getIt = GetIt.instance;
 
 void setInjection() {
   getIt.registerSingleton<ApiClient>(ApiClient());
   getIt.registerSingleton<FlutterSecureStorage>(FlutterSecureStorage());
+  getIt.registerLazySingleton(() => DialogService());
   getIt.registerSingleton<RemoteRepository>(RemoteRepositoryImpl(getIt.get()));
   getIt.registerSingleton<LocalPreference>(LocalPreferenceImpl(getIt.get()));
   getIt.registerSingleton<DataManager>(

@@ -247,28 +247,68 @@ class _HomeContentState extends State<HomeContent> {
 
   Widget _buildListView() {
     final _data = (_homeBloc.state as HomeSuccessState).entities;
-    if (_data.isEmpty) {
-      return _buildError(false);
-    }
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: ReorderableListView(
-        onReorder: (int a, int b) => _homeBloc.onReorder(_data, a, b),
-        children: _data
-            .map(
-              (e) => ExpansionTile(
-                key: ValueKey(e),
-                trailing:
-                    Visibility(visible: false, child: Icon(Icons.more_vert)),
-                leading: _buildAvatarViewHolder(e),
-                title: _buildAuthorViewHolder(e),
-                subtitle: _buildNameViewHolder(e),
-                children: <Widget>[
-                  _buildBody(e),
-                ],
+    return _data.isEmpty
+        ? _buildError(false)
+        : Scaffold(
+            backgroundColor: Colors.white,
+            body: ReorderableListView(
+              onReorder: (int a, int b) => _homeBloc.onReorder(_data, a, b),
+              children: _getItemList(_data),
+            ),
+          );
+  }
+
+  List<Widget> _getItemList(List<ModelEntity> list) {
+    return list
+        .asMap()
+        .map((index, value) =>
+            MapEntry(index, _buildDismissibleList(index, value)))
+        .values
+        .toList();
+  }
+
+  Widget _buildDismissibleList(int index, ModelEntity e) {
+    return Dismissible(
+      key: ValueKey(e),
+      //confirmDismiss: //todo,
+      onDismissed: (_) => {},
+      direction: DismissDirection.endToStart,
+      background: _buildDismissBackground(),
+      child: ExpansionTile(
+        key: ValueKey(e),
+        trailing: Visibility(visible: false, child: Icon(Icons.more_vert)),
+        leading: _buildAvatarViewHolder(e),
+        title: _buildAuthorViewHolder(e),
+        subtitle: _buildNameViewHolder(e),
+        children: <Widget>[
+          _buildBody(e),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDismissBackground() {
+    return Container(
+      padding: EdgeInsets.all(10.0),
+      color: Colors.red,
+      child: Align(
+        alignment: Alignment.centerRight,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Icon(
+              Icons.delete_forever,
+              color: Colors.white,
+            ),
+            Text(
+              "Delete",
+              style: TextStyle(
+                color: Colors.white,
               ),
-            )
-            .toList(),
+              textAlign: TextAlign.end,
+            ),
+          ],
+        ),
       ),
     );
   }
