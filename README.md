@@ -1,4 +1,4 @@
-## Flutter Sample Application Exploration ![alt text](https://avatars0.githubusercontent.com/u/26918952?s=400&v=4)
+# Flutter Sample Application Exploration 
 
 ## Features / Packages in this App:
 - Flutter Bloc [![Pub](https://img.shields.io/pub/v/flutter_bloc.svg)](https://pub.dev/packages/flutter_bloc)
