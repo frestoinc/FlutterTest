@@ -38,18 +38,7 @@ class _HomeContentState extends State<HomeContent> {
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
-          children: <Widget>[
-            UserAccountsDrawerHeader(
-              currentAccountPicture: _buildUserAvatar(),
-              accountName: _buildUserName(),
-              accountEmail: _buildUserEmail(),
-              decoration: const BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage('assets/images/background.jpg'),
-                      fit: BoxFit.cover)),
-            ),
-            ListTile()
-          ],
+          children: <Widget>[_buildDrawerHeader(), ListTile()],
         ),
       ),
       appBar: AppBar(
@@ -178,6 +167,18 @@ class _HomeContentState extends State<HomeContent> {
     );
   }
 
+  Widget _buildDrawerHeader() {
+    return UserAccountsDrawerHeader(
+      currentAccountPicture: _buildUserAvatar(),
+      accountName: _buildUserName(),
+      accountEmail: _buildUserEmail(),
+      decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage('assets/images/background.jpg'),
+              fit: BoxFit.cover)),
+    );
+  }
+
   Widget _buildUserEmail() {
     return BlocBuilder<AuthenticationBloc, AuthenticationState>(
       builder: (context, state) {
@@ -245,25 +246,30 @@ class _HomeContentState extends State<HomeContent> {
   }
 
   Widget _buildListView() {
-    final data = (_homeBloc.state as HomeSuccessState).entities;
-    if (data.isEmpty) {
+    final _data = (_homeBloc.state as HomeSuccessState).entities;
+    if (_data.isEmpty) {
       return _buildError(false);
     }
     return Scaffold(
       backgroundColor: Colors.white,
-      body: ListView.builder(
-          itemCount: data.length,
-          itemBuilder: (context, index) {
-            return ExpansionTile(
-              trailing: Icon(Icons.more_vert),
-              leading: _buildAvatarViewHolder(data[index]),
-              title: _buildAuthorViewHolder(data[index]),
-              subtitle: _buildNameViewHolder(data[index]),
-              children: <Widget>[
-                _buildBody(data[index]),
-              ],
-            );
-          }),
+      body: ReorderableListView(
+        onReorder: (int a, int b) => _homeBloc.onReorder(_data, a, b),
+        children: _data
+            .map(
+              (e) => ExpansionTile(
+                key: ValueKey(e),
+                trailing:
+                    Visibility(visible: false, child: Icon(Icons.more_vert)),
+                leading: _buildAvatarViewHolder(e),
+                title: _buildAuthorViewHolder(e),
+                subtitle: _buildNameViewHolder(e),
+                children: <Widget>[
+                  _buildBody(e),
+                ],
+              ),
+            )
+            .toList(),
+      ),
     );
   }
 

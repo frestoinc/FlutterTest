@@ -69,8 +69,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       case 2:
         clone.sort((a, b) => b.forks.compareTo(a.forks));
         break;
-      default:
+      case 3:
         clone.shuffle();
+        break;
+      default:
         break;
     }
     this.add(HomeSuccessEvent(list: clone));
@@ -96,6 +98,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     } else {
       _sortList(type);
     }
+  }
+
+  void onReorder(List<ModelEntity> list, int oldIndex, int newIndex) {
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+    final ModelEntity entity = list.removeAt(oldIndex);
+    list.insert(newIndex, entity);
+    this.add(HomeSortedEvent(type: 4, list: list));
   }
 
   void _sortList(int type) async {
@@ -156,10 +167,4 @@ class HomeFailureState extends HomeState {
   final Exception error;
 
   const HomeFailureState({@required this.error});
-}
-
-class HomeSortedState extends HomeState {
-  final List<ModelEntity> list;
-
-  const HomeSortedState({@required this.list});
 }
