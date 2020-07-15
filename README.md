@@ -14,5 +14,5 @@
 
 |  |  |   | |
 | :---:                              | :---:                             | :---:                              | :---:     |
-|![](art/Screenshot_01.png) |![](art/Screenshot_02.png) | ![](art/Screenshot_03.png)|![](art/Screenshot_04.png) |
-|![](art/Screenshot_05.png) |![](art/Screenshot_06.png) | ![](art/Screenshot_07.png)|![](art/Screenshot_08.png) |
+|![](screenshots/Screenshot_01.png) |![](screenshots/Screenshot_02.png) | ![](screenshots/Screenshot_03.png)|![](screenshots/Screenshot_04.png) |
+|![](screenshots/Screenshot_05.png) |![](screenshots/Screenshot_06.png) | ![](screenshots/Screenshot_07.png)|![](screenshots/Screenshot_08.png) |
