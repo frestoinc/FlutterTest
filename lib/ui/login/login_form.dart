@@ -13,7 +13,7 @@ class _LoginFormState extends State<LoginForm> {
   LoginBloc _loginBloc;
   bool obscure = true;
 
-  void _toggle() {
+  _toggle() {
     setState(() {
       obscure = !obscure;
     });
@@ -106,6 +106,8 @@ class _LoginFormState extends State<LoginForm> {
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
       return TextField(
         controller: _loginBloc.passwordController,
+        onSubmitted: (_) => FocusScope.of(context).unfocus(),
+        onChanged: (_) => _loginBloc.onLoginPasswordChanged(),
         textInputAction: TextInputAction.done,
         obscureText: obscure,
         keyboardType: TextInputType.text,
@@ -138,7 +140,9 @@ class _LoginFormState extends State<LoginForm> {
   Widget _buildEmailField() {
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
       return TextField(
+        onSubmitted: (_) => FocusScope.of(context).nextFocus(),
         controller: _loginBloc.emailController,
+        onChanged: (_) => _loginBloc.onLoginEmailChanged(),
         textInputAction: TextInputAction.next,
         keyboardType: TextInputType.emailAddress,
         maxLines: 1,

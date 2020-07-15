@@ -23,33 +23,19 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final List<String> _list = new List(2);
 
   LoginBloc({@required this.manager, @required this.authBloc})
-      : super(LoginInitialState()) {
-    emailController.addListener(() {
-      this.onLoginEmailChanged();
-    });
-    passwordController.addListener(() {
-      this.onLoginPasswordChanged();
-    });
-  }
+      : super(LoginInitialState());
 
   @override
   Stream<Transition<LoginEvent, LoginState>> transformEvents(
-      Stream<LoginEvent> events,
-      TransitionFunction<LoginEvent, LoginState> transitionFn) {
-    final nonDebounceStream = events.where((event) {
-      return (event is! LoginEmailChangedEvent &&
-          event is! LoginPasswordChangedEvent);
-    });
-
-    final debounceStream = events.where((event) {
-      return (event is LoginEmailChangedEvent ||
-          event is LoginPasswordChangedEvent);
-    }).timeout(Duration(milliseconds: 500));
-
-    return super.transformEvents(
-      nonDebounceStream.mergeWith([debounceStream]),
-      transitionFn,
-    );
+    Stream<LoginEvent> events,
+    Stream<Transition<LoginEvent, LoginState>> Function(
+      LoginEvent event,
+    )
+        transitionFn,
+  ) {
+    return events
+        .debounceTime(const Duration(milliseconds: 300))
+        .switchMap(transitionFn);
   }
 
   @override

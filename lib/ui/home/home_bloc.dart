@@ -20,12 +20,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   @override
   Stream<Transition<HomeEvent, HomeState>> transformEvents(
     Stream<HomeEvent> events,
-    TransitionFunction<HomeEvent, HomeState> transitionFn,
+    Stream<Transition<HomeEvent, HomeState>> Function(
+      HomeEvent event,
+    )
+        transitionFn,
   ) {
-    return super.transformEvents(
-      events.debounceTime(const Duration(milliseconds: 500)),
-      transitionFn,
-    );
+    return events
+        .debounceTime(const Duration(milliseconds: 500))
+        .switchMap(transitionFn);
   }
 
   @override

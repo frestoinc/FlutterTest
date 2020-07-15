@@ -34,6 +34,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(BlocProvider<AuthenticationBloc>(
     create: (context) {
+      print("datamanager in main: ${getIt<DataManager>().hashCode}");
       return AuthenticationBloc(manager: getIt<DataManager>())
         ..add(AuthenticationStartedEvent());
     },
