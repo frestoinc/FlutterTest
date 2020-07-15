@@ -7,4 +7,6 @@ abstract class LocalPreference {
   Future<Either<Exception, User>> readCredentials();
 
   Future<Either<Exception, bool>> deleteCredentials();
+
+  Future<bool> validCredentials();
 }

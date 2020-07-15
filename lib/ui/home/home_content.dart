@@ -1,25 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterapp/data/entities/model_entity.dart';
-import 'package:flutterapp/data/manager/data_manager.dart';
-import 'package:flutterapp/di/inject.dart';
 import 'package:flutterapp/extension/constants.dart';
 import 'package:flutterapp/extension/string.dart';
 import 'package:flutterapp/ui/extension/widget_extension.dart';
 
 import 'home_bloc.dart';
 
-class HomePage extends StatefulWidget {
+class HomeContent extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _HomePageState();
+  State<StatefulWidget> createState() => _HomeContentState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomeContentState extends State<HomeContent> {
   HomeBloc _homeBloc;
 
   @override
   void initState() {
-    _homeBloc = HomeBloc(manager: getIt<DataManager>());
+    _homeBloc = BlocProvider.of(context);
     super.initState();
   }
 
@@ -31,73 +29,12 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        image: const DecorationImage(
-          image: const AssetImage('assets/images/background.jpg'),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Scaffold(
-        drawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              UserAccountsDrawerHeader(
-                decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('assets/images/background.jpg'),
-                        fit: BoxFit.cover)),
-              ),
-              ListTile()
-            ],
-          ),
-        ),
-        appBar: AppBar(
-          title: Text(
-            HOME_TITLE,
-            style: const TextStyle(color: const Color(0xFF25282B)),
-          ),
-          centerTitle: true,
-          backgroundColor: Colors.white,
-          iconTheme: IconThemeData(
-            color: Color(0xFF25282B),
-          ),
-          actions: [
-            PopupMenuButton<String>(
-              padding: EdgeInsets.zero,
-              /*onSelected: (value) => showInSnackBar(GalleryLocalizations.of(context).demoMenuSelected(value)),*/
-              itemBuilder: (context) => <PopupMenuEntry<String>>[
-                PopupMenuItem<String>(
-                  value: "",
-                  child: Text("ABC"),
-                ),
-                PopupMenuItem<String>(
-                  enabled: false,
-                  value: "",
-                  child: Text("DEF"),
-                ),
-                PopupMenuItem<String>(
-                  enabled: false,
-                  value: "",
-                  child: Text("GHI"),
-                ),
-              ],
-            )
-          ],
-        ),
-        backgroundColor: Colors.transparent,
-        body: BlocProvider<HomeBloc>(
-          create: (context) => _homeBloc..add(HomeFetchedDataEvent()),
-          child: BlocListener<HomeBloc, HomeState>(
-            listener: (context, state) {},
-            child: Container(
-              child: RefreshIndicator(
-                onRefresh: () => _homeBloc.fetchData(),
-                child: _buildStateView(),
-              ),
-            ),
-          ),
+    return BlocListener<HomeBloc, HomeState>(
+      listener: (context, state) {},
+      child: Container(
+        child: RefreshIndicator(
+          onRefresh: () => _homeBloc.fetchData(),
+          child: _buildStateView(),
         ),
       ),
     );
@@ -107,13 +44,17 @@ class _HomePageState extends State<HomePage> {
     return BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
       if (state is HomeLoadingState) {
         return _buildLoadingProgress();
-      } else if (state is HomeFailureState) {
-        return _buildError(true);
-      } else if (state is HomeSuccessState) {
-        return _buildListView();
-      } else {
-        return Container();
       }
+
+      if (state is HomeFailureState) {
+        return _buildError(true);
+      }
+
+      if (state is HomeSuccessState) {
+        return _buildListView();
+      }
+
+      return Container();
     });
   }
 

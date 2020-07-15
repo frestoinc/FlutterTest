@@ -3,15 +3,16 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterapp/extension/constants.dart';
-import 'package:flutterapp/extension/string.dart';
-import 'package:flutterapp/ui/home/home_ui.dart';
+import 'package:flutterapp/data/entities/user.dart';
+import 'package:flutterapp/data/manager/data_manager.dart';
+import 'package:flutterapp/extension/extension.dart';
+import 'package:flutterapp/ui/authentication/authentication.dart';
 import 'package:rxdart/rxdart.dart';
 
-part 'login_event.dart';
-part 'login_state.dart';
-
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
+  final DataManager manager;
+  final AuthenticationBloc authBloc;
+
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -21,7 +22,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   final List<String> _list = new List(2);
 
-  LoginBloc() : super(LoginInitialState()) {
+  LoginBloc({@required this.manager, @required this.authBloc})
+      : super(LoginInitialState()) {
     emailController.addListener(() {
       this.onLoginEmailChanged();
     });
@@ -31,8 +33,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   @override
-  Stream<Transition<LoginEvent, LoginState>> transformEvents(
-      Stream<LoginEvent> events,
+  Stream<Transition<LoginEvent, LoginState>> transformEvents(Stream<LoginEvent> events,
       TransitionFunction<LoginEvent, LoginState> transitionFn) {
     final nonDebounceStream = events.where((event) {
       return (event is! LoginEmailChangedEvent &&
@@ -54,9 +55,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   Stream<LoginState> mapEventToState(LoginEvent event) async* {
     if (event is LoginEmailChangedEvent) {
       yield* _mapStateOfLoginEmailChanged();
-    } else if (event is LoginPasswordChangedEvent) {
+    }
+
+    if (event is LoginPasswordChangedEvent) {
       yield* _mapStateOfPasswordEmailChanged();
-    } else if (event is LoginButtonPressedEvent) {
+    }
+
+    if (event is LoginButtonPressedEvent) {
       yield* _mapStateOnButtonPressed();
     }
   }
@@ -79,7 +84,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     yield LoginLoadingState();
     await Future.delayed(Duration(seconds: 3), () {}); // simulation
     if (_email == LOGIN_EMAIL_HINT && _pwd == LOGIN_PASSWORD_HINT) {
-      yield LoginSuccessState();
+      authBloc.add(AuthenticationLoggedInEvent(
+          user: User(emailAddress: _email, password: _pwd)));
     } else {
       if (!_email.isEmailValid()) {
         _list[0] = EMAIL_ERROR;
@@ -88,7 +94,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         _list[1] = PWD_ERROR;
       }
       yield LoginFailureState(error: [_list[0], _list[1]]);
-      yield LoginFormFailureState();
+      yield LoginFormFailureState(error: Exception("Invalid Credentials"));
     }
   }
 
@@ -106,16 +112,50 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 
-  void navigate(BuildContext context) {
-    //todo save details to shared preference
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => HomePage()));
+  void saveCredentials() async {
+    await manager.saveCredentials(User(
+        emailAddress: emailController.text, password: passwordController.text));
   }
+}
+
+///EVENTS///
+@immutable
+abstract class LoginEvent extends Equatable {
+  const LoginEvent();
 
   @override
-  Future<Function> close() {
-    emailController.dispose();
-    passwordController.dispose();
-    return super.close();
-  }
+  List<Object> get props => [];
+}
+
+class LoginEmailChangedEvent extends LoginEvent {}
+
+class LoginPasswordChangedEvent extends LoginEvent {}
+
+class LoginButtonPressedEvent extends LoginEvent {}
+
+///STATES///
+@immutable
+abstract class LoginState extends Equatable {
+  const LoginState();
+
+  @override
+  List<Object> get props => [];
+}
+
+class LoginInitialState extends LoginState {}
+
+class LoginEditingState extends LoginState {}
+
+class LoginLoadingState extends LoginState {}
+
+class LoginFailureState extends LoginState {
+  final List<String> error;
+
+  const LoginFailureState({@required this.error});
+}
+
+class LoginFormFailureState extends LoginState {
+  final Exception error;
+
+  const LoginFormFailureState({@required this.error});
 }

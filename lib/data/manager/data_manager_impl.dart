@@ -31,4 +31,9 @@ class DataManagerImpl implements DataManager {
   Future<Either<Exception, bool>> saveCredentials(User user) {
     return _localPref.saveCredentials(user);
   }
+
+  @override
+  Future<bool> validCredentials() {
+    return _localPref.validCredentials();
+  }
 }

@@ -27,3 +27,10 @@ UnderlineInputBorder buildBorder() {
     ),
   );
 }
+
+extension Navigation on BuildContext {
+  void navigate(StatefulWidget route) {
+    Navigator.pushReplacement(
+        this, MaterialPageRoute(builder: (context) => route));
+  }
+}

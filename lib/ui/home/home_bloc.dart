@@ -5,19 +5,16 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutterapp/data/entities/model_entity.dart';
 import 'package:flutterapp/data/manager/data_manager.dart';
+import 'package:flutterapp/ui/authentication/authentication.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
-part 'home_event.dart';
-part 'home_state.dart';
-
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final DataManager manager;
+  final AuthenticationBloc authBloc;
 
-  /* @override
-  get initialState => HomeInitialState();*/
-
-  HomeBloc({@required this.manager}) : super(HomeInitialState());
+  HomeBloc({@required this.manager, @required this.authBloc})
+      : super(HomeInitialState());
 
   @override
   Stream<Transition<HomeEvent, HomeState>> transformEvents(
@@ -34,21 +31,23 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Stream<HomeState> mapEventToState(HomeEvent event) async* {
     if (event is HomeFetchedDataEvent) {
       yield* _mapStateOfFetchedData();
-    } else if (event is HomeErrorEvent) {
+    }
+
+    if (event is HomeErrorEvent) {
       yield* _mapStateOfErrorEvent(event.error);
-    } else if (event is HomeSuccessEvent) {
+    }
+
+    if (event is HomeSuccessEvent) {
       yield* _mapStateOfSuccessEvent(event.list);
     }
   }
 
   Stream<HomeState> _mapStateOfFetchedData() async* {
     yield HomeLoadingState();
-    await manager.getRepositories().then((value) => {
-          if (value.isLeft())
-            {value.leftMap((l) => this.add(HomeErrorEvent(error: l)))}
-          else
-            {value.map((r) => this.add(HomeSuccessEvent(list: r)))}
-        });
+    await manager.getRepositories().then((value) =>
+        value.fold(
+                (l) => this.add(HomeErrorEvent(error: l)),
+                (r) => this.add(HomeSuccessEvent(list: r))));
   }
 
   Stream<HomeState> _mapStateOfErrorEvent(Exception e) async* {
@@ -64,4 +63,54 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       this.add(HomeFetchedDataEvent());
     }
   }
+
+  void onLoggedOut() {
+    authBloc.add(AuthenticationLoggedOutEvent());
+  }
+}
+
+@immutable
+abstract class HomeEvent extends Equatable {
+  const HomeEvent();
+
+  @override
+  List<Object> get props => [];
+}
+
+class HomeFetchedDataEvent extends HomeEvent {}
+
+class HomeErrorEvent extends HomeEvent {
+  final Exception error;
+
+  const HomeErrorEvent({this.error});
+}
+
+class HomeSuccessEvent extends HomeEvent {
+  final List<ModelEntity> list;
+
+  const HomeSuccessEvent({this.list});
+}
+
+@immutable
+abstract class HomeState extends Equatable {
+  const HomeState();
+
+  @override
+  List<Object> get props => [];
+}
+
+class HomeInitialState extends HomeState {}
+
+class HomeLoadingState extends HomeState {}
+
+class HomeSuccessState extends HomeState {
+  final List<ModelEntity> entities;
+
+  const HomeSuccessState({this.entities});
+}
+
+class HomeFailureState extends HomeState {
+  final Exception error;
+
+  const HomeFailureState({@required this.error});
 }
