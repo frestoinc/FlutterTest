@@ -277,16 +277,20 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
       onDismissed: (_) => {print("onDismissed")},
       direction: DismissDirection.endToStart,
       background: _buildDismissBackground(),
-      child: ExpansionTile(
-        key: ValueKey(e),
-        trailing: Visibility(visible: false, child: Icon(Icons.more_vert)),
-        leading: _buildAvatarViewHolder(e),
-        title: _buildAuthorViewHolder(e),
-        subtitle: _buildNameViewHolder(e),
-        children: <Widget>[
-          _buildBody(e),
-        ],
-      ),
+      child: _buildExpansionTile(e),
+    );
+  }
+
+  Widget _buildExpansionTile(ModelEntity e) {
+    return ExpansionTile(
+      key: ValueKey(e),
+      trailing: Visibility(visible: false, child: Icon(Icons.more_vert)),
+      leading: _buildAvatarViewHolder(e),
+      title: _buildAuthorViewHolder(e),
+      subtitle: _buildNameViewHolder(e),
+      children: <Widget>[
+        _buildBody(e),
+      ],
     );
   }
 
