@@ -81,7 +81,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         _list[1] = PWD_ERROR;
       }
       yield LoginFailureState(error: [_list[0], _list[1]]);
-      yield LoginFormFailureState(error: Exception("Invalid Credentials"));
+      yield LoginFormFailureState(error: Exception(LOGIN_INVALID_CREDENTIALS));
     }
   }
 

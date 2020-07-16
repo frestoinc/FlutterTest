@@ -61,21 +61,20 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Stream<HomeState> _mapStateOfSortedEvent(
       int type, List<ModelEntity> list) async* {
     yield HomeLoadingState();
-    List<ModelEntity> clone = list;
     switch (type) {
       case 1:
-        clone.sort((a, b) => b.stars.compareTo(a.stars));
+        list.sort((a, b) => b.stars.compareTo(a.stars));
         break;
       case 2:
-        clone.sort((a, b) => b.forks.compareTo(a.forks));
+        list.sort((a, b) => b.forks.compareTo(a.forks));
         break;
       case 3:
-        clone.shuffle();
+        list.shuffle();
         break;
       default:
         break;
     }
-    this.add(HomeSuccessEvent(list: clone));
+    this.add(HomeSuccessEvent(list: list));
   }
 
   Stream<HomeState> _mapStateOfErrorEvent(Exception e) async* {
@@ -100,19 +99,30 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
   }
 
-  void onReorder(List<ModelEntity> list, int oldIndex, int newIndex) {
-    if (newIndex > oldIndex) {
-      newIndex -= 1;
+  void onReorder(int oldIndex, int newIndex) {
+    if (state is HomeSuccessState) {
+      var list = (state as HomeSuccessState).entities;
+      if (newIndex > oldIndex) {
+        newIndex -= 1;
+      }
+      final ModelEntity entity = list.removeAt(oldIndex);
+      list.insert(newIndex, entity);
+      this.add(HomeSortedEvent(type: 4, list: list));
     }
-    final ModelEntity entity = list.removeAt(oldIndex);
-    list.insert(newIndex, entity);
-    this.add(HomeSortedEvent(type: 4, list: list));
   }
 
   void _sortList(int type) async {
     await manager.getRepositories().then((value) => value.fold(
         (l) => this.add(HomeErrorEvent(error: l)),
         (r) => this.add(HomeSortedEvent(type: type, list: r))));
+  }
+
+  void deleteItemList(ModelEntity entity) {
+    if (state is HomeSuccessState) {
+      var list = (state as HomeSuccessState).entities;
+      list.remove(entity);
+      this.add(HomeSortedEvent(type: 5, list: list));
+    }
   }
 }
 

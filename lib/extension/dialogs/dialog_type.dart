@@ -6,9 +6,9 @@ enum DialogType {
 extension DialogStrings on DialogType {
   String get title {
     switch (this) {
-      case DialogType.DIALOG_CONFIRM_DELETE:
-        return "QUIT APPLICATION";
       case DialogType.DIALOG_EXIT_APP:
+        return "QUIT APPLICATION";
+      case DialogType.DIALOG_CONFIRM_DELETE:
         return "DELETE ENTRY";
       default:
         return null;
@@ -17,9 +17,9 @@ extension DialogStrings on DialogType {
 
   String get message {
     switch (this) {
-      case DialogType.DIALOG_CONFIRM_DELETE:
-        return "Confirm Quit Application?";
       case DialogType.DIALOG_EXIT_APP:
+        return "Confirm Quit Application?";
+      case DialogType.DIALOG_CONFIRM_DELETE:
         return "Continue to delete entry?";
       default:
         return "";

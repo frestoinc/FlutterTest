@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterapp/data/entities/model_entity.dart';
 import 'package:flutterapp/extension/constants.dart';
+import 'package:flutterapp/extension/dialogs/dialog_listener.dart';
+import 'package:flutterapp/extension/dialogs/dialog_type.dart';
 import 'package:flutterapp/extension/string.dart';
 import 'package:flutterapp/ui/authentication/authentication.dart';
 import 'package:flutterapp/ui/extension/widget_extension.dart';
@@ -13,7 +15,7 @@ class HomeContent extends StatefulWidget {
   State<StatefulWidget> createState() => _HomeContentState();
 }
 
-class _HomeContentState extends State<HomeContent> {
+class _HomeContentState extends State<HomeContent> implements DialogListener {
   HomeBloc _homeBloc;
   AuthenticationBloc _authBloc;
 
@@ -103,7 +105,7 @@ class _HomeContentState extends State<HomeContent> {
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(6, 0, 0, 0),
-                child: Text("Sort By Stars"),
+                child: Text(HOME_OPTION_SORT_STAR),
               ),
             ],
           ),
@@ -121,7 +123,7 @@ class _HomeContentState extends State<HomeContent> {
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(6, 0, 0, 0),
-                child: Text("Sort By Forks"),
+                child: Text(HOME_OPTION_SORT_FORK),
               ),
             ],
           ),
@@ -139,7 +141,7 @@ class _HomeContentState extends State<HomeContent> {
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(6, 0, 0, 0),
-                child: Text("Sort Randomly"),
+                child: Text(HOME_OPTION_SORT_RANDOM),
               ),
             ],
           ),
@@ -158,7 +160,7 @@ class _HomeContentState extends State<HomeContent> {
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(6, 2, 0, 2),
-                child: Text("Log Out"),
+                child: Text(LOG_OUT),
               ),
             ],
           ),
@@ -221,7 +223,7 @@ class _HomeContentState extends State<HomeContent> {
         height: 100,
         child: CircularProgressIndicator(
           strokeWidth: 8.0,
-          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF31B057)),
+          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF52575C)),
         ),
       ),
     );
@@ -252,7 +254,7 @@ class _HomeContentState extends State<HomeContent> {
         : Scaffold(
             backgroundColor: Colors.white,
             body: ReorderableListView(
-              onReorder: (int a, int b) => _homeBloc.onReorder(_data, a, b),
+              onReorder: (a, b) => _homeBloc.onReorder(a, b),
               children: _getItemList(_data),
             ),
           );
@@ -270,8 +272,9 @@ class _HomeContentState extends State<HomeContent> {
   Widget _buildDismissibleList(int index, ModelEntity e) {
     return Dismissible(
       key: ValueKey(e),
-      //confirmDismiss: //todo,
-      onDismissed: (_) => {},
+      confirmDismiss: (direction) =>
+          context.buildAlertDialog(DialogType.DIALOG_CONFIRM_DELETE, e, this),
+      onDismissed: (_) => {print("onDismissed")},
       direction: DismissDirection.endToStart,
       background: _buildDismissBackground(),
       child: ExpansionTile(
@@ -539,5 +542,15 @@ class _HomeContentState extends State<HomeContent> {
                 _homeBloc.fetchData(),
               }),
     );
+  }
+
+  @override
+  void onNegativeButtonClicked(DialogType type, dynamic t) {
+    print("onNegativeButtonClicked: $type, $t");
+  }
+
+  @override
+  void onPositiveButtonClicked(DialogType type, dynamic t) {
+    _homeBloc.deleteItemList(t as ModelEntity);
   }
 }
