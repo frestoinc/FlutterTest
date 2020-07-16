@@ -29,9 +29,9 @@ extension DialogStrings on DialogType {
   String get pBtn {
     switch (this) {
       case DialogType.DIALOG_CONFIRM_DELETE:
-        return "Yes";
-      case DialogType.DIALOG_EXIT_APP:
         return "Delete";
+      case DialogType.DIALOG_EXIT_APP:
+        return "Yes";
       default:
         return null;
     }
@@ -40,9 +40,9 @@ extension DialogStrings on DialogType {
   String get nBtn {
     switch (this) {
       case DialogType.DIALOG_CONFIRM_DELETE:
-        return "No";
-      case DialogType.DIALOG_EXIT_APP:
         return "Cancel";
+      case DialogType.DIALOG_EXIT_APP:
+        return "No";
       default:
         return null;
     }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterapp/data/entities/model_entity.dart';
 import 'package:flutterapp/extension/constants.dart';
@@ -34,35 +35,53 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
   }
 
   @override
+  void onNegativeButtonClicked(DialogType type, dynamic t) {
+    print("onNegativeButtonClicked: $type, $t");
+  }
+
+  @override
+  void onPositiveButtonClicked(DialogType type, dynamic t) {
+    if (type == DialogType.DIALOG_CONFIRM_DELETE) {
+      _homeBloc.deleteItemList(t as ModelEntity);
+    } else {
+      SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[_buildDrawerHeader(), ListTile()],
+    return WillPopScope(
+      onWillPop: () =>
+          context.buildAlertDialog(DialogType.DIALOG_EXIT_APP, null, this),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[_buildDrawerHeader(), ListTile()],
+          ),
         ),
-      ),
-      appBar: AppBar(
-        title: Text(
-          HOME_TITLE,
-          style: const TextStyle(color: const Color(0xFF25282B)),
+        appBar: AppBar(
+          title: Text(
+            HOME_TITLE,
+            style: const TextStyle(color: const Color(0xFF25282B)),
+          ),
+          centerTitle: true,
+          backgroundColor: Colors.white,
+          iconTheme: IconThemeData(
+            color: Color(0xFF25282B),
+          ),
+          actions: [
+            _buildPopUpMenu(),
+          ],
         ),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(
-          color: Color(0xFF25282B),
-        ),
-        actions: [
-          _buildPopUpMenu(),
-        ],
-      ),
-      body: BlocListener<HomeBloc, HomeState>(
-        listener: (context, state) {},
-        child: Container(
-          child: RefreshIndicator(
-            onRefresh: () => _homeBloc.fetchData(),
-            child: _buildStateView(),
+        body: BlocListener<HomeBloc, HomeState>(
+          listener: (context, state) {},
+          child: Container(
+            child: RefreshIndicator(
+              onRefresh: () => _homeBloc.fetchData(),
+              child: _buildStateView(),
+            ),
           ),
         ),
       ),
@@ -274,7 +293,6 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
       key: ValueKey(e),
       confirmDismiss: (direction) =>
           context.buildAlertDialog(DialogType.DIALOG_CONFIRM_DELETE, e, this),
-      onDismissed: (_) => {print("onDismissed")},
       direction: DismissDirection.endToStart,
       background: _buildDismissBackground(),
       child: _buildExpansionTile(e),
@@ -546,15 +564,5 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
                 _homeBloc.fetchData(),
               }),
     );
-  }
-
-  @override
-  void onNegativeButtonClicked(DialogType type, dynamic t) {
-    print("onNegativeButtonClicked: $type, $t");
-  }
-
-  @override
-  void onPositiveButtonClicked(DialogType type, dynamic t) {
-    _homeBloc.deleteItemList(t as ModelEntity);
   }
 }

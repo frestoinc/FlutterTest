@@ -6,6 +6,7 @@
 - Form Validation
 - Drag-And-Drop
 - List Re-Ordering
+- Swipe to Dismiss
 - SharedPreferences
 - Repository 
 
