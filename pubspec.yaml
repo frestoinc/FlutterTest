@@ -42,6 +42,7 @@ dependencies:
   #bloc
   bloc: ^5.0.0
   flutter_bloc: ^5.0.0
+  bloc_test: ^6.0.0
 
   #di
   get_it: ^4.0.2
