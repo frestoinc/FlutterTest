@@ -5,17 +5,17 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutterapp/data/entities/entities.dart';
 import 'package:flutterapp/data/entities/model_entity.dart';
-import 'package:flutterapp/data/manager/data_manager.dart';
-import 'package:flutterapp/ui/authentication/authentication.dart';
+import 'package:flutterapp/extension/response.dart';
+import 'package:flutterapp/ui/authentication/authentication_bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  final DataManager manager;
   final AuthenticationBloc authBloc;
 
-  HomeBloc({@required this.manager, @required this.authBloc})
-      : super(HomeInitialState());
+  HomeBloc({@required this.authBloc})
+      : assert(authBloc != null),
+        super(HomeInitialState());
 
   @override
   Stream<Transition<HomeEvent, HomeState>> transformEvents(
@@ -51,11 +51,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   Stream<HomeState> _mapStateOfFetchedData() async* {
     yield HomeLoadingState();
-    await manager.getRepositories().then(
-        (value) => value.fold((l) => this.add(HomeErrorEvent(error: l)), (r) {
-              r.shuffle();
-              this.add(HomeSuccessEvent(list: r));
-            }));
+    await authBloc.manager.getRepositories().then((value) {
+      value is SuccessState
+          ? add(HomeSuccessEvent(list: value.value))
+          : add(HomeErrorEvent(error: (value as ErrorState).exception));
+    });
   }
 
   Stream<HomeState> _mapStateOfSortedEvent(
@@ -74,7 +74,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       default:
         break;
     }
-    this.add(HomeSuccessEvent(list: list));
+    add(HomeSuccessEvent(list: list));
   }
 
   Stream<HomeState> _mapStateOfErrorEvent(Exception e) async* {
@@ -87,7 +87,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   Future<Null> fetchData() async {
     if (state is! HomeLoadingState) {
-      this.add(HomeFetchedDataEvent());
+      add(HomeFetchedDataEvent());
     }
   }
 
@@ -105,23 +105,24 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       if (newIndex > oldIndex) {
         newIndex -= 1;
       }
-      final ModelEntity entity = list.removeAt(oldIndex);
-      list.insert(newIndex, entity);
-      this.add(HomeSortedEvent(type: 4, list: list));
+      list.insert(newIndex, list.removeAt(oldIndex));
+      add(HomeSortedEvent(type: 4, list: list));
     }
   }
 
   void _sortList(int type) async {
-    await manager.getRepositories().then((value) => value.fold(
-        (l) => this.add(HomeErrorEvent(error: l)),
-        (r) => this.add(HomeSortedEvent(type: type, list: r))));
+    await authBloc.manager.getRepositories().then((value) {
+      value is SuccessState
+          ? add(HomeSortedEvent(type: type, list: value.value))
+          : add(HomeErrorEvent(error: (value as ErrorState).exception));
+    });
   }
 
   void deleteItemList(ModelEntity entity) {
     if (state is HomeSuccessState) {
       var list = (state as HomeSuccessState).entities;
       list.remove(entity);
-      this.add(HomeSortedEvent(type: 5, list: list));
+      add(HomeSortedEvent(type: 5, list: list));
     }
   }
 }

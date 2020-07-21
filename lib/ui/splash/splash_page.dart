@@ -13,10 +13,11 @@ class _SplashPageState extends State<SplashPage>
 
   void _toggleState() {
     _loaded = !_loaded;
-    if (_loaded)
+    if (_loaded) {
       _controller.reverse();
-    else
+    } else {
       _controller.forward();
+    }
   }
 
   @override
@@ -47,8 +48,8 @@ class _SplashPageState extends State<SplashPage>
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        image: const DecorationImage(
-          image: const AssetImage('assets/images/background.jpg'),
+        image: DecorationImage(
+          image: AssetImage('assets/images/background.jpg'),
           fit: BoxFit.cover,
         ),
       ),
@@ -70,8 +71,8 @@ class _SplashPageState extends State<SplashPage>
       duration: const Duration(milliseconds: 250),
       switchInCurve: Curves.easeIn,
       switchOutCurve: Curves.easeOut,
-      child: new Image.asset(
-        _loaded ? "assets/images/door1.png" : "assets/images/door2.png",
+      child: Image.asset(
+        _loaded ? 'assets/images/door1.png' : 'assets/images/door2.png',
         key: ValueKey<bool>(_loaded),
       ),
     );

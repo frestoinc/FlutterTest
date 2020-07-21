@@ -24,7 +24,7 @@ Widget buildSpacer(double height) {
 
 UnderlineInputBorder buildBorder() {
   return UnderlineInputBorder(
-    borderSide: new BorderSide(
+    borderSide: BorderSide(
       color: const Color(0xFF31B057),
     ),
   );
@@ -33,7 +33,7 @@ UnderlineInputBorder buildBorder() {
 extension Navigation on BuildContext {
   void navigate(StatefulWidget route) {
     Navigator.pushReplacement(
-        this, MaterialPageRoute(builder: (context) => route));
+        this, MaterialPageRoute(builder: (BuildContext context) => route));
   }
 
   Future<bool> buildAlertDialog(

@@ -1,18 +1,24 @@
+import 'dart:async';
 import 'dart:convert';
 
-import 'package:dartz/dartz.dart';
 import 'package:flutterapp/data/entities/model_entity.dart';
 import 'package:flutterapp/extension/constants.dart';
+import 'package:flutterapp/extension/response.dart';
 import 'package:http/http.dart' as http;
 
 class ApiClient {
-  Future<Either<Exception, List<ModelEntity>>> getRepositories() async {
+  Future<Response> getRepositories() async {
     try {
-      final _response = await http.get(WEB_API + WEB_API_TOKEN);
+      final _response = await http
+          .get(WEB_API + WEB_API_TOKEN)
+          .timeout(Duration(seconds: 10), onTimeout: () {
+        throw TimeoutException('Timeout after 10 sec');
+      });
       final _bodyList = jsonDecode(_response.body) as List;
-      return Right(_bodyList.map((e) => ModelEntity.fromJson(e)).toList());
+      return Response<List<ModelEntity>>.success(
+          _bodyList.map((e) => ModelEntity.fromJson(e)).toList());
     } on Exception catch (e) {
-      return Left(e);
+      return Response<Exception>.error(e);
     }
   }
 }

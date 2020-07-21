@@ -1,0 +1,10 @@
+include: package:pedantic/analysis_options.yaml
+
+#SEE https://dart.dev/guides/language/analysis-options#excluding-code-from-analysis for more options
+
+#optional
+analyzer:
+  exclude:
+    - '**/generated/**'
+    - flutter/**
+    - lib/data/entities/*.g.dart #exclude auto generated dart file

@@ -7,9 +7,9 @@ extension DialogStrings on DialogType {
   String get title {
     switch (this) {
       case DialogType.DIALOG_EXIT_APP:
-        return "QUIT APPLICATION";
+        return 'QUIT APPLICATION';
       case DialogType.DIALOG_CONFIRM_DELETE:
-        return "DELETE ENTRY";
+        return 'DELETE ENTRY';
       default:
         return null;
     }
@@ -18,20 +18,20 @@ extension DialogStrings on DialogType {
   String get message {
     switch (this) {
       case DialogType.DIALOG_EXIT_APP:
-        return "Confirm Quit Application?";
+        return 'Confirm Quit Application?';
       case DialogType.DIALOG_CONFIRM_DELETE:
-        return "Continue to delete entry?";
+        return 'Continue to delete entry?';
       default:
-        return "";
+        return '';
     }
   }
 
   String get pBtn {
     switch (this) {
       case DialogType.DIALOG_CONFIRM_DELETE:
-        return "Delete";
+        return 'Delete';
       case DialogType.DIALOG_EXIT_APP:
-        return "Yes";
+        return 'Yes';
       default:
         return null;
     }
@@ -40,9 +40,9 @@ extension DialogStrings on DialogType {
   String get nBtn {
     switch (this) {
       case DialogType.DIALOG_CONFIRM_DELETE:
-        return "Cancel";
+        return 'Cancel';
       case DialogType.DIALOG_EXIT_APP:
-        return "No";
+        return 'No';
       default:
         return null;
     }

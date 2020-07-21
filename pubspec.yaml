@@ -42,16 +42,12 @@ dependencies:
   #bloc
   bloc: ^5.0.0
   flutter_bloc: ^5.0.0
-  bloc_test: ^6.0.0
 
   #di
   get_it: ^4.0.2
 
   # rxdart
   rxdart: ^0.24.1
-
-  #Either<L,R>
-  dartz: ^0.9.1
 
   #serialization
   json_serializable: 3.3.0  #flutter packages pub run build_runner build
@@ -62,12 +58,14 @@ dependencies:
   #widgets
   functional_widget_annotation: ^0.5.1
 
+  #static-code-analysis
+  pedantic: ^1.9.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   build_runner: ^1.10.0
-  functional_widget: ^0.7.3
+  bloc_test: ^6.0.0
 
 
 # For information on the generic Dart part of this file, see the

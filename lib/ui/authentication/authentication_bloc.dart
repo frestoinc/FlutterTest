@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutterapp/data/entities/entities.dart';
 import 'package:flutterapp/data/manager/data_manager.dart';
+import 'package:flutterapp/extension/response.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -12,7 +13,8 @@ class AuthenticationBloc
   final DataManager manager;
 
   AuthenticationBloc({@required this.manager})
-      : super(AuthenticationInitialState());
+      : assert(manager != null),
+        super(AuthenticationInitialState());
 
   @override
   Stream<Transition<AuthenticationEvent, AuthenticationState>> transformEvents(
@@ -33,26 +35,30 @@ class AuthenticationBloc
     yield AuthenticationInProgressState();
 
     if (event is AuthenticationStartedEvent) {
-      final valid = await manager.validCredentials();
+      var valid = await manager.validCredentials();
 
       await Future.delayed(Duration(seconds: 6), () {});
 
       if (valid) {
-        final credentials = await manager
-            .readCredentials()
-            .then((value) => value.fold((l) => "Unknown", (r) => r));
-        yield AuthenticationSuccessState(emailAddress: credentials);
+        var credentials = await manager.readCredentials();
+        if (credentials is SuccessState) {
+          yield AuthenticationSuccessState(emailAddress: (credentials.value));
+        } else {
+          yield AuthenticationFailureState();
+        }
       } else {
         yield AuthenticationFailureState();
       }
     }
 
+    ///unhandled exception if saveCredentials failed
     if (event is AuthenticationLoggedInEvent) {
       yield AuthenticationInProgressState();
       await manager.saveCredentials(event.user);
       yield AuthenticationSuccessState(emailAddress: event.user.emailAddress);
     }
 
+    ///unhandled exception if deleteCredentials failed
     if (event is AuthenticationLoggedOutEvent) {
       yield AuthenticationInProgressState();
       await manager.deleteCredentials();
@@ -61,7 +67,7 @@ class AuthenticationBloc
   }
 
   void onLoggedOutPressed() {
-    this.add(AuthenticationLoggedOutEvent());
+    add(AuthenticationLoggedOutEvent());
   }
 }
 

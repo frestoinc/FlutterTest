@@ -6,7 +6,7 @@ import 'package:flutterapp/extension/constants.dart';
 import 'package:flutterapp/extension/dialogs/dialog_listener.dart';
 import 'package:flutterapp/extension/dialogs/dialog_type.dart';
 import 'package:flutterapp/extension/string.dart';
-import 'package:flutterapp/ui/authentication/authentication.dart';
+import 'package:flutterapp/ui/authentication/authentication_bloc.dart';
 import 'package:flutterapp/ui/extension/widget_extension.dart';
 
 import 'home_bloc.dart';
@@ -36,7 +36,7 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
 
   @override
   void onNegativeButtonClicked(DialogType type, dynamic t) {
-    print("onNegativeButtonClicked: $type, $t");
+    print('onNegativeButtonClicked: $type, $t');
   }
 
   @override
@@ -64,7 +64,7 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
         appBar: AppBar(
           title: Text(
             HOME_TITLE,
-            style: const TextStyle(color: const Color(0xFF25282B)),
+            style: const TextStyle(color: Color(0xFF25282B)),
           ),
           centerTitle: true,
           backgroundColor: Colors.white,
@@ -204,14 +204,14 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
     return BlocBuilder<AuthenticationBloc, AuthenticationState>(
       builder: (context, state) {
         return _buildUserText(state is AuthenticationSuccessState
-            ? "Email: ${state.emailAddress}"
-            : "Email: Unknown");
+            ? 'Email: ${state.emailAddress}'
+            : 'Email: Unknown');
       },
     );
   }
 
   Widget _buildUserName() {
-    return _buildUserText("Username: root");
+    return _buildUserText('Username: root');
   }
 
   Widget _buildUserText(String text) {
@@ -230,7 +230,7 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
     return CircleAvatar(
       backgroundColor: Colors.black,
       child: ClipRRect(
-        child: Image.asset("assets/images/user.png"),
+        child: Image.asset('assets/images/user.png'),
       ),
     );
   }
@@ -326,7 +326,7 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
               color: Colors.white,
             ),
             Text(
-              "Delete",
+              'Delete',
               style: TextStyle(
                 color: Colors.white,
               ),
@@ -345,7 +345,7 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
         fit: BoxFit.cover,
         width: 40,
         height: 40,
-        placeholder: "assets/images/image_error.png",
+        placeholder: 'assets/images/image_error.png',
         image: model.avatar,
       ),
     );
@@ -425,11 +425,11 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
               width: 16,
               height: 16,
               decoration: BoxDecoration(
-                color: model.languageColor.parseColorFromHex(),
+                color: model.languageColor?.parseColorFromHex() ?? Colors.black,
                 shape: BoxShape.circle,
               )),
           Text(
-            model.language == null ? "Unknown" : model.language,
+            model.language ?? 'Unknown',
             textAlign: TextAlign.start,
             style: TextStyle(
               color: const Color(0xFF52575C),
@@ -452,8 +452,8 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
               width: 16,
               height: 16,
               decoration: const BoxDecoration(
-                image: const DecorationImage(
-                  image: const AssetImage('assets/images/star.png'),
+                image: DecorationImage(
+                  image: AssetImage('assets/images/star.png'),
                   fit: BoxFit.fill,
                 ),
                 shape: BoxShape.rectangle,
@@ -482,8 +482,8 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
               width: 16,
               height: 16,
               decoration: const BoxDecoration(
-                image: const DecorationImage(
-                  image: const AssetImage('assets/images/fork.png'),
+                image: DecorationImage(
+                  image: AssetImage('assets/images/fork.png'),
                   fit: BoxFit.fill,
                 ),
                 shape: BoxShape.rectangle,

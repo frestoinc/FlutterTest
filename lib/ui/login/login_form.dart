@@ -13,7 +13,7 @@ class _LoginFormState extends State<LoginForm> {
   LoginBloc _loginBloc;
   bool obscure = true;
 
-  _toggle() {
+  void _toggle() {
     setState(() {
       obscure = !obscure;
     });
@@ -70,7 +70,7 @@ class _LoginFormState extends State<LoginForm> {
                       softWrap: true,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
-                          color: const Color(0xFF52575C),
+                          color: Color(0xFF52575C),
                           fontSize: 28,
                           fontFamily: 'RobotoBold'),
                     ),

@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterapp/data/manager/data_manager.dart';
-import 'package:flutterapp/ui/home/home.dart';
-import 'package:flutterapp/ui/login/login_page.dart';
 import 'package:flutterapp/ui/splash/splash_page.dart';
 
+import 'data/manager/data_manager.dart';
 import 'di/inject.dart';
-import 'ui/authentication/authentication.dart';
+import 'ui/authentication/authentication_bloc.dart';
+import 'ui/home/home_page.dart';
+import 'ui/login/login_page.dart';
 
 class CustomBlocObserver extends BlocObserver {
   @override
   void onEvent(Bloc bloc, Object event) {
-    print("bloc: $bloc, event: $event");
+    print('bloc: $bloc, event: $event');
     super.onEvent(bloc, event);
   }
 
   @override
   void onTransition(Bloc bloc, Transition transition) {
-    print("bloc: $bloc, transition: $transition");
+    print('bloc: $bloc, transition: $transition');
     super.onTransition(bloc, transition);
   }
 
   @override
   void onError(Bloc bloc, Object error, StackTrace stackTrace) {
-    print("bloc: $bloc, error: $error, stackTrace: $stackTrace");
+    print('bloc: $bloc, error: $error, stackTrace: $stackTrace');
     super.onError(bloc, error, stackTrace);
   }
 }
