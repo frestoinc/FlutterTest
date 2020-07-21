@@ -12,8 +12,7 @@ class AuthenticationBloc
   final DataManager manager;
 
   AuthenticationBloc({@required this.manager})
-      : assert(manager != null),
-        super(AuthenticationInitialState());
+      : super(AuthenticationInitialState());
 
   @override
   Stream<Transition<AuthenticationEvent, AuthenticationState>> transformEvents(
@@ -48,14 +47,12 @@ class AuthenticationBloc
       }
     }
 
-    ///unhandled exception if saveCredentials failed
     if (event is AuthenticationLoggedInEvent) {
       yield AuthenticationInProgressState();
       await manager.saveCredentials(event.user);
       yield AuthenticationSuccessState(emailAddress: event.user.emailAddress);
     }
 
-    ///unhandled exception if deleteCredentials failed
     if (event is AuthenticationLoggedOutEvent) {
       yield AuthenticationInProgressState();
       await manager.deleteCredentials();

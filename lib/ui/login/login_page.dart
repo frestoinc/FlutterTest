@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutterapp/data/manager/data_manager.dart';
+import 'package:flutterapp/di/inject.dart';
 import 'package:flutterapp/extension/constants.dart';
 import 'package:flutterapp/ui/authentication/authentication.dart';
 import 'package:flutterapp/ui/extension/widget_extension.dart';
@@ -22,6 +24,7 @@ class LoginPage extends StatelessWidget {
         body: BlocProvider(
           create: (context) {
             return LoginBloc(
+                manager: getIt<DataManager>(),
                 authBloc: BlocProvider.of<AuthenticationBloc>(context));
           },
           child: LoginForm(),

@@ -4,11 +4,13 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterapp/data/entities/user.dart';
+import 'package:flutterapp/data/manager/data_manager.dart';
 import 'package:flutterapp/extension/extension.dart';
 import 'package:flutterapp/ui/authentication/authentication.dart';
 import 'package:rxdart/rxdart.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
+  final DataManager manager;
   final AuthenticationBloc authBloc;
 
   final emailController = TextEditingController();
@@ -20,9 +22,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   final List<String> _list = new List(2);
 
-  LoginBloc({@required this.authBloc})
-      : assert(authBloc != null),
-        super(LoginInitialState());
+  LoginBloc({@required this.manager, @required this.authBloc})
+      : super(LoginInitialState());
 
   @override
   Stream<Transition<LoginEvent, LoginState>> transformEvents(
@@ -69,7 +70,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   Stream<LoginState> _mapStateOnButtonPressed() async* {
     yield LoginLoadingState();
     await Future.delayed(Duration(seconds: 3), () {}); // simulation
-    if (isCredentialValid()) {
+    if (_email == LOGIN_EMAIL_HINT && _pwd == LOGIN_PASSWORD_HINT) {
       authBloc.add(AuthenticationLoggedInEvent(
           user: User(emailAddress: _email, password: _pwd)));
     } else {
@@ -84,10 +85,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 
-  bool isCredentialValid() {
-    return _email == LOGIN_EMAIL_HINT && _pwd == LOGIN_PASSWORD_HINT;
-  }
-
   void onLoginEmailChanged() {
     this.add(LoginEmailChangedEvent());
   }
@@ -100,6 +97,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     if (state is! LoginLoadingState) {
       this.add(LoginButtonPressedEvent());
     }
+  }
+
+  void saveCredentials() async {
+    await manager.saveCredentials(User(
+        emailAddress: emailController.text, password: passwordController.text));
   }
 }
 
