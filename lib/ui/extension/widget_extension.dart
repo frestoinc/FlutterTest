@@ -3,7 +3,7 @@ import 'package:flutterapp/extension/dialogs/dialog_listener.dart';
 import 'package:flutterapp/extension/dialogs/dialog_type.dart';
 import 'package:functional_widget_annotation/functional_widget_annotation.dart';
 
-@widget
+@swidget
 Widget buildAppBar({String title}) {
   return AppBar(
     title: Text(
@@ -15,7 +15,7 @@ Widget buildAppBar({String title}) {
   );
 }
 
-@widget
+@swidget
 Widget buildSpacer(double height) {
   return SizedBox(
     height: height,

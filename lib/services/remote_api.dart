@@ -12,7 +12,7 @@ class ApiClient {
       final _response = await http
           .get(WEB_API + WEB_API_TOKEN)
           .timeout(Duration(seconds: 10), onTimeout: () {
-        throw TimeoutException('Timeout after 10 sec');
+        throw TimeoutException(null, Duration(seconds: 10));
       });
       final _bodyList = jsonDecode(_response.body) as List;
       return Response<List<ModelEntity>>.success(

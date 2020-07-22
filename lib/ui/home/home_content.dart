@@ -58,7 +58,17 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
         drawer: Drawer(
           child: ListView(
             padding: EdgeInsets.zero,
-            children: <Widget>[_buildDrawerHeader(), ListTile()],
+            children: <Widget>[
+              _buildDrawerHeader(),
+              ListTile(
+                title: Text('Navigate to Android (TODO)'),
+                onTap: () => Navigator.pop(context),
+              ),
+              ListTile(
+                title: Text('Navigate to IOS (TODO)'),
+                onTap: () => Navigator.pop(context),
+              )
+            ],
           ),
         ),
         appBar: AppBar(

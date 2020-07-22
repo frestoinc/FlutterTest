@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutterapp/data/entities/entities.dart';
 import 'package:flutterapp/data/manager/data_manager.dart';
@@ -15,6 +17,26 @@ void main() {
 
   tearDown(() {
     _manager = null;
+  });
+
+  group('Test Get Repositories', () {
+    test('Empty List', () async {
+      when(_manager.getRepositories()).thenAnswer(
+          (_) async => SuccessState<List<ModelEntity>>(<ModelEntity>[]));
+      expect(await _manager.getRepositories(),
+          isInstanceOf<SuccessState<List<ModelEntity>>>());
+      var _response = await _manager.getRepositories();
+      List<ModelEntity> list = (_response as SuccessState).value;
+      expect(list.length, 0);
+    });
+
+    test('Error', () async {
+      when(_manager.getRepositories())
+          .thenThrow(TimeoutException(null, Duration(seconds: 10)));
+      expect(() async => await _manager.getRepositories(), throwsException);
+      expect(() async => await _manager.getRepositories(),
+          throwsA(predicate((f) => f is Exception)));
+    });
   });
 
   group('Test Delete Credentials', () {

@@ -61,20 +61,22 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Stream<HomeState> _mapStateOfSortedEvent(
       int type, List<ModelEntity> list) async* {
     yield HomeLoadingState();
-    switch (type) {
-      case 1:
-        list.sort((a, b) => b.stars.compareTo(a.stars));
-        break;
-      case 2:
-        list.sort((a, b) => b.forks.compareTo(a.forks));
-        break;
-      case 3:
-        list.shuffle();
-        break;
-      default:
-        break;
+    if (list.length > 2) {
+      switch (type) {
+        case 1:
+          list.sort((a, b) => b.stars.compareTo(a.stars));
+          break;
+        case 2:
+          list.sort((a, b) => b.forks.compareTo(a.forks));
+          break;
+        case 3:
+          list.shuffle();
+          break;
+        default:
+          break;
+      }
     }
-    add(HomeSuccessEvent(list: list));
+    yield HomeSuccessState(entities: list);
   }
 
   Stream<HomeState> _mapStateOfErrorEvent(Exception e) async* {
