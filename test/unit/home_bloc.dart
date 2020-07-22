@@ -33,7 +33,7 @@ void main() {
 
   test('throws when Authentication bloc is null', () {
     expect(
-          () => HomeBloc(authBloc: null),
+      () => HomeBloc(authBloc: null),
       throwsAssertionError,
     );
   });
