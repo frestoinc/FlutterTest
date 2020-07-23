@@ -35,6 +35,7 @@ void main() {
         ),
       );
       expect(find.text('Flutter App Demo'), findsOneWidget);
+      expect(find.byKey(ValueKey(false)), findsOneWidget);
     });
   });
 

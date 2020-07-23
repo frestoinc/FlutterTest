@@ -166,10 +166,12 @@ class _LoginFormState extends State<LoginForm> {
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
       if (state is LoginLoadingState) {
         return CircularProgressIndicator(
+          key: ValueKey('btn_loading'),
           valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF31B057)),
         );
       }
       return SizedBox(
+        key: ValueKey('btn_idle'),
         width: double.infinity,
         child: RaisedButton(
             padding: const EdgeInsets.all(16),
@@ -191,9 +193,9 @@ class _LoginFormState extends State<LoginForm> {
               ),
             ),
             onPressed: () => {
-                  FocusScope.of(context).unfocus(),
-                  _loginBloc.onFormSubmitted(),
-                }),
+              FocusScope.of(context).unfocus(),
+              _loginBloc.onFormSubmitted(),
+            }),
       );
     });
   }

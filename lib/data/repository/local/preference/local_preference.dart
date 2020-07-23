@@ -56,7 +56,7 @@ class LocalPreferenceImpl implements LocalPreference {
   Future<bool> validCredentials() async {
     try {
       final _response = await _storage.read(key: USER_PREF_KEY);
-      return _response?.isNotEmpty;
+      return _response != null && _response.isNotEmpty;
     } on Exception catch (_) {
       return false;
     }
