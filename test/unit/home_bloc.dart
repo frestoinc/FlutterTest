@@ -38,17 +38,9 @@ void main() {
     );
   });
 
-  test('close does not emit new states', () {
-    expectLater(
-      _homeBloc,
-      emitsInOrder([HomeInitialState(), emitsDone]),
-    );
-    _homeBloc.close();
-  });
-
   group('Test HomeFetchedDataEvent', () {
-    blocTest('Test with empty list',
-        build: () async {
+    blocTest<HomeBloc, HomeState>('Test with empty list',
+        build: () {
           when(_authBloc.manager.getRepositories()).thenAnswer(
               (_) async => SuccessState<List<ModelEntity>>(<ModelEntity>[]));
           return _homeBloc;
@@ -68,8 +60,8 @@ void main() {
           expect(list.length, 0);
         });
 
-    blocTest('Test with error',
-        build: () async {
+    blocTest<HomeBloc, HomeState>('Test with error',
+        build: () {
           when(_manager.getRepositories()).thenAnswer((_) async =>
               ErrorState<Exception>(
                   TimeoutException(null, Duration(seconds: 10))));
@@ -91,26 +83,26 @@ void main() {
         });
   });
 
-  blocTest(
+  blocTest<HomeBloc, HomeState>(
     'Test HomeErrorEvent',
-    build: () async => _homeBloc,
+    build: () => _homeBloc,
     act: (bloc) => bloc.add(HomeErrorEvent(error: null)),
     wait: const Duration(milliseconds: 600),
     expect: [HomeFailureState(error: null)],
   );
 
-  blocTest(
+  blocTest<HomeBloc, HomeState>(
     'Test HomeSuccessEvent',
-    build: () async => _homeBloc,
+    build: () => _homeBloc,
     act: (bloc) => bloc.add(HomeSuccessEvent(list: null)),
     wait: const Duration(milliseconds: 600),
     expect: [HomeSuccessState(entities: null)],
   );
 
   group('Test HomeSortedEvent', () {
-    blocTest(
+    blocTest<HomeBloc, HomeState>(
       'Test with type 1, empty list',
-      build: () async {
+      build: () {
         return _homeBloc;
       },
       act: (bloc) => bloc.add(HomeSortedEvent(type: 1, list: <ModelEntity>[])),
@@ -119,8 +111,8 @@ void main() {
     );
 
     for (var i = 1; i < 3; i++) {
-      blocTest('Test with type',
-          build: () async {
+      blocTest<HomeBloc, HomeState>('Test with type',
+          build: () {
             return _homeBloc;
           },
           act: (bloc) => bloc.add(HomeSortedEvent(type: i, list: list)),

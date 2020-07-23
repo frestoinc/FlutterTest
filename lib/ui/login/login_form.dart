@@ -105,6 +105,7 @@ class _LoginFormState extends State<LoginForm> {
   Widget _buildPasswordField() {
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
       return TextField(
+        key: ValueKey('pwd_field'),
         controller: _loginBloc.passwordController,
         onSubmitted: (_) => FocusScope.of(context).unfocus(),
         onChanged: (_) => _loginBloc.onLoginPasswordChanged(),
@@ -140,6 +141,7 @@ class _LoginFormState extends State<LoginForm> {
   Widget _buildEmailField() {
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
       return TextField(
+        key: ValueKey('email_field'),
         onSubmitted: (_) => FocusScope.of(context).nextFocus(),
         controller: _loginBloc.emailController,
         onChanged: (_) => _loginBloc.onLoginEmailChanged(),
@@ -193,9 +195,9 @@ class _LoginFormState extends State<LoginForm> {
               ),
             ),
             onPressed: () => {
-              FocusScope.of(context).unfocus(),
-              _loginBloc.onFormSubmitted(),
-            }),
+                  FocusScope.of(context).unfocus(),
+                  _loginBloc.onFormSubmitted(),
+                }),
       );
     });
   }

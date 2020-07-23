@@ -40,11 +40,11 @@ dependencies:
   fluttertoast: ^7.0.1
 
   #bloc
-  bloc: ^5.0.1
-  flutter_bloc: ^5.0.1
+  bloc: ^6.0.1
+  flutter_bloc: ^6.0.1
 
   #di
-  get_it: ^4.0.2
+  get_it: ^4.0.4
 
   # rxdart
   rxdart: ^0.24.1
@@ -64,6 +64,9 @@ dependencies:
   #permissions
   permission_handler: ^5.0.1+1
 
+  #bdd test style
+  flutter_gherkin: ^1.1.8+3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -71,7 +74,7 @@ dev_dependencies:
     sdk: flutter
   test: any
   build_runner: ^1.10.0
-  bloc_test: ^6.0.1
+  bloc_test: ^7.0.0
 
 
 # For information on the generic Dart part of this file, see the

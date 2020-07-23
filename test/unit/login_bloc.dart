@@ -33,18 +33,10 @@ void main() {
     );
   });
 
-  test('close does not emit new states', () {
-    expectLater(
-      _loginBloc,
-      emitsInOrder([LoginInitialState(), emitsDone]),
-    );
-    _loginBloc.close();
-  });
-
   group('Test LoginEmailChangedEvent', () {
-    blocTest(
+    blocTest<LoginBloc, LoginState>(
       'Test with valid email format',
-      build: () async {
+      build: () {
         _loginBloc.emailController.text = 'abc@gmail.com';
         return _loginBloc;
       },
@@ -53,9 +45,9 @@ void main() {
       expect: [LoginEditingState()],
     );
 
-    blocTest(
+    blocTest<LoginBloc, LoginState>(
       'Test onLoginEmailChanged function with valid email format',
-      build: () async {
+      build: () {
         _loginBloc.emailController.text = 'abc@gmail.com';
         _loginBloc.onLoginEmailChanged();
         return _loginBloc;
@@ -64,9 +56,9 @@ void main() {
       expect: [LoginEditingState()],
     );
 
-    blocTest(
+    blocTest<LoginBloc, LoginState>(
       'Test with invalid email format',
-      build: () async {
+      build: () {
         _loginBloc.emailController.text = 'qwqrfase';
         return _loginBloc;
       },
@@ -75,9 +67,9 @@ void main() {
       expect: [LoginFailureState(error: null)],
     );
 
-    blocTest(
+    blocTest<LoginBloc, LoginState>(
       'Test onLoginEmailChanged function with invalid email format',
-      build: () async {
+      build: () {
         _loginBloc.emailController.text = 'qwrtasd';
         _loginBloc.onLoginEmailChanged();
         return _loginBloc;
@@ -88,9 +80,9 @@ void main() {
   });
 
   group('Test LoginPasswordChangedEvent', () {
-    blocTest(
+    blocTest<LoginBloc, LoginState>(
       'Test with valid pwd format',
-      build: () async {
+      build: () {
         _loginBloc.passwordController.text = '1234567';
         return _loginBloc;
       },
@@ -99,9 +91,9 @@ void main() {
       expect: [LoginEditingState()],
     );
 
-    blocTest(
+    blocTest<LoginBloc, LoginState>(
       'Test onLoginPasswordChanged function with valid pwd format',
-      build: () async {
+      build: () {
         _loginBloc.passwordController.text = '1234567';
         _loginBloc.onLoginPasswordChanged();
         return _loginBloc;
@@ -110,9 +102,9 @@ void main() {
       expect: [LoginEditingState()],
     );
 
-    blocTest(
+    blocTest<LoginBloc, LoginState>(
       'Test with invalid pwd format',
-      build: () async {
+      build: () {
         _loginBloc.passwordController.text = 'abc';
         return _loginBloc;
       },
@@ -121,9 +113,9 @@ void main() {
       expect: [LoginFailureState(error: null)],
     );
 
-    blocTest(
+    blocTest<LoginBloc, LoginState>(
       'Test onLoginPasswordChanged function with invalid pwd format',
-      build: () async {
+      build: () {
         _loginBloc.passwordController.text = 'abc';
         _loginBloc.onLoginPasswordChanged();
         return _loginBloc;
@@ -135,9 +127,9 @@ void main() {
 
   //todo review
   group('Test LoginButtonPressedEvent', () {
-    blocTest(
+    blocTest<LoginBloc, LoginState>(
       'Test onFormSubmitted function with valid credentials',
-      build: () async {
+      build: () {
         _loginBloc.emailController.text = LOGIN_EMAIL_HINT;
         _loginBloc.passwordController.text = LOGIN_PASSWORD_HINT;
         _loginBloc.onFormSubmitted();
@@ -149,9 +141,9 @@ void main() {
       ],
     );
 
-    blocTest(
+    blocTest<LoginBloc, LoginState>(
       'Test LoginButtonPressedEvent with valid credentials',
-      build: () async {
+      build: () {
         _loginBloc.emailController.text = LOGIN_EMAIL_HINT;
         _loginBloc.passwordController.text = LOGIN_PASSWORD_HINT;
         return _loginBloc;
@@ -163,9 +155,9 @@ void main() {
       ],
     );
 
-    blocTest(
+    blocTest<LoginBloc, LoginState>(
       'Test onFormSubmitted function with invalid credentials',
-      build: () async {
+      build: () {
         _loginBloc.emailController.text = 'abc@123.com';
         _loginBloc.passwordController.text = 'qwer54321';
         _loginBloc.onFormSubmitted();
@@ -179,9 +171,9 @@ void main() {
       ],
     );
 
-    blocTest(
+    blocTest<LoginBloc, LoginState>(
       'Test LoginButtonPressedEvent with invalid credentials',
-      build: () async {
+      build: () {
         _loginBloc.emailController.text = 'abc@123.com';
         _loginBloc.passwordController.text = 'qwer54321';
         return _loginBloc;

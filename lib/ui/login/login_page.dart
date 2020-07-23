@@ -10,6 +10,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      key: ValueKey('login_page'),
       decoration: const BoxDecoration(
         image: DecorationImage(
           image: AssetImage('assets/images/background.jpg'),

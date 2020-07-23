@@ -31,17 +31,10 @@ void main() {
     );
   });
 
-  test('close does not emit new states', () {
-    expectLater(
-      _bloc,
-      emitsInOrder([AuthenticationInitialState(), emitsDone]),
-    );
-    _bloc.close();
-  });
-
   group('Test AuthenticationStartedEvent', () {
-    blocTest('Test with no credentials',
-        build: () async {
+    blocTest<AuthenticationBloc, AuthenticationState>(
+        'Test with no credentials',
+        build: () {
           when(_manager.validCredentials()).thenAnswer((_) async => false);
           return _bloc;
         },
@@ -54,8 +47,10 @@ void main() {
         verify: (_) async {
           verify(_manager.validCredentials()).called(1);
         });
-    blocTest('Test with valid credentials',
-        build: () async {
+
+    blocTest<AuthenticationBloc, AuthenticationState>(
+        'Test with valid credentials',
+        build: () {
           when(_manager.validCredentials()).thenAnswer((_) async => true);
           when(_manager.readCredentials()).thenAnswer(
               (_) async => SuccessState<String>('abc123@gmail.com'));
@@ -73,8 +68,9 @@ void main() {
         });
   });
 
-  blocTest('Test AuthenticationLoggedInEvent with valid credentials',
-      build: () async => _bloc,
+  blocTest<AuthenticationBloc, AuthenticationState>(
+      'Test AuthenticationLoggedInEvent with valid credentials',
+      build: () => _bloc,
       act: (bloc) => bloc.add(AuthenticationLoggedInEvent(
           user: User(emailAddress: 'e', password: 'p'))),
       wait: const Duration(milliseconds: 600),
@@ -88,8 +84,9 @@ void main() {
       });
 
   group('Test AuthenticationLoggedOutEvent', () {
-    blocTest('Test AuthenticationLoggedOutEvent',
-        build: () async => _bloc,
+    blocTest<AuthenticationBloc, AuthenticationState>(
+        'Test AuthenticationLoggedOutEvent',
+        build: () => _bloc,
         act: (bloc) => bloc.add(AuthenticationLoggedOutEvent()),
         wait: const Duration(milliseconds: 600),
         expect: [AuthenticationInProgressState(), AuthenticationFailureState()],
@@ -97,8 +94,9 @@ void main() {
           verify(_manager.deleteCredentials()).called(1);
         });
 
-    blocTest('Test AuthenticationLoggedOutEvent',
-        build: () async {
+    blocTest<AuthenticationBloc, AuthenticationState>(
+        'Test AuthenticationLoggedOutEvent',
+        build: () {
           _bloc.onLoggedOutPressed();
           return _bloc;
         },

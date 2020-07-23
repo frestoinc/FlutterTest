@@ -42,14 +42,14 @@ packages:
       name: bloc
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.1"
+    version: "6.0.1"
   bloc_test:
     dependency: "direct dev"
     description:
       name: bloc_test
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.1"
+    version: "7.0.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -169,20 +169,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.16.1"
-  cubit:
-    dependency: transitive
-    description:
-      name: cubit
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.2"
-  cubit_test:
-    dependency: transitive
-    description:
-      name: cubit_test
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.1"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -229,19 +215,19 @@ packages:
       name: flutter_bloc
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.1"
-  flutter_cubit:
-    dependency: transitive
-    description:
-      name: flutter_cubit
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.0"
+    version: "6.0.1"
   flutter_driver:
     dependency: "direct dev"
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_gherkin:
+    dependency: "direct main"
+    description:
+      name: flutter_gherkin
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.8+3"
   flutter_secure_storage:
     dependency: "direct main"
     description:
@@ -284,7 +270,14 @@ packages:
       name: get_it
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.2"
+    version: "4.0.4"
+  gherkin:
+    dependency: transitive
+    description:
+      name: gherkin
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.8+2"
   glob:
     dependency: transitive
     description:
