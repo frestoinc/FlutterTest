@@ -3,6 +3,7 @@ import 'unit/authentication_bloc.dart' as authentication_bloc;
 import 'unit/home_bloc.dart' as home_bloc;
 import 'unit/login_bloc.dart' as login_bloc;
 import 'unit/mock_manager.dart' as mock_manager;
+import 'widget/main_page.dart' as main_page;
 
 void main() {
   ///bloc
@@ -13,4 +14,7 @@ void main() {
   ///data
   mock_manager.main();
   api_client.main();
+
+  ///ui
+  main_page.main();
 }
