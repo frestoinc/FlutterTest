@@ -10,7 +10,7 @@
 - Swipe to Dismiss
 - SharedPreferences
 - Repository 
-
+- Unit Test (To test just type 'flutter test test/all_tests.dart' on your terminal)
 - And More...
 
 ## Packages in this App:
