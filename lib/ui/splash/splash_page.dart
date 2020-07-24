@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterapp/extension/constants.dart';
+import 'package:flutterapp/ui/extension/widget_extension.dart';
 
 class SplashPage extends StatefulWidget {
   @override
@@ -48,12 +49,7 @@ class _SplashPageState extends State<SplashPage>
   Widget build(BuildContext context) {
     return Container(
       key: ValueKey('splash_page'),
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/images/background.jpg'),
-          fit: BoxFit.cover,
-        ),
-      ),
+      decoration: buildBackground(),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Column(

@@ -30,6 +30,15 @@ UnderlineInputBorder buildBorder() {
   );
 }
 
+Decoration buildBackground() {
+  return const BoxDecoration(
+    image: DecorationImage(
+      image: AssetImage('assets/images/background.jpg'),
+      fit: BoxFit.cover,
+    ),
+  );
+}
+
 extension Navigation on BuildContext {
   void navigate(StatefulWidget route) {
     Navigator.pushReplacement(

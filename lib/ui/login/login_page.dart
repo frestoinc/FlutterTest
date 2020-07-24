@@ -11,12 +11,7 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       key: ValueKey('login_page'),
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/images/background.jpg'),
-          fit: BoxFit.cover,
-        ),
-      ),
+      decoration: buildBackground(),
       child: Scaffold(
         appBar: buildAppBar(title: LOGIN_TITLE),
         backgroundColor: Colors.transparent,
