@@ -11,13 +11,6 @@ import 'package:rxdart/rxdart.dart';
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final AuthenticationBloc authBloc;
 
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-
-  String get _email => emailController.text.trim();
-
-  String get _pwd => passwordController.text.trim();
-
   final List<String> _list = List(2);
 
   LoginBloc({@required this.authBloc})
@@ -40,43 +33,43 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   @override
   Stream<LoginState> mapEventToState(LoginEvent event) async* {
     if (event is LoginEmailChangedEvent) {
-      yield* _mapStateOfLoginEmailChanged();
+      yield* _mapStateOfLoginEmailChanged(event.value);
     }
 
     if (event is LoginPasswordChangedEvent) {
-      yield* _mapStateOfPasswordEmailChanged();
+      yield* _mapStateOfPasswordEmailChanged(event.value);
     }
 
     if (event is LoginButtonPressedEvent) {
-      yield* _mapStateOnButtonPressed();
+      yield* _mapStateOnButtonPressed(event.user);
     }
   }
 
-  Stream<LoginState> _mapStateOfLoginEmailChanged() async* {
-    _list[0] = !_email.isEmailValid() ? EMAIL_ERROR : null;
-    yield !_email.isEmailValid()
-        ? LoginFailureState(error: [_list[0], _list[1]])
+  Stream<LoginState> _mapStateOfLoginEmailChanged(String value) async* {
+    _list[0] = !value.isEmailValid() ? EMAIL_ERROR : null;
+    yield !value.isEmailValid()
+        ? LoginFailureState(error: _list)
         : LoginEditingState();
   }
 
-  Stream<LoginState> _mapStateOfPasswordEmailChanged() async* {
-    _list[1] = !_pwd.isPasswordValid() ? PWD_ERROR : null;
-    yield !_pwd.isPasswordValid()
-        ? LoginFailureState(error: [_list[0], _list[1]])
+  Stream<LoginState> _mapStateOfPasswordEmailChanged(String value) async* {
+    _list[1] = !value.isPasswordValid() ? PWD_ERROR : null;
+    print('pwd error: ${_list[1]}');
+    yield !value.isPasswordValid()
+        ? LoginFailureState(error: _list)
         : LoginEditingState();
   }
 
-  Stream<LoginState> _mapStateOnButtonPressed() async* {
+  Stream<LoginState> _mapStateOnButtonPressed(User user) async* {
     yield LoginLoadingState();
     await Future.delayed(Duration(seconds: 3), () {}); // simulation
-    if (isCredentialValid()) {
-      authBloc.add(AuthenticationLoggedInEvent(
-          user: User(emailAddress: _email, password: _pwd)));
+    if (isCredentialValid(user)) {
+      authBloc.add(AuthenticationLoggedInEvent(user: user));
     } else {
-      if (!_email.isEmailValid()) {
+      if (!user.emailAddress.isEmailValid()) {
         _list[0] = EMAIL_ERROR;
       }
-      if (!_pwd.isPasswordValid()) {
+      if (!user.password.isPasswordValid()) {
         _list[1] = PWD_ERROR;
       }
       yield LoginFailureState(error: [_list[0], _list[1]]);
@@ -84,20 +77,22 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 
-  bool isCredentialValid() =>
-      _email == LOGIN_EMAIL_HINT && _pwd == LOGIN_PASSWORD_HINT;
+  bool isCredentialValid(User user) =>
+      user.emailAddress == LOGIN_EMAIL_HINT &&
+      user.password == LOGIN_PASSWORD_HINT;
 
-  void onLoginEmailChanged() {
-    add(LoginEmailChangedEvent());
+  void onLoginEmailChanged(String value) {
+    add(LoginEmailChangedEvent(value: value));
   }
 
-  void onLoginPasswordChanged() {
-    add(LoginPasswordChangedEvent());
+  void onLoginPasswordChanged(String value) {
+    add(LoginPasswordChangedEvent(value: value));
   }
 
-  void onFormSubmitted() {
+  void onFormSubmitted(String email, String pwd) {
     if (state is! LoginLoadingState) {
-      add(LoginButtonPressedEvent());
+      add(LoginButtonPressedEvent(
+          user: User(emailAddress: email, password: pwd)));
     }
   }
 }
@@ -111,11 +106,23 @@ abstract class LoginEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class LoginEmailChangedEvent extends LoginEvent {}
+class LoginEmailChangedEvent extends LoginEvent {
+  final String value;
 
-class LoginPasswordChangedEvent extends LoginEvent {}
+  const LoginEmailChangedEvent({this.value});
+}
 
-class LoginButtonPressedEvent extends LoginEvent {}
+class LoginPasswordChangedEvent extends LoginEvent {
+  final String value;
+
+  const LoginPasswordChangedEvent({this.value});
+}
+
+class LoginButtonPressedEvent extends LoginEvent {
+  final User user;
+
+  const LoginButtonPressedEvent({this.user});
+}
 
 ///STATES///
 @immutable

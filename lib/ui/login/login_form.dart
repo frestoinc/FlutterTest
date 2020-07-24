@@ -12,6 +12,8 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   LoginBloc _loginBloc;
   bool obscure = true;
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   void _toggle() {
     setState(() {
@@ -103,13 +105,39 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 
+  Widget _buildEmailField() {
+    return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
+      return TextField(
+        key: ValueKey('login_email_field'),
+        onSubmitted: (_) => FocusScope.of(context).nextFocus(),
+        controller: _emailController,
+        onChanged: (value) => _loginBloc.onLoginEmailChanged(value),
+        textInputAction: TextInputAction.next,
+        keyboardType: TextInputType.emailAddress,
+        maxLines: 1,
+        cursorColor: const Color(0xFF31B057),
+        style: TextStyle(color: const Color(0xFF52575C)),
+        decoration: InputDecoration(
+          hintText: LOGIN_EMAIL_HINT,
+          labelText: LOGIN_EMAIL_LABEL,
+          labelStyle: TextStyle(
+            color: const Color(0xFF31B057),
+          ),
+          enabledBorder: buildBorder(),
+          focusedBorder: buildBorder(),
+          errorText: (state is LoginFailureState) ? state.error[0] : null,
+        ),
+      );
+    });
+  }
+
   Widget _buildPasswordField() {
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
       return TextField(
         key: ValueKey('login_pwd_field'),
-        controller: _loginBloc.passwordController,
+        controller: _passwordController,
         onSubmitted: (_) => FocusScope.of(context).unfocus(),
-        onChanged: (_) => _loginBloc.onLoginPasswordChanged(),
+        onChanged: (value) => _loginBloc.onLoginPasswordChanged(value),
         textInputAction: TextInputAction.done,
         obscureText: obscure,
         keyboardType: TextInputType.text,
@@ -134,32 +162,6 @@ class _LoginFormState extends State<LoginForm> {
             color: const Color(0xFF31B057),
             iconSize: 18.0,
           ),
-        ),
-      );
-    });
-  }
-
-  Widget _buildEmailField() {
-    return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
-      return TextField(
-        key: ValueKey('login_email_field'),
-        onSubmitted: (_) => FocusScope.of(context).nextFocus(),
-        controller: _loginBloc.emailController,
-        onChanged: (_) => _loginBloc.onLoginEmailChanged(),
-        textInputAction: TextInputAction.next,
-        keyboardType: TextInputType.emailAddress,
-        maxLines: 1,
-        cursorColor: const Color(0xFF31B057),
-        style: TextStyle(color: const Color(0xFF52575C)),
-        decoration: InputDecoration(
-          hintText: LOGIN_EMAIL_HINT,
-          labelText: LOGIN_EMAIL_LABEL,
-          labelStyle: TextStyle(
-            color: const Color(0xFF31B057),
-          ),
-          enabledBorder: buildBorder(),
-          focusedBorder: buildBorder(),
-          errorText: (state is LoginFailureState) ? state.error[0] : null,
         ),
       );
     });
@@ -195,9 +197,11 @@ class _LoginFormState extends State<LoginForm> {
                 fontFamily: 'RobotoReg',
               ),
             ),
-            onPressed: () => {
+            onPressed: () =>
+            {
                   FocusScope.of(context).unfocus(),
-                  _loginBloc.onFormSubmitted(),
+                  _loginBloc.onFormSubmitted(
+                      _emailController.text, _passwordController.text),
                 }),
       );
     });

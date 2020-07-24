@@ -1,5 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutterapp/data/entities/entities.dart';
 import 'package:flutterapp/extension/extension.dart';
 import 'package:flutterapp/ui/authentication/authentication_bloc.dart';
 import 'package:flutterapp/ui/login/login_bloc.dart';
@@ -37,10 +38,9 @@ void main() {
     blocTest<LoginBloc, LoginState>(
       'Test with valid email format',
       build: () {
-        _loginBloc.emailController.text = 'abc@gmail.com';
         return _loginBloc;
       },
-      act: (bloc) => bloc.add(LoginEmailChangedEvent()),
+      act: (bloc) => bloc.add(LoginEmailChangedEvent(value: 'abc@gmail.com')),
       wait: const Duration(milliseconds: 500),
       expect: [LoginEditingState()],
     );
@@ -48,8 +48,7 @@ void main() {
     blocTest<LoginBloc, LoginState>(
       'Test onLoginEmailChanged function with valid email format',
       build: () {
-        _loginBloc.emailController.text = 'abc@gmail.com';
-        _loginBloc.onLoginEmailChanged();
+        _loginBloc.onLoginEmailChanged('abc@gmail.com');
         return _loginBloc;
       },
       wait: const Duration(milliseconds: 500),
@@ -59,10 +58,9 @@ void main() {
     blocTest<LoginBloc, LoginState>(
       'Test with invalid email format',
       build: () {
-        _loginBloc.emailController.text = 'qwqrfase';
         return _loginBloc;
       },
-      act: (bloc) => bloc.add(LoginEmailChangedEvent()),
+      act: (bloc) => bloc.add(LoginEmailChangedEvent(value: 'qwrtasd')),
       wait: const Duration(milliseconds: 500),
       expect: [LoginFailureState(error: null)],
     );
@@ -70,8 +68,7 @@ void main() {
     blocTest<LoginBloc, LoginState>(
       'Test onLoginEmailChanged function with invalid email format',
       build: () {
-        _loginBloc.emailController.text = 'qwrtasd';
-        _loginBloc.onLoginEmailChanged();
+        _loginBloc.onLoginEmailChanged('qwrtasd');
         return _loginBloc;
       },
       wait: const Duration(milliseconds: 500),
@@ -83,10 +80,9 @@ void main() {
     blocTest<LoginBloc, LoginState>(
       'Test with valid pwd format',
       build: () {
-        _loginBloc.passwordController.text = '1234567';
         return _loginBloc;
       },
-      act: (bloc) => bloc.add(LoginPasswordChangedEvent()),
+      act: (bloc) => bloc.add(LoginPasswordChangedEvent(value: '1234567')),
       wait: const Duration(milliseconds: 500),
       expect: [LoginEditingState()],
     );
@@ -94,8 +90,7 @@ void main() {
     blocTest<LoginBloc, LoginState>(
       'Test onLoginPasswordChanged function with valid pwd format',
       build: () {
-        _loginBloc.passwordController.text = '1234567';
-        _loginBloc.onLoginPasswordChanged();
+        _loginBloc.onLoginPasswordChanged('1234567');
         return _loginBloc;
       },
       wait: const Duration(milliseconds: 500),
@@ -105,10 +100,9 @@ void main() {
     blocTest<LoginBloc, LoginState>(
       'Test with invalid pwd format',
       build: () {
-        _loginBloc.passwordController.text = 'abc';
         return _loginBloc;
       },
-      act: (bloc) => bloc.add(LoginPasswordChangedEvent()),
+      act: (bloc) => bloc.add(LoginPasswordChangedEvent(value: 'abc')),
       wait: const Duration(milliseconds: 500),
       expect: [LoginFailureState(error: null)],
     );
@@ -116,8 +110,7 @@ void main() {
     blocTest<LoginBloc, LoginState>(
       'Test onLoginPasswordChanged function with invalid pwd format',
       build: () {
-        _loginBloc.passwordController.text = 'abc';
-        _loginBloc.onLoginPasswordChanged();
+        _loginBloc.onLoginPasswordChanged('abc');
         return _loginBloc;
       },
       wait: const Duration(milliseconds: 500),
@@ -130,9 +123,7 @@ void main() {
     blocTest<LoginBloc, LoginState>(
       'Test onFormSubmitted function with valid credentials',
       build: () {
-        _loginBloc.emailController.text = LOGIN_EMAIL_HINT;
-        _loginBloc.passwordController.text = LOGIN_PASSWORD_HINT;
-        _loginBloc.onFormSubmitted();
+        _loginBloc.onFormSubmitted(LOGIN_EMAIL_HINT, LOGIN_PASSWORD_HINT);
         return _loginBloc;
       },
       wait: const Duration(milliseconds: 3500),
@@ -144,11 +135,11 @@ void main() {
     blocTest<LoginBloc, LoginState>(
       'Test LoginButtonPressedEvent with valid credentials',
       build: () {
-        _loginBloc.emailController.text = LOGIN_EMAIL_HINT;
-        _loginBloc.passwordController.text = LOGIN_PASSWORD_HINT;
         return _loginBloc;
       },
-      act: (bloc) => bloc.add(LoginButtonPressedEvent()),
+      act: (bloc) => bloc.add(LoginButtonPressedEvent(
+          user: User(
+              emailAddress: LOGIN_EMAIL_HINT, password: LOGIN_PASSWORD_HINT))),
       wait: const Duration(milliseconds: 3500),
       expect: [
         LoginLoadingState(),
@@ -158,9 +149,7 @@ void main() {
     blocTest<LoginBloc, LoginState>(
       'Test onFormSubmitted function with invalid credentials',
       build: () {
-        _loginBloc.emailController.text = 'abc@123.com';
-        _loginBloc.passwordController.text = 'qwer54321';
-        _loginBloc.onFormSubmitted();
+        _loginBloc.onFormSubmitted('abc@123.com', 'qwer54321');
         return _loginBloc;
       },
       wait: const Duration(milliseconds: 3500),
@@ -174,11 +163,11 @@ void main() {
     blocTest<LoginBloc, LoginState>(
       'Test LoginButtonPressedEvent with invalid credentials',
       build: () {
-        _loginBloc.emailController.text = 'abc@123.com';
-        _loginBloc.passwordController.text = 'qwer54321';
         return _loginBloc;
       },
-      act: (bloc) => bloc.add(LoginButtonPressedEvent()),
+      act: (bloc) =>
+          bloc.add(LoginButtonPressedEvent(
+              user: User(emailAddress: 'abc@123.com', password: 'qwer54321'))),
       wait: const Duration(milliseconds: 3500),
       expect: [
         LoginLoadingState(),
