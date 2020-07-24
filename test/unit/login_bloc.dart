@@ -165,9 +165,8 @@ void main() {
       build: () {
         return _loginBloc;
       },
-      act: (bloc) =>
-          bloc.add(LoginButtonPressedEvent(
-              user: User(emailAddress: 'abc@123.com', password: 'qwer54321'))),
+      act: (bloc) => bloc.add(LoginButtonPressedEvent(
+          user: User(emailAddress: 'abc@123.com', password: 'qwer54321'))),
       wait: const Duration(milliseconds: 3500),
       expect: [
         LoginLoadingState(),

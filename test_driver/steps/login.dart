@@ -2,28 +2,66 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:gherkin/gherkin.dart';
 
-class LoginGiven extends Given3WithWorld<String, String, String, FlutterWorld> {
-  @override
-  Future<void> executeStep(String input1, String input2, String input3) async {
-    await Future<void>.delayed(Duration(seconds: 6));
+class LoginTest {
+  static Iterable<StepDefinitionGeneric> STEPS = [
+    InSpecificPage(),
+    WidgetExists(),
+    InputTextField(),
+    TapAction(),
+    Verify(),
+  ];
 
-    var exist1 = await FlutterDriverUtils.isPresent(
-        world.driver, find.byValueKey(input1));
-    var exist2 = await FlutterDriverUtils.isPresent(
-        world.driver, find.byValueKey(input2));
-    var exist3 = await FlutterDriverUtils.isPresent(
-        world.driver, find.byValueKey(input3));
-
-    expectMatch(exist1, true);
-    expectMatch(exist2, true);
-    expectMatch(exist3, true);
+  static StepDefinitionGeneric InSpecificPage() {
+    return when1<String, FlutterWorld>(RegExp(r'user is at {string}'),
+        (input1, context) async {
+      await FlutterDriverUtils.waitUntil(
+          context.world.driver,
+          () => FlutterDriverUtils.isPresent(
+              context.world.driver, find.byValueKey(input1)),
+          timeout: Duration(seconds: 7));
+    });
   }
 
-  @override
-  RegExp get pattern =>
-      RegExp(r'I have {string} and {string} and {string} widgets');
+  static StepDefinitionGeneric WidgetExists() {
+    return given1<String, FlutterWorld>(RegExp(r'a {string} widget'),
+        (input1, context) async {
+      var exist1 = await FlutterDriverUtils.isPresent(
+          context.world.driver, find.byValueKey(input1));
+
+      context.expectMatch(exist1, true);
+    });
+  }
+
+  static StepDefinitionGeneric InputTextField() {
+    return when2<String, String, FlutterWorld>(
+      RegExp(r'user enter {string} in {string}'),
+      (input1, input2, context) async {
+        await FlutterDriverUtils.enterText(
+            context.world.driver, find.byValueKey(input2), input1);
+      },
+    );
+  }
+
+  static StepDefinitionGeneric TapAction() {
+    return when1<String, FlutterWorld>(RegExp(r'user tap {string}'),
+        (input1, context) async {
+      await FlutterDriverUtils.tap(
+          context.world.driver, find.byValueKey(input1));
+    });
+  }
+
+  static StepDefinitionGeneric Verify() {
+    return then1<String, FlutterWorld>(RegExp(r'{string} should show'),
+        (input1, context) async {
+      await Future<void>.delayed(Duration(seconds: 3));
+      var exist = await FlutterDriverUtils.isPresent(
+          context.world.driver, find.text(input1));
+      context.expectMatch(exist, true);
+    });
+  }
 }
 
+///sample
 class LoginWhen1 extends When2WithWorld<String, String, FlutterWorld> {
   @override
   Future<void> executeStep(String input1, String input2) async {
@@ -33,27 +71,4 @@ class LoginWhen1 extends When2WithWorld<String, String, FlutterWorld> {
 
   @override
   RegExp get pattern => RegExp(r'user enter {string} in {string}');
-}
-
-class LoginWhen2 extends When1WithWorld<String, FlutterWorld> {
-  @override
-  Future<void> executeStep(String input1) async {
-    await FlutterDriverUtils.tap(world.driver, find.byValueKey(input1));
-  }
-
-  @override
-  RegExp get pattern => RegExp(r'user tap {string}');
-}
-
-class LoginThen extends Then1WithWorld<String, FlutterWorld> {
-  @override
-  Future<void> executeStep(String input1) async {
-    await Future<void>.delayed(Duration(seconds: 3));
-    var exist =
-        await FlutterDriverUtils.isPresent(world.driver, find.text(input1));
-    expectMatch(exist, true);
-  }
-
-  @override
-  RegExp get pattern => RegExp(r'{string} should show');
 }

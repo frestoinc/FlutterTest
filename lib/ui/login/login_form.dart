@@ -197,8 +197,7 @@ class _LoginFormState extends State<LoginForm> {
                 fontFamily: 'RobotoReg',
               ),
             ),
-            onPressed: () =>
-            {
+            onPressed: () => {
                   FocusScope.of(context).unfocus(),
                   _loginBloc.onFormSubmitted(
                       _emailController.text, _passwordController.text),

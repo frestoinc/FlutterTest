@@ -2,13 +2,17 @@ import 'dart:async';
 
 import 'package:flutter_gherkin/flutter_gherkin.dart';
 import 'package:gherkin/gherkin.dart';
-import 'package:glob/glob.dart';
 
+import 'custom_hook.dart';
 import 'steps/login.dart';
 
 Future<void> main() {
-  final config = FlutterTestConfiguration()
-    ..features = [Glob(r'test_driver/features/**.feature')]
+  final steps = [...LoginTest.STEPS];
+
+  final config = FlutterTestConfiguration.DEFAULT(steps,
+      featurePath: 'test_driver/features/**.feature',
+      targetAppPath: 'test_driver/app.dart')
+    ..hooks = [CustomHook()]
     ..reporters = [
       ProgressReporter(),
       TestRunSummaryReporter(),
@@ -17,9 +21,8 @@ Future<void> main() {
       ),
       StdoutReporter()
     ]
-    ..stepDefinitions = [LoginGiven(), LoginWhen1(), LoginWhen2(), LoginThen()]
+    //..targetDeviceId = 'all' //doesn't work
     ..restartAppBetweenScenarios = true
-    ..targetAppPath = 'test_driver/app.dart'
     ..exitAfterTestRun = true;
   return GherkinRunner().execute(config);
 }
