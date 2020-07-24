@@ -19,6 +19,7 @@ Future<void> main() {
       FlutterDriverReporter(
         logErrorMessages: true,
       ),
+      JsonReporter(path: './report.json'),
       StdoutReporter()
     ]
     //..targetDeviceId = 'all' //doesn't work
