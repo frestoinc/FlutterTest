@@ -24,12 +24,15 @@ void main() {
     await driver.waitForAbsent(find.byValueKey('splash_page'));
 
     await driver.waitFor(find.byValueKey('login_page'));
-    await driver.tap(find.byValueKey('email_field'));
+    await driver.tap(find.byValueKey('login_email_field'));
     await driver.enterText('abc@gmail.com');
     await driver.waitFor(find.text('abc@gmail.com'));
-    await driver.tap(find.byValueKey('pwd_field'));
+    await driver.tap(find.byValueKey('login_pwd_field'));
     await driver.enterText('123456');
 
-    await Future<void>.delayed(Duration(milliseconds: 7000));
+    await driver.tap(find.byValueKey('login_btn_idle'));
+    await driver.waitFor(find.byValueKey('login_snackbar'));
+
+    await Future<void>.delayed(Duration(milliseconds: 5000));
   });
 }

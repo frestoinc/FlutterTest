@@ -37,6 +37,7 @@ class _LoginFormState extends State<LoginForm> {
       listener: (context, state) {
         if (state is LoginFormFailureState) {
           Scaffold.of(context).showSnackBar(SnackBar(
+            key: ValueKey('login_snackbar'),
             content: Text(
               state.error.toString(),
               style: TextStyle(
@@ -105,7 +106,7 @@ class _LoginFormState extends State<LoginForm> {
   Widget _buildPasswordField() {
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
       return TextField(
-        key: ValueKey('pwd_field'),
+        key: ValueKey('login_pwd_field'),
         controller: _loginBloc.passwordController,
         onSubmitted: (_) => FocusScope.of(context).unfocus(),
         onChanged: (_) => _loginBloc.onLoginPasswordChanged(),
@@ -141,7 +142,7 @@ class _LoginFormState extends State<LoginForm> {
   Widget _buildEmailField() {
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
       return TextField(
-        key: ValueKey('email_field'),
+        key: ValueKey('login_email_field'),
         onSubmitted: (_) => FocusScope.of(context).nextFocus(),
         controller: _loginBloc.emailController,
         onChanged: (_) => _loginBloc.onLoginEmailChanged(),
@@ -168,12 +169,12 @@ class _LoginFormState extends State<LoginForm> {
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
       if (state is LoginLoadingState) {
         return CircularProgressIndicator(
-          key: ValueKey('btn_loading'),
+          key: ValueKey('login_btn_loading'),
           valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF31B057)),
         );
       }
       return SizedBox(
-        key: ValueKey('btn_idle'),
+        key: ValueKey('login_btn_idle'),
         width: double.infinity,
         child: RaisedButton(
             padding: const EdgeInsets.all(16),

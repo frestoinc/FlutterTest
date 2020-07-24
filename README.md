@@ -11,6 +11,7 @@
 - SharedPreferences
 - Repository 
 - Unit Test (To test just type 'flutter test test/all_tests.dart' on your terminal)
+- Gherkin UI Test
 - And More...
 
 ## Packages in this App:
@@ -21,6 +22,7 @@
 - Json Serializer [![Build Status](https://travis-ci.org/google/json_serializable.dart.svg?branch=master)](https://travis-ci.org/google/json_serializable.dart)
 - Equatable [![Pub](https://img.shields.io/pub/v/equatable.svg)](https://pub.dartlang.org/packages/equatable)
 - Pedantic [![Pub](https://img.shields.io/pub/v/pedantic.svg)](https://pub.dev/packages/pedantic)
+- [Gherkin](https://github.com/jonsamwell/flutter_gherkin)
 - And More...
 
 ## Screenshots
