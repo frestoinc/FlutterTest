@@ -4,7 +4,6 @@ import 'package:flutterapp/ui/splash/splash_page.dart';
 
 import 'data/manager/data_manager.dart';
 import 'di/inject.dart';
-import 'extension/command.dart';
 import 'ui/authentication/authentication_bloc.dart';
 import 'ui/home/home_page.dart';
 import 'ui/login/login_page.dart';
@@ -35,18 +34,18 @@ class CustomBlocObserver extends BlocObserver {
   }
 }
 
-void main([ExternalApplicationCommandInvoker _invoker]) {
+void main(/*[ExternalApplicationCommandInvoker _invoker]*/) {
   Bloc.observer = CustomBlocObserver();
   setInjection();
   WidgetsFlutterBinding.ensureInitialized();
 
-  _invoker?.addCommandHandler(
+  /* _invoker?.addCommandHandler(
     ExternalApplicationCommand.reset,
     () async {
       await getIt<DataManager>().deleteCredentials();
       return 'ok';
     },
-  );
+  );*/
 
   runApp(BlocProvider<AuthenticationBloc>(
     create: (context) {

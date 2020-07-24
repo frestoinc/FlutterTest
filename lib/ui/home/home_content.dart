@@ -7,6 +7,7 @@ import 'package:flutterapp/extension/dialogs/dialog_listener.dart';
 import 'package:flutterapp/extension/dialogs/dialog_type.dart';
 import 'package:flutterapp/extension/string.dart';
 import 'package:flutterapp/ui/authentication/authentication_bloc.dart';
+import 'package:flutterapp/ui/extension/app_theme.dart';
 import 'package:flutterapp/ui/extension/widget_extension.dart';
 
 import 'home_bloc.dart';
@@ -56,18 +57,45 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         drawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
+          child: Column(
             children: <Widget>[
-              _buildDrawerHeader(),
-              ListTile(
-                title: Text('Navigate to Android (TODO)'),
-                onTap: () => Navigator.pop(context),
+              Expanded(
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: <Widget>[
+                    _buildDrawerHeader(),
+                    ListTile(
+                      title: Text('Navigate to Android (TODO)'),
+                      onTap: () => Navigator.pop(context),
+                    ),
+                    ListTile(
+                      title: Text('Navigate to IOS (TODO)'),
+                      onTap: () => Navigator.pop(context),
+                    )
+                  ],
+                ),
+              ),
+              Divider(
+                height: 1,
+                color: AppTheme.grey.withOpacity(0.6),
               ),
               ListTile(
-                title: Text('Navigate to IOS (TODO)'),
-                onTap: () => Navigator.pop(context),
-              )
+                title: Text(
+                  'Sign Out',
+                  style: TextStyle(
+                    fontFamily: AppTheme.fontName,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                    color: AppTheme.darkText,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+                trailing: Icon(
+                  Icons.power_settings_new,
+                  color: Colors.grey,
+                ),
+                onTap: () => _homeBloc.handleOptionsMenu(0),
+              ),
             ],
           ),
         ),
@@ -171,25 +199,6 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
               Padding(
                 padding: const EdgeInsets.fromLTRB(6, 0, 0, 0),
                 child: Text(HOME_OPTION_SORT_RANDOM),
-              ),
-            ],
-          ),
-        ),
-        const PopupMenuDivider(),
-        PopupMenuItem<int>(
-          value: 0,
-          textStyle: TextStyle(
-              color: const Color(0xFF52575C), fontFamily: 'RobotoBold'),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              Icon(
-                Icons.exit_to_app,
-                color: const Color(0xFF52575C),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(6, 2, 0, 2),
-                child: Text(LOG_OUT),
               ),
             ],
           ),
