@@ -247,7 +247,6 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
 
   Widget _buildLoadingProgress() {
     return Center(
-      key: ValueKey('model_loading'),
       child: SizedBox(
         width: 100,
         height: 100,
@@ -284,7 +283,6 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
         : Scaffold(
             backgroundColor: Colors.white,
             body: ReorderableListView(
-              key: ValueKey('model_listview'),
               onReorder: (a, b) => _homeBloc.onReorder(a, b),
               children: _getItemList(_data),
             ),
@@ -302,7 +300,7 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
 
   Widget _buildDismissibleList(int index, ModelEntity e) {
     return Dismissible(
-      key: ValueKey('model_dismissible'),
+      key: ValueKey(e),
       confirmDismiss: (direction) =>
           context.buildAlertDialog(DialogType.DIALOG_CONFIRM_DELETE, e, this),
       direction: DismissDirection.endToStart,
@@ -313,7 +311,7 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
 
   Widget _buildExpansionTile(ModelEntity e) {
     return ExpansionTile(
-      key: ValueKey('model_expansion'),
+      key: ValueKey(e),
       trailing: Visibility(visible: false, child: Icon(Icons.more_vert)),
       leading: _buildAvatarViewHolder(e),
       title: _buildAuthorViewHolder(e),
@@ -326,7 +324,6 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
 
   Widget _buildDismissBackground() {
     return Container(
-      key: ValueKey('model_dismissible_bg'),
       padding: EdgeInsets.all(10.0),
       color: Colors.red,
       child: Align(
@@ -353,7 +350,6 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
 
   Widget _buildAvatarViewHolder(ModelEntity model) {
     return ClipRRect(
-      key: ValueKey('model_avatar'),
       borderRadius: BorderRadius.circular(20.0),
       child: FadeInImage.assetNetwork(
         fit: BoxFit.cover,
@@ -414,7 +410,6 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
 
   Widget _buildDescriptionViewHolder(ModelEntity model) {
     return Container(
-      key: ValueKey('model_description'),
       alignment: Alignment.centerLeft,
       padding: const EdgeInsets.fromLTRB(60.0, 5.0, 20.0, 5.0),
       child: Text(

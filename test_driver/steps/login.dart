@@ -6,11 +6,9 @@ class LoginTest {
   static Iterable<StepDefinitionGeneric> STEPS = [
     InSpecificPage(),
     WidgetExists(),
-    WidgetNotExists(),
     InputTextField(),
     TapAction(),
-    VerifyByText(),
-    VerifyByWidget(),
+    Verify(),
   ];
 
   static StepDefinitionGeneric InSpecificPage() {
@@ -34,17 +32,6 @@ class LoginTest {
     });
   }
 
-  static StepDefinitionGeneric WidgetNotExists() {
-    return given1<String, FlutterWorld>(RegExp(r'{string} is detach'),
-        (input1, context) async {
-      var exist1 = await FlutterDriverUtils.isAbsent(
-          context.world.driver, find.byValueKey(input1),
-          timeout: Duration(seconds: 4));
-
-      context.expectMatch(exist1, true);
-    });
-  }
-
   static StepDefinitionGeneric InputTextField() {
     return when2<String, String, FlutterWorld>(
       RegExp(r'user enter {string} in {string}'),
@@ -63,22 +50,12 @@ class LoginTest {
     });
   }
 
-  static StepDefinitionGeneric VerifyByText() {
+  static StepDefinitionGeneric Verify() {
     return then1<String, FlutterWorld>(RegExp(r'{string} should show'),
-            (input1, context) async {
-          await Future<void>.delayed(Duration(seconds: 3));
-          var exist = await FlutterDriverUtils.isPresent(
-              context.world.driver, find.text(input1));
-          context.expectMatch(exist, true);
-        });
-  }
-
-  static StepDefinitionGeneric VerifyByWidget() {
-    return then1<String, FlutterWorld>(
-        RegExp(r'{string} should show on screen'), (input1, context) async {
+        (input1, context) async {
       await Future<void>.delayed(Duration(seconds: 3));
       var exist = await FlutterDriverUtils.isPresent(
-          context.world.driver, find.byValueKey(input1));
+          context.world.driver, find.text(input1));
       context.expectMatch(exist, true);
     });
   }
