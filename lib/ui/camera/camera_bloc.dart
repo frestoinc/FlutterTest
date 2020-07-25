@@ -9,11 +9,64 @@ import 'package:flutter/material.dart';
 class CameraBloc extends Bloc<CameraEvent, CameraState> {
   CameraBloc() : super(CameraInitial());
 
+  CameraController _controller;
+  CameraLensDirection _direction;
+
   @override
   Stream<CameraState> mapEventToState(
     CameraEvent event,
   ) async* {
-    // TODO: implement mapEventToState
+    if ((event is CameraInitialisationErrorEvent)) {
+      yield CameraInitialisationErrorState(error: event.error);
+    }
+
+    if ((event is CameraInitialisationSuccessEvent)) {
+      if (_controller != null) {
+        await _controller.dispose();
+      }
+
+      _controller = event.controller;
+      try {
+        await _controller.initialize();
+        add(CameraReadyEvent());
+      } on CameraException catch (e) {
+        yield CameraInitialisationErrorState(error: e);
+      }
+    }
+
+    if (event is CameraChangeDirectionEvent) {
+      yield CameraChangeDirectionState(direction: _direction);
+    }
+
+    if ((event is CameraReadyEvent)) {
+      _controller.addListener(() {
+        if (_controller.value.hasError) {
+          add(CameraErrorEvent(error: _controller.value.errorDescription));
+        }
+      });
+    }
+
+    if ((event is CameraErrorEvent)) {
+      yield CameraErrorState(error: event.error);
+    }
+  }
+
+  void toggle() {
+    _direction = _direction == CameraLensDirection.back
+        ? CameraLensDirection.front
+        : CameraLensDirection.back;
+    add(CameraChangeDirectionEvent());
+  }
+
+  void initialise() {
+    availableCameras().then((cameras) {
+      _direction = cameras[0].lensDirection;
+      add(cameras.isNotEmpty
+          ? CameraInitialisationSuccessEvent(
+              controller: CameraController(cameras[0], ResolutionPreset.high))
+          : CameraInitialisationErrorEvent(
+              error: Exception('No camera found')));
+    });
   }
 }
 
@@ -25,23 +78,36 @@ abstract class CameraEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class CameraAvailableEvent extends CameraEvent {
+class CameraInitialisationErrorEvent extends CameraEvent {
+  final error;
+
+  const CameraInitialisationErrorEvent({@required this.error});
+
+  @override
+  List<Object> get props => [error];
+}
+
+class CameraInitialisationSuccessEvent extends CameraEvent {
   final CameraController controller;
 
-  const CameraAvailableEvent({@required this.controller});
+  const CameraInitialisationSuccessEvent({@required this.controller});
 
   @override
   List<Object> get props => [controller];
 }
 
-class CameraChangeDirectionEvent extends CameraEvent {
-  final CameraLensDirection direction;
+class CameraReadyEvent extends CameraEvent {}
 
-  const CameraChangeDirectionEvent({@required this.direction});
+class CameraErrorEvent extends CameraEvent {
+  final String error;
+
+  const CameraErrorEvent({@required this.error});
 
   @override
-  List<Object> get props => [direction];
+  List<Object> get props => [error];
 }
+
+class CameraChangeDirectionEvent extends CameraEvent {}
 
 class CameraCapturedEvent extends CameraEvent {
   final String path;
@@ -63,6 +129,15 @@ abstract class CameraState extends Equatable {
 class CameraInitial extends CameraState {
   @override
   List<Object> get props => [];
+}
+
+class CameraInitialisationErrorState extends CameraState {
+  final error;
+
+  const CameraInitialisationErrorState({@required this.error});
+
+  @override
+  List<Object> get props => [error];
 }
 
 class CameraAvailableState extends CameraState {
@@ -90,4 +165,13 @@ class CameraCapturedState extends CameraState {
 
   @override
   List<Object> get props => [path];
+}
+
+class CameraErrorState extends CameraState {
+  final String error;
+
+  const CameraErrorState({@required this.error});
+
+  @override
+  List<Object> get props => [error];
 }
