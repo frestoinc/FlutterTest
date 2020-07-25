@@ -1,15 +1,38 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutterapp/ui/camera/camera_bloc.dart';
 
 class CameraContent extends StatefulWidget {
   @override
   _CameraContentState createState() => _CameraContentState();
 }
 
-/// 2 fab buttons
-/// left button popup bottom sheet to choose picture from gallery
-/// right button navigate to camera
-/// Center screen image view to display image return from fab
 class _CameraContentState extends State<CameraContent> {
+  CameraBloc _cameraBloc;
+  CameraLensDirection _direction;
+
+  void _toggle() {
+    setState(() {
+      _direction = _direction == CameraLensDirection.back
+          ? CameraLensDirection.front
+          : CameraLensDirection.back;
+    });
+  }
+
+  @override
+  void initState() {
+    _cameraBloc = BlocProvider.of(context);
+    _direction = CameraLensDirection.back;
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _cameraBloc.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,48 +89,29 @@ class _CameraContentState extends State<CameraContent> {
     );
   }
 
-  Widget _cameraTogglesRowWidget() {
-    return Expanded(
-      child: Align(
-        alignment: Alignment.center,
-        child: ClipOval(
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              child: CircleAvatar(
-                radius: 30,
-                backgroundColor: Colors.transparent,
-                child: Icon(
-                  Icons.autorenew,
-                  color: Colors.white,
-                  size: 40,
+  Widget _thumbnailWidget() {
+    return BlocBuilder<CameraBloc, CameraState>(
+      builder: (context, state) {
+        return Expanded(
+          child: Align(
+            alignment: Alignment.center,
+            child: ClipOval(
+              child: Material(
+                color: Colors.black,
+                child: InkWell(
+                  child: CircleAvatar(
+                      radius: 30,
+                      backgroundColor: Colors.black,
+                      child: (state is CameraCapturedState)
+                          ? Image.asset(state.path)
+                          : Container()),
+                  onTap: () {},
                 ),
               ),
-              onTap: () {},
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _thumbnailWidget() {
-    return Expanded(
-      child: Align(
-        alignment: Alignment.center,
-        child: ClipOval(
-          child: Material(
-            color: Colors.black,
-            child: InkWell(
-              child: CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Colors.black,
-                  child: Image.asset('assets/images/user.png')),
-              onTap: () {},
-            ),
-          ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -134,5 +138,36 @@ class _CameraContentState extends State<CameraContent> {
         ),
       ),
     );
+  }
+
+  Widget _cameraTogglesRowWidget() {
+    return BlocBuilder<CameraBloc, CameraState>(builder: (context, state) {
+      return Expanded(
+        child: Align(
+          alignment: Alignment.center,
+          child: ClipOval(
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                child: CircleAvatar(
+                  radius: 30,
+                  backgroundColor: Colors.transparent,
+                  child: Icon(
+                    Icons.autorenew,
+                    color: Colors.white,
+                    size: 40,
+                  ),
+                ),
+                onTap: () {
+                  _toggle();
+                  _cameraBloc
+                      .add(CameraChangeDirectionEvent(direction: _direction));
+                },
+              ),
+            ),
+          ),
+        ),
+      );
+    });
   }
 }

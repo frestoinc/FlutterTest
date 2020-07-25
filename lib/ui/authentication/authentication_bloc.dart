@@ -111,6 +111,9 @@ class AuthenticationSuccessState extends AuthenticationState {
   final String emailAddress;
 
   const AuthenticationSuccessState({@required this.emailAddress});
+
+  @override
+  List<Object> get props => [emailAddress];
 }
 
 class AuthenticationFailureState extends AuthenticationState {}

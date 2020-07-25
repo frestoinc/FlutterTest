@@ -110,18 +110,27 @@ class LoginEmailChangedEvent extends LoginEvent {
   final String value;
 
   const LoginEmailChangedEvent({this.value});
+
+  @override
+  List<Object> get props => [value];
 }
 
 class LoginPasswordChangedEvent extends LoginEvent {
   final String value;
 
   const LoginPasswordChangedEvent({this.value});
+
+  @override
+  List<Object> get props => [value];
 }
 
 class LoginButtonPressedEvent extends LoginEvent {
   final User user;
 
   const LoginButtonPressedEvent({this.user});
+
+  @override
+  List<Object> get props => [user];
 }
 
 ///STATES///
@@ -143,10 +152,16 @@ class LoginFailureState extends LoginState {
   final List<String> error;
 
   const LoginFailureState({@required this.error});
+
+  @override
+  List<Object> get props => [error];
 }
 
 class LoginFormFailureState extends LoginState {
   final Exception error;
 
   const LoginFormFailureState({@required this.error});
+
+  @override
+  List<Object> get props => [error];
 }

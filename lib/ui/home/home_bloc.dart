@@ -143,12 +143,18 @@ class HomeErrorEvent extends HomeEvent {
   final Exception error;
 
   const HomeErrorEvent({@required this.error});
+
+  @override
+  List<Object> get props => [error];
 }
 
 class HomeSuccessEvent extends HomeEvent {
   final List<ModelEntity> list;
 
   const HomeSuccessEvent({@required this.list});
+
+  @override
+  List<Object> get props => [list];
 }
 
 class HomeSortedEvent extends HomeEvent {
@@ -156,6 +162,9 @@ class HomeSortedEvent extends HomeEvent {
   final List<ModelEntity> list;
 
   const HomeSortedEvent({@required this.type, @required this.list});
+
+  @override
+  List<Object> get props => [type, list];
 }
 
 @immutable
@@ -174,10 +183,16 @@ class HomeSuccessState extends HomeState {
   final List<ModelEntity> entities;
 
   const HomeSuccessState({@required this.entities});
+
+  @override
+  List<Object> get props => [entities];
 }
 
 class HomeFailureState extends HomeState {
   final Exception error;
 
   const HomeFailureState({@required this.error});
+
+  @override
+  List<Object> get props => [error];
 }
