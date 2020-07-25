@@ -12,6 +12,19 @@ import 'package:flutterapp/ui/extension/widget_extension.dart';
 
 import 'home_bloc.dart';
 
+class DrawerItem {
+  String title;
+  IconData icon;
+
+  DrawerItem(this.title, [this.icon = Icons.add]);
+}
+
+final _drawerItemList = [
+  DrawerItem('Navigate to Android (TODO)', Icons.android),
+  DrawerItem('Navigate to IOS (TODO)'),
+  DrawerItem('Camera', Icons.camera_alt),
+];
+
 class HomeContent extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _HomeContentState();
@@ -20,6 +33,7 @@ class HomeContent extends StatefulWidget {
 class _HomeContentState extends State<HomeContent> implements DialogListener {
   HomeBloc _homeBloc;
   AuthenticationBloc _authBloc;
+  int _selectedDrawerIndex = 0;
 
   @override
   void initState() {
@@ -49,8 +63,47 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
     }
   }
 
+  void _onSelectItem(int index) {
+    setState(() => _selectedDrawerIndex = index);
+    Navigator.of(context).pop(); // close the drawer
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => _navigateToIndex(index)));
+  }
+
+  Widget _navigateToIndex(int index) {
+    switch (index) {
+      case 0:
+        return Container(
+          child: Text('abc'),
+        );
+      case 1:
+        return Container(
+          child: Text('def'),
+        );
+      case 2:
+        return Container(
+          child: Text('ghi'),
+        );
+      default:
+        return Container(
+          child: Text('jkl'),
+        );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    var drawerItems = <Widget>[];
+    for (var i = 0; i < _drawerItemList.length; i++) {
+      var item = _drawerItemList[i];
+      drawerItems.add(ListTile(
+        trailing: Icon(item.icon),
+        title: Text(item.title),
+        selected: i == _selectedDrawerIndex,
+        onTap: () => _onSelectItem(i),
+      ));
+    }
+
     return WillPopScope(
       onWillPop: () =>
           context.buildAlertDialog(DialogType.DIALOG_EXIT_APP, null, this),
@@ -64,14 +117,9 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
                   padding: EdgeInsets.zero,
                   children: <Widget>[
                     _buildDrawerHeader(),
-                    ListTile(
-                      title: Text('Navigate to Android (TODO)'),
-                      onTap: () => Navigator.pop(context),
+                    Column(
+                      children: drawerItems,
                     ),
-                    ListTile(
-                      title: Text('Navigate to IOS (TODO)'),
-                      onTap: () => Navigator.pop(context),
-                    )
                   ],
                 ),
               ),
