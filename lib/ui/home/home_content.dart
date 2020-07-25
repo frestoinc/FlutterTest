@@ -7,6 +7,7 @@ import 'package:flutterapp/extension/dialogs/dialog_listener.dart';
 import 'package:flutterapp/extension/dialogs/dialog_type.dart';
 import 'package:flutterapp/extension/string.dart';
 import 'package:flutterapp/ui/authentication/authentication_bloc.dart';
+import 'package:flutterapp/ui/camera/camera_page.dart';
 import 'package:flutterapp/ui/extension/app_theme.dart';
 import 'package:flutterapp/ui/extension/widget_extension.dart';
 
@@ -81,9 +82,7 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
           child: Text('def'),
         );
       case 2:
-        return Container(
-          child: Text('ghi'),
-        );
+        return CameraPage();
       default:
         return Container(
           child: Text('jkl'),
@@ -147,20 +146,7 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
             ],
           ),
         ),
-        appBar: AppBar(
-          title: Text(
-            HOME_TITLE,
-            style: const TextStyle(color: Color(0xFF25282B)),
-          ),
-          centerTitle: true,
-          backgroundColor: Colors.white,
-          iconTheme: IconThemeData(
-            color: Color(0xFF25282B),
-          ),
-          actions: [
-            _buildPopUpMenu(),
-          ],
-        ),
+        appBar: buildAppBar(HOME_TITLE, _buildPopUpMenu()),
         body: BlocListener<HomeBloc, HomeState>(
           listener: (context, state) {},
           child: Container(

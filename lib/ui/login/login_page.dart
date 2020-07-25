@@ -13,7 +13,7 @@ class LoginPage extends StatelessWidget {
       key: ValueKey('login_page'),
       decoration: buildBackground(),
       child: Scaffold(
-        appBar: buildAppBar(title: LOGIN_TITLE),
+        appBar: buildAppBar(LOGIN_TITLE),
         backgroundColor: Colors.transparent,
         body: BlocProvider(
           create: (context) {

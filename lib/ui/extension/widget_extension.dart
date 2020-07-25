@@ -4,7 +4,7 @@ import 'package:flutterapp/extension/dialogs/dialog_type.dart';
 import 'package:functional_widget_annotation/functional_widget_annotation.dart';
 
 @swidget
-Widget buildAppBar({String title}) {
+Widget buildAppBar(String title, [Widget menu]) {
   return AppBar(
     title: Text(
       title,
@@ -12,6 +12,10 @@ Widget buildAppBar({String title}) {
     ),
     centerTitle: true,
     backgroundColor: Colors.white,
+    iconTheme: IconThemeData(
+      color: Color(0xFF25282B),
+    ),
+    actions: [menu ?? Container()],
   );
 }
 

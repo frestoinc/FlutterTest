@@ -17,5 +17,5 @@ void main() {
   });
 
   ///remove commandRunner if don't wish to reset on every run
-  app.main(commandRunner);
+  app.main(/*commandRunner*/);
 }
