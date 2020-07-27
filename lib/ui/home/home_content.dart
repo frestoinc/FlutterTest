@@ -8,7 +8,6 @@ import 'package:flutterapp/extension/dialogs/dialog_type.dart';
 import 'package:flutterapp/extension/string.dart';
 import 'package:flutterapp/ui/authentication/authentication_bloc.dart';
 import 'package:flutterapp/ui/camera/camera_page.dart';
-import 'package:flutterapp/ui/camera/test.dart';
 import 'package:flutterapp/ui/extension/app_theme.dart';
 import 'package:flutterapp/ui/extension/widget_extension.dart';
 
@@ -75,7 +74,9 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
   Widget _navigateToIndex(int index) {
     switch (index) {
       case 0:
-        return TakePictureScreen();
+        return Container(
+          child: Text('abc'),
+        );
       case 1:
         return Container(
           child: Text('def'),

@@ -10,11 +10,17 @@ class CameraPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: buildBackground(),
-      child: BlocProvider(
-        create: (context) {
-          return CameraBloc();
-        },
-        child: CameraContent(),
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          iconTheme: IconThemeData(color: Colors.white),
+        ),
+        body: BlocProvider(
+          create: (context) {
+            return CameraBloc()..add(CameraInitStartedEvent());
+          },
+          child: CameraContent(),
+        ),
       ),
     );
   }

@@ -70,6 +70,7 @@ dependencies:
   #path
   path: ^1.6.4
   path_provider: ^1.6.11
+  mime: 0.9.6+3
 
 
 
