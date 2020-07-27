@@ -147,24 +147,16 @@ class _CameraContentState extends State<CameraContent> {
               color: Colors.transparent,
               child: InkWell(
                 child: CircleAvatar(
-                  radius: (MediaQuery
-                      .of(context)
-                      .size
-                      .height * 0.05) - 10.0,
+                  radius: (MediaQuery.of(context).size.height * 0.05) - 10.0,
                   backgroundColor: Colors.transparent,
                   child: Icon(
                     Icons.autorenew,
                     color: Colors.white,
-                    size: MediaQuery
-                        .of(context)
-                        .size
-                        .height * 0.05,
+                    size: MediaQuery.of(context).size.height * 0.05,
                   ),
                 ),
-                onTap: () =>
-                    _cameraBloc
-                        .add(
-                        CameraChangeDirectionEvent(controller: controller)),
+                onTap: () => _cameraBloc
+                    .add(CameraChangeDirectionEvent(controller: controller)),
               ),
             ),
           ),
@@ -185,18 +177,15 @@ class _CameraContentState extends State<CameraContent> {
                 child: InkWell(
                   child: CircleAvatar(
                       radius:
-                      (MediaQuery
-                          .of(context)
-                          .size
-                          .height * 0.05) - 10.0,
+                          (MediaQuery.of(context).size.height * 0.05) - 10.0,
                       backgroundColor: Colors.black,
                       child: (state is CameraReadyState)
                           ? state.path == null
-                          ? Container()
-                          : Image.file(
-                        state.path,
-                        fit: BoxFit.fill,
-                      )
+                              ? Container()
+                              : Image.file(
+                                  state.path,
+                                  fit: BoxFit.fill,
+                                )
                           : Container()),
                   onTap: () => _showBottomSheetImages(),
                 ),
@@ -209,7 +198,7 @@ class _CameraContentState extends State<CameraContent> {
   }
 
   void _showBottomSheetImages() async {
-    await _cameraBloc.getFilesInDirectory().then((data) {
+    await _cameraBloc.directory.getFilesInDirectory().then((data) {
       if (data.isEmpty) return;
       showBottomSheet(
           backgroundColor: Colors.black,
@@ -228,10 +217,7 @@ class _CameraContentState extends State<CameraContent> {
                       alignment: Alignment.center,
                       margin: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
                       height: 4.0,
-                      width: MediaQuery
-                          .of(context)
-                          .size
-                          .width * 0.5,
+                      width: MediaQuery.of(context).size.width * 0.5,
                       decoration: BoxDecoration(
                         color: Colors.grey,
                         shape: BoxShape.rectangle,
@@ -277,9 +263,7 @@ class _CameraContentState extends State<CameraContent> {
         Padding(
           padding: EdgeInsets.all(4.0),
           child: Text(
-            modal.path
-                .split('/')
-                .last,
+            modal.path.split('/').last,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
