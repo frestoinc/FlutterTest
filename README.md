@@ -4,6 +4,7 @@
 - Bloc Architecture (includes bloc testing)
 - Dependency Injection
 - Static Code Analysis
+- Camera
 - Form Validation
 - Drag-And-Drop
 - List Re-Ordering
@@ -22,6 +23,7 @@
 - Json Serializer [![Build Status](https://travis-ci.org/google/json_serializable.dart.svg?branch=master)](https://travis-ci.org/google/json_serializable.dart)
 - Equatable [![Pub](https://img.shields.io/pub/v/equatable.svg)](https://pub.dartlang.org/packages/equatable)
 - Pedantic [![Pub](https://img.shields.io/pub/v/pedantic.svg)](https://pub.dev/packages/pedantic)
+- Camera [![pub package](https://img.shields.io/pub/v/camera.svg)](https://pub.dartlang.org/packages/camera)
 - [Gherkin](https://github.com/jonsamwell/flutter_gherkin)
 - And More...
 
