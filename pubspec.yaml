@@ -72,7 +72,8 @@ dependencies:
   path_provider: ^1.6.11
   mime: 0.9.6+3
 
-
+  #webview
+  webview_flutter: 0.3.22+1
 
 dev_dependencies:
   flutter_test:

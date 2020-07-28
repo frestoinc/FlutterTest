@@ -10,6 +10,7 @@ import 'package:flutterapp/ui/authentication/authentication_bloc.dart';
 import 'package:flutterapp/ui/camera/camera_page.dart';
 import 'package:flutterapp/ui/extension/app_theme.dart';
 import 'package:flutterapp/ui/extension/widget_extension.dart';
+import 'package:flutterapp/ui/webview.dart';
 
 import 'home_bloc.dart';
 
@@ -392,14 +393,18 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
   }
 
   Widget _buildAvatarViewHolder(ModelEntity model) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20.0),
-      child: FadeInImage.assetNetwork(
-        fit: BoxFit.cover,
-        width: 40,
-        height: 40,
-        placeholder: 'assets/images/image_error.png',
-        image: model.avatar,
+    return InkWell(
+      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => WebViewContent(entity: model))),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20.0),
+        child: FadeInImage.assetNetwork(
+          fit: BoxFit.cover,
+          width: 40,
+          height: 40,
+          placeholder: 'assets/images/image_error.png',
+          image: model.avatar,
+        ),
       ),
     );
   }
