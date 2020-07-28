@@ -33,10 +33,10 @@ class PictureDirectoryImpl implements PictureDirectory {
   @override
   Future<File> getLastPictureInDirectory() async {
     var files = await getFilesInDirectory();
-    if (files == null) return null;
+    if (files.isEmpty) return null;
     //final mimeType = lookupMimeType('/some/path/to/file/file.jpg');
     var file = files.firstWhere((element) => element.path.endsWith('.jpg'));
-    return file ?? null;
+    return file ??= null;
   }
 
   @override
@@ -44,7 +44,7 @@ class PictureDirectoryImpl implements PictureDirectory {
     var directory = await getDirectory();
     var files = directory.listSync().toList();
     if (files.isEmpty) {
-      return null;
+      return [];
     }
     files.sort((a, b) => b.path.compareTo(a.path));
     return files;

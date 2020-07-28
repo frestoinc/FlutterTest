@@ -180,12 +180,12 @@ class _CameraContentState extends State<CameraContent> {
                           (MediaQuery.of(context).size.height * 0.05) - 10.0,
                       backgroundColor: Colors.black,
                       child: (state is CameraReadyState)
-                          ? state.path == null
-                              ? Container()
-                              : Image.file(
+                          ? state.path != null
+                              ? Image.file(
                                   state.path,
                                   fit: BoxFit.fill,
                                 )
+                              : Container()
                           : Container()),
                   onTap: () => _showBottomSheetImages(),
                 ),

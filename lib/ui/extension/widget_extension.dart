@@ -49,11 +49,8 @@ extension Navigation on BuildContext {
         this, MaterialPageRoute(builder: (BuildContext context) => route));
   }
 
-  Future<bool> buildAlertDialog(
-    DialogType type,
-    dynamic t,
-    DialogListener listener,
-  ) async {
+  Future<bool> buildAlertDialog(DialogType type, DialogListener listener,
+      [dynamic t]) async {
     return await showDialog(
         context: this,
         barrierDismissible: false,
@@ -65,7 +62,7 @@ extension Navigation on BuildContext {
                 ),
               ),
               actions: <Widget>[
-                type.nBtn != null
+                type.nBtn.isNotEmpty
                     ? FlatButton(
                         child: Text(type.nBtn),
                         onPressed: () => {

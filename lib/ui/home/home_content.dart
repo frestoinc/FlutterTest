@@ -106,7 +106,7 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
 
     return WillPopScope(
       onWillPop: () =>
-          context.buildAlertDialog(DialogType.DIALOG_EXIT_APP, null, this),
+          context.buildAlertDialog(DialogType.DIALOG_EXIT_APP, this),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         drawer: Drawer(
@@ -346,7 +346,7 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
     return Dismissible(
       key: ValueKey(e),
       confirmDismiss: (direction) =>
-          context.buildAlertDialog(DialogType.DIALOG_CONFIRM_DELETE, e, this),
+          context.buildAlertDialog(DialogType.DIALOG_CONFIRM_DELETE, this, e),
       direction: DismissDirection.endToStart,
       background: _buildDismissBackground(),
       child: _buildExpansionTile(e),

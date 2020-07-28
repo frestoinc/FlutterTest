@@ -11,7 +11,7 @@ extension DialogStrings on DialogType {
       case DialogType.DIALOG_CONFIRM_DELETE:
         return 'DELETE ENTRY';
       default:
-        return null;
+        return '';
     }
   }
 
@@ -33,7 +33,7 @@ extension DialogStrings on DialogType {
       case DialogType.DIALOG_EXIT_APP:
         return 'Yes';
       default:
-        return null;
+        return '';
     }
   }
 
@@ -44,7 +44,7 @@ extension DialogStrings on DialogType {
       case DialogType.DIALOG_EXIT_APP:
         return 'No';
       default:
-        return null;
+        return '';
     }
   }
 }
