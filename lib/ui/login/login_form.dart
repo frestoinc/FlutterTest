@@ -41,7 +41,7 @@ class _LoginFormState extends State<LoginForm> {
           Scaffold.of(context).showSnackBar(SnackBar(
             key: ValueKey('login_snackbar'),
             content: Text(
-              state.error.toString(),
+              state.error,
               style: TextStyle(
                 color: Colors.red,
               ),

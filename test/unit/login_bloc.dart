@@ -62,7 +62,9 @@ void main() {
       },
       act: (bloc) => bloc.add(LoginEmailChangedEvent(value: 'qwrtasd')),
       wait: const Duration(milliseconds: 500),
-      expect: [LoginFailureState(error: null)],
+      expect: [
+        LoginFailureState(error: [EMAIL_ERROR, null])
+      ],
     );
 
     blocTest<LoginBloc, LoginState>(
@@ -72,7 +74,9 @@ void main() {
         return _loginBloc;
       },
       wait: const Duration(milliseconds: 500),
-      expect: [LoginFailureState(error: null)],
+      expect: [
+        LoginFailureState(error: [EMAIL_ERROR, null])
+      ],
     );
   });
 
@@ -104,7 +108,9 @@ void main() {
       },
       act: (bloc) => bloc.add(LoginPasswordChangedEvent(value: 'abc')),
       wait: const Duration(milliseconds: 500),
-      expect: [LoginFailureState(error: null)],
+      expect: [
+        LoginFailureState(error: [null, PWD_ERROR])
+      ],
     );
 
     blocTest<LoginBloc, LoginState>(
@@ -114,7 +120,9 @@ void main() {
         return _loginBloc;
       },
       wait: const Duration(milliseconds: 500),
-      expect: [LoginFailureState(error: null)],
+      expect: [
+        LoginFailureState(error: [null, PWD_ERROR])
+      ],
     );
   });
 
@@ -155,8 +163,8 @@ void main() {
       wait: const Duration(milliseconds: 3500),
       expect: [
         LoginLoadingState(),
-        LoginFailureState(error: null),
-        LoginFormFailureState(error: null),
+        LoginFailureState(error: [null, null]),
+        LoginFormFailureState(error: LOGIN_INVALID_CREDENTIALS),
       ],
     );
 
@@ -170,8 +178,8 @@ void main() {
       wait: const Duration(milliseconds: 3500),
       expect: [
         LoginLoadingState(),
-        LoginFailureState(error: null),
-        LoginFormFailureState(error: null),
+        LoginFailureState(error: [null, null]),
+        LoginFormFailureState(error: LOGIN_INVALID_CREDENTIALS),
       ],
     );
   });

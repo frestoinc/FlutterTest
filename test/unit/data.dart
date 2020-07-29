@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutterapp/data/entities/entities.dart';
@@ -10,3 +11,6 @@ Response mockRightData = SuccessState<List<ModelEntity>>(
     _bodyList.map((e) => ModelEntity.fromJson(e)).toList());
 Response mockLeftData = ErrorState<Exception>(FormatException('msg 123'));
 List<ModelEntity> list = (mockRightData as SuccessState).value;
+
+var error =
+    ErrorState<Exception>(TimeoutException(null, Duration(seconds: 10)));

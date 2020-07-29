@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutterapp/data/entities/model_entity.dart';
@@ -49,7 +47,7 @@ void main() {
         wait: const Duration(milliseconds: 1500),
         expect: [
           HomeLoadingState(),
-          HomeSuccessState(entities: null),
+          HomeSuccessState(entities: []),
         ],
         verify: (_) async {
           verify(_authBloc.manager.getRepositories()).called(1);
@@ -62,16 +60,14 @@ void main() {
 
     blocTest<HomeBloc, HomeState>('Test with error',
         build: () {
-          when(_manager.getRepositories()).thenAnswer((_) async =>
-              ErrorState<Exception>(
-                  TimeoutException(null, Duration(seconds: 10))));
+          when(_manager.getRepositories()).thenAnswer((_) async => error);
           return _homeBloc;
         },
         act: (bloc) => bloc.add(HomeFetchedDataEvent()),
         wait: const Duration(milliseconds: 1500),
         expect: [
           HomeLoadingState(),
-          HomeFailureState(error: null),
+          HomeFailureState(error: error.exception),
         ],
         verify: (_) async {
           verify(_authBloc.manager.getRepositories()).called(1);
@@ -107,7 +103,7 @@ void main() {
       },
       act: (bloc) => bloc.add(HomeSortedEvent(type: 1, list: <ModelEntity>[])),
       wait: const Duration(milliseconds: 600),
-      expect: [HomeLoadingState(), HomeSuccessState(entities: null)],
+      expect: [HomeLoadingState(), HomeSuccessState(entities: [])],
     );
 
     for (var i = 1; i < 3; i++) {
@@ -117,7 +113,7 @@ void main() {
           },
           act: (bloc) => bloc.add(HomeSortedEvent(type: i, list: list)),
           wait: const Duration(milliseconds: 600),
-          expect: [HomeLoadingState(), HomeSuccessState(entities: null)],
+          expect: [HomeLoadingState(), HomeSuccessState(entities: list)],
           verify: (_) async {
             expect(list.length, 3);
             switch (i) {

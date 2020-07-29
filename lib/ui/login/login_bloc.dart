@@ -73,7 +73,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         _list[1] = PWD_ERROR;
       }
       yield LoginFailureState(error: [_list[0], _list[1]]);
-      yield LoginFormFailureState(error: Exception(LOGIN_INVALID_CREDENTIALS));
+      yield LoginFormFailureState(error: LOGIN_INVALID_CREDENTIALS);
     }
   }
 
@@ -158,7 +158,7 @@ class LoginFailureState extends LoginState {
 }
 
 class LoginFormFailureState extends LoginState {
-  final Exception error;
+  final String error;
 
   const LoginFormFailureState({@required this.error});
 

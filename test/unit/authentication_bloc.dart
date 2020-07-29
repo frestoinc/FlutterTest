@@ -60,7 +60,7 @@ void main() {
         wait: const Duration(milliseconds: 6600),
         expect: [
           AuthenticationInProgressState(),
-          AuthenticationSuccessState(emailAddress: null),
+          AuthenticationSuccessState(emailAddress: 'abc123@gmail.com'),
         ],
         verify: (_) async {
           verify(_manager.validCredentials()).called(1);
@@ -76,7 +76,7 @@ void main() {
       wait: const Duration(milliseconds: 600),
       expect: [
         AuthenticationInProgressState(),
-        AuthenticationSuccessState(emailAddress: null)
+        AuthenticationSuccessState(emailAddress: 'e')
       ],
       verify: (_) async {
         verify(_manager.saveCredentials(User(emailAddress: 'e', password: 'p')))
