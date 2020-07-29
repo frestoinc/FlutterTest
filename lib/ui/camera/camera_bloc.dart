@@ -10,7 +10,7 @@ import 'package:flutterapp/data/repository/local/directory/directory.dart';
 import 'package:flutterapp/di/inject.dart';
 
 class CameraBloc extends Bloc<CameraEvent, CameraState> {
-  CameraBloc() : super(CameraInitial());
+  CameraBloc() : super(CameraInitialState());
 
   int _selectedCamera = 0;
   List<CameraDescription> _cameraList;
@@ -173,7 +173,7 @@ abstract class CameraState extends Equatable {
   List<Object> get props => [];
 }
 
-class CameraInitial extends CameraState {
+class CameraInitialState extends CameraState {
   @override
   List<Object> get props => [];
 }
