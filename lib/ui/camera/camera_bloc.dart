@@ -35,46 +35,44 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
       });
     }
 
-    if (event is CameraInitErrorEvent) {
-      yield CameraInitErrorState(error: event.error);
-    }
-
     if (event is CameraInitSuccessEvent) {
-      try {
-        await event.controller.initialize();
-        add(CameraReadyEvent(controller: event.controller));
-      } on CameraException catch (e) {
-        yield CameraInitErrorState(error: e);
-      }
+      await event.controller
+          .initialize()
+          .then((value) => add(CameraReadyEvent(controller: event.controller)))
+          .catchError((e) => add(CameraInitErrorEvent(error: e)));
     }
 
     if (event is CameraChangeDirectionEvent) {
       _selectedCamera =
           _selectedCamera < _cameraList.length - 1 ? _selectedCamera + 1 : 0;
-      await event.controller.dispose();
-      add(CameraInitSuccessEvent(
+      await event.controller.dispose().then((_) => add(CameraInitSuccessEvent(
           controller: CameraController(
-              _cameraList[_selectedCamera], ResolutionPreset.high)));
+              _cameraList[_selectedCamera], ResolutionPreset.high))));
     }
 
     if (event is CameraCapturingEvent) {
-      try {
-        var filename = await directory.generateFilename();
-        await event.controller.takePicture(filename).then((value) {
-          add(CameraCapturedEvent(controller: event.controller));
-        });
-      } on CameraException catch (e) {
-        yield CameraInitErrorState(error: e);
-      }
+      await directory
+          .generateFilename()
+          .then((filename) =>
+          event.controller
+              .takePicture(filename)
+              .catchError((e) => add(CameraInitErrorEvent(error: e)))
+              .then((value) =>
+              add(CameraCapturedEvent(controller: event.controller))))
+          .catchError((e) => add(CameraInitErrorEvent(error: e)));
     }
 
     if (event is CameraCapturedEvent) {
-      try {
-        var file = await directory.getLastPictureInDirectory();
-        yield CameraReadyState(controller: event.controller, path: file);
-      } on Exception catch (e) {
-        yield CameraInitErrorState(error: e);
-      }
+      await directory
+          .getLastPictureInDirectory()
+          .then((file) =>
+          add(CameraReadyToCapturedEvent(
+              controller: event.controller, path: file)))
+          .catchError((e) => add(CameraInitErrorEvent(error: e)));
+    }
+
+    if (event is CameraReadyToCapturedEvent) {
+      yield CameraReadyState(controller: event.controller, path: event.path);
     }
 
     if ((event is CameraReadyEvent)) {
@@ -84,6 +82,10 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
         }
       });
       add(CameraCapturedEvent(controller: event.controller));
+    }
+
+    if (event is CameraInitErrorEvent) {
+      yield CameraInitErrorState(error: event.error);
     }
 
     if ((event is CameraErrorEvent)) {
@@ -118,6 +120,17 @@ class CameraInitSuccessEvent extends CameraEvent {
 
   @override
   List<Object> get props => [controller];
+}
+
+class CameraReadyToCapturedEvent extends CameraEvent {
+  final CameraController controller;
+  final File path;
+
+  const CameraReadyToCapturedEvent(
+      {@required this.controller, @required this.path});
+
+  @override
+  List<Object> get props => [controller, path];
 }
 
 class CameraReadyEvent extends CameraEvent {

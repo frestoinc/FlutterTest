@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_blue/flutter_blue.dart';
+import 'package:location/location.dart';
 
 //TODO => FIRST IS BLE-INITIAL-STATE WHERE YOU CHECK WHETHER BLUETOOTH IS AVAILABLE OR NOT
 //TODO => THEN YOU CHECK WHETHER BLUETOOTH IS ON OR OFF
@@ -16,31 +17,33 @@ import 'package:flutter_blue/flutter_blue.dart';
 //TODO => FOR NOW OUTPUT THE LIST TO UI
 class BleBloc extends Bloc<BleEvent, BleState> {
   FlutterBlue flutterBlue;
+  final _location = Location();
+
+  static const _channel = MethodChannel('flutterapp/custom');
 
   BleBloc() : super(BleInitialState());
-
-  final List<BluetoothDevice> devicesList = <BluetoothDevice>[];
 
   @override
   Stream<BleState> mapEventToState(BleEvent event) async* {
     if (event is BleCheckStateEvent) {
-      try {
-        flutterBlue ??= FlutterBlue.instance;
-        var bleAvailable = await flutterBlue.isAvailable;
-        if (!bleAvailable) {
-          add(BleStatusMissingEvent());
+      flutterBlue ??= FlutterBlue.instance;
+      await flutterBlue.isAvailable.then((isAvailable) {
+        if (!isAvailable) {
+          add(BleStatusErrorEvent(
+              error:
+                  'Bluetooth not available on device. Returning to previous screen.'));
         } else {
           flutterBlue.state.listen((event) {
             _listenToBluetoothState(event);
           });
         }
-      } catch (e) {
-        yield BleErrorState(error: e.toString());
-      }
+      }).catchError((e) {
+        add(BleStatusErrorEvent(error: e.toString()));
+      });
     }
 
-    if (event is BleStatusMissingEvent) {
-      yield BleStatusMissingState();
+    if (event is BleStatusErrorEvent) {
+      yield BleErrorState(error: event.error);
     }
 
     if (event is BleStatusOffEvent) {
@@ -49,23 +52,24 @@ class BleBloc extends Bloc<BleEvent, BleState> {
 
     if (event is BleTurningOnEvent) {
       if (Platform.isAndroid) {
-        try {
-          var response = await MethodChannel('flutterapp/custom')
-              .invokeMethod('bluetoothSwitch');
-          print('response: $response');
-        } catch (e) {
-          yield BleErrorState(error: e.toString());
-        }
+        await _channel.invokeMethod('bluetoothSwitch').catchError((e) {
+          add(BleStatusErrorEvent(error: e.toString()));
+        });
       }
     }
 
     if (event is BleStatusOnEvent) {
-      add(BleStartScanningEvent());
+      add(BlePreScanningEvent());
+    }
+
+    if (event is BlePreScanningEvent) {
       yield (BleScanningState());
+      checkLocationPermission();
     }
 
     if (event is BleStartScanningEvent) {
       try {
+        var devicesList = <BluetoothDevice>[];
         await flutterBlue.setLogLevel(LogLevel.debug);
         await flutterBlue.startScan(timeout: Duration(seconds: 5));
         await flutterBlue.scanResults.listen((event) {
@@ -73,8 +77,9 @@ class BleBloc extends Bloc<BleEvent, BleState> {
             print('Device: ${sr.device.name}');
             devicesList.add(sr.device);
           }
+        }).onDone(() {
+          flutterBlue.stopScan();
         });
-        await flutterBlue.stopScan();
         yield BleScanningCompletedState(list: devicesList);
       } on PlatformException {
         yield BleErrorState(
@@ -85,18 +90,50 @@ class BleBloc extends Bloc<BleEvent, BleState> {
     }
   }
 
+  void checkLocationPermission() async {
+    //TODO IF ANDROID EARLIER THAN 10 RETURN
+    var _locationPermissionGranted = await _location.hasPermission();
+    if (_locationPermissionGranted == PermissionStatus.granted) {
+      checkLocationService();
+    } else {
+      await _location
+          .requestPermission()
+          .then((value) => add(value == PermissionStatus.granted
+              ? BlePreScanningEvent()
+              : BleStatusErrorEvent(
+                  error:
+                      'Location Permission Denied. Returning to previous screen.')))
+          .catchError((e) {
+        add(BleStatusErrorEvent(error: e.toString()));
+      });
+    }
+  }
+
+  void checkLocationService() async {
+    var _locationServiceEnabled = await _location.serviceEnabled();
+    if (_locationServiceEnabled) {
+      add(BleStartScanningEvent());
+    } else {
+      await _channel.invokeMethod('locationSwitch').then((value) {
+        add(value == 1
+            ? BlePreScanningEvent()
+            : BleStatusErrorEvent(
+                error:
+                    'Location Service not enabled. Returning to previous screen.'));
+      }).catchError((e) {
+        add(BleStatusErrorEvent(error: e.toString()));
+      });
+    }
+  }
+
   void _listenToBluetoothState(BluetoothState state) {
     switch (state) {
-      case BluetoothState.unavailable:
-        add(BleStatusMissingEvent());
-        break;
-
-      case BluetoothState.off:
-        add(BleStatusOffEvent());
-        break;
-
       case BluetoothState.on:
         add(BleStatusOnEvent());
+        break;
+      case BluetoothState.off:
+      case BluetoothState.turningOff:
+        add(BleStatusOffEvent());
         break;
       default:
         break;
@@ -116,13 +153,22 @@ class BleCheckStateEvent extends BleEvent {}
 
 class BleCheckStatusEvent extends BleEvent {}
 
-class BleStatusMissingEvent extends BleEvent {}
+class BleStatusErrorEvent extends BleEvent {
+  final String error;
+
+  const BleStatusErrorEvent({@required this.error});
+
+  @override
+  List<Object> get props => [error];
+}
 
 class BleStatusOffEvent extends BleEvent {}
 
 class BleTurningOnEvent extends BleEvent {}
 
 class BleStatusOnEvent extends BleEvent {}
+
+class BlePreScanningEvent extends BleEvent {}
 
 class BleStartScanningEvent extends BleEvent {}
 
@@ -147,8 +193,6 @@ class BleScanningCompletedState extends BleState {
 }
 
 class BleStatusOffState extends BleState {}
-
-class BleStatusMissingState extends BleState {}
 
 class BleErrorState extends BleState {
   final String error;

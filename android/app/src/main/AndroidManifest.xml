@@ -46,7 +46,7 @@
         </activity>-->
 
         <activity
-            android:name=".BluetoothSwitchPlugin"
+            android:name="com.example.flutterapp.CustomSwitchPlugin"
             android:hardwareAccelerated="true"
             android:launchMode="singleTop"
             android:windowSoftInputMode="adjustResize">
