@@ -54,19 +54,12 @@ class LocationHelperImpl implements LocationHelper {
     var result1 = await Permission.locationAlways.serviceStatus;
     var result2 = await Permission.locationWhenInUse.serviceStatus;
 
-    if (result1 == ServiceStatus.enabled || result2 == ServiceStatus.enabled) {
-      return true;
-    }
-    return false;
+    return result1 == ServiceStatus.enabled || result2 == ServiceStatus.enabled;
   }
 
   @override
   Future<bool> isLocationPermissionGranted() async {
-    var result = await Permission.location.status;
-    if (result == PermissionStatus.granted) {
-      return true;
-    }
-    return false;
+    return await Permission.location.status == PermissionStatus.granted;
   }
 
   @override
@@ -77,10 +70,6 @@ class LocationHelperImpl implements LocationHelper {
 
   @override
   Future<bool> requestLocationPermission() async {
-    final _result = await Permission.location.request();
-    if (_result == PermissionStatus.granted) {
-      return true;
-    }
-    return false;
+    return await Permission.location.request() == PermissionStatus.granted;
   }
 }

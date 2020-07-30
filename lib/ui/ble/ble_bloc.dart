@@ -116,8 +116,8 @@ class BleBloc extends Bloc<BleEvent, BleState> {
           add(isEnabled
               ? BlePreScanningEvent()
               : BleStatusErrorEvent(
-              error:
-              'Location Service not enabled. Returning to previous screen.'));
+                  error:
+                      'Location Service not enabled. Returning to previous screen.'));
         });
       }
     });
