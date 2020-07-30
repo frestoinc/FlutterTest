@@ -7,6 +7,7 @@ import 'package:flutterapp/extension/dialogs/dialog_listener.dart';
 import 'package:flutterapp/extension/dialogs/dialog_type.dart';
 import 'package:flutterapp/extension/string.dart';
 import 'package:flutterapp/ui/authentication/authentication_bloc.dart';
+import 'package:flutterapp/ui/ble/ble_page.dart';
 import 'package:flutterapp/ui/camera/camera_page.dart';
 import 'package:flutterapp/ui/extension/app_theme.dart';
 import 'package:flutterapp/ui/extension/widget_extension.dart';
@@ -25,6 +26,7 @@ final _drawerItemList = [
   DrawerItem('Navigate to Android (TODO)', Icons.android),
   DrawerItem('Navigate to IOS (TODO)'),
   DrawerItem('Camera', Icons.camera_alt),
+  DrawerItem('Bluetooth', Icons.bluetooth),
 ];
 
 class HomeContent extends StatefulWidget {
@@ -84,6 +86,8 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
         );
       case 2:
         return CameraPage();
+      case 3:
+        return BlePage();
       default:
         return Container(
           child: Text('jkl'),

@@ -75,6 +75,9 @@ dependencies:
   #webview
   webview_flutter: 0.3.22+1
 
+  #ble
+  flutter_blue: 0.7.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
