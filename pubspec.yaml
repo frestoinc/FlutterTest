@@ -78,9 +78,6 @@ dependencies:
   #ble
   flutter_blue: 0.7.2
 
-  #location
-  location: 3.0.2
-
 dev_dependencies:
   flutter_test:
     sdk: flutter

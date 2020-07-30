@@ -1,8 +1,9 @@
 package com.example.flutterapp
 
-import android.app.Activity
 import android.bluetooth.BluetoothAdapter
+import android.content.Context
 import android.content.Intent
+import android.location.LocationManager
 import android.provider.Settings
 import androidx.annotation.NonNull
 import io.flutter.embedding.android.FlutterActivity
@@ -32,8 +33,9 @@ class CustomSwitchPlugin : FlutterActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
-            REQUEST_CODE_FOR_TURN_ON_LOCATION -> if (resultCode == Activity.RESULT_OK) result.success(1) else result.success(0)
+            REQUEST_CODE_FOR_TURN_ON_LOCATION -> result.success(parseResult());
 
         }
         super.onActivityResult(requestCode, resultCode, data)
@@ -43,7 +45,7 @@ class CustomSwitchPlugin : FlutterActivity() {
         try {
             val adapter = BluetoothAdapter.getDefaultAdapter()
             adapter.enable()
-            result.success(1)
+            result.success(true)
         } catch (e: Exception) {
             result.notImplemented()
         }
@@ -55,5 +57,10 @@ class CustomSwitchPlugin : FlutterActivity() {
                 intent,
                 REQUEST_CODE_FOR_TURN_ON_LOCATION
         )
+    }
+
+    private fun parseResult(): Boolean {
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
     }
 }

@@ -15,9 +15,12 @@ import Flutter
 
     weak var weakSelf = self
     nativeChannel.methodCallHandler = { call, result in
-     if ("bluetoothSwitch" == call?.method) {
-       let strNative = weakSelf?.helloFromNativeCode()
-       result(strNative)
+     if ("locationSwitch" == call?.method) {
+       if let bundleId = Bundle.main.bundleIdentifier,
+                 let url = URL(string: "\(UIApplication.openSettingsURLString)&path=LOCATION/\(bundleId)") {
+                  UIApplication.shared.open(url, options: [:], completionHandler: nil)
+              }
+       result(bundleId)
      } else {
        result(FlutterMethodNotImplemented)
      }
