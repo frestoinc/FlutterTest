@@ -10,6 +10,7 @@ import 'package:flutter_blue/flutter_blue.dart';
 //TODO => THEN YOU CHECK WHETHER BLUETOOTH IS ON OR OFF
 //TODO => BLUETOOTH ON OUTPUT BLE-ON-STATE
 //TODO => BLUETOOTH OFF OUTPUT BLE-OFF-STATE
+//TODO => WHEN STATE IS BLE-OFF-STATE SHOW SNACKBAR THAT BLUETOOTH IS OFF. IF ANDROID TURN ON BLUETOOTH ADAPTER ELSE NOTHING
 //TODO => WHEN STATE IS BLE-ON-STATE ADD BLE-START-SCANNING-EVENT AND OUTPUT BLE-SCANNING-STATE
 //TODO => SCANNING COMPLETE ADD BLE-SCANNING-COMPLETED-EVENT AND OUTPUT BLE-SCANNING-COMPLETED-STATE
 //TODO => FOR NOW OUTPUT THE LIST TO UI
@@ -32,11 +33,8 @@ class BleBloc extends Bloc<BleEvent, BleState> {
           flutterBlue.state.listen((event) {
             _listenToBluetoothState(event);
           });
-
-          /*var bleStatus = await flutterBlue.isOn;
-          add(bleStatus ? BleStatusOnEvent() : BleStatusOffEvent());*/
         }
-      } on Exception catch (e) {
+      } catch (e) {
         yield BleErrorState(error: e.toString());
       }
     }

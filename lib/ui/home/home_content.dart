@@ -477,29 +477,33 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
   }
 
   Widget _buildLanguageViewHolder(ModelEntity model) {
-    return Container(
-      alignment: Alignment.topLeft,
-      margin: const EdgeInsets.fromLTRB(60.0, 0.0, 5.0, 5.0),
-      child: Row(
-        children: <Widget>[
-          Container(
-              margin: EdgeInsets.all(5.0),
-              width: 16,
-              height: 16,
-              decoration: BoxDecoration(
-                color: model.languageColor?.parseColorFromHex() ?? Colors.black,
-                shape: BoxShape.circle,
-              )),
-          Text(
-            model.language ?? 'Unknown',
-            textAlign: TextAlign.start,
-            style: TextStyle(
-              color: const Color(0xFF52575C),
-              fontSize: 12,
-              fontFamily: 'RobotoReg',
+    return Visibility(
+      visible: model.language != null,
+      child: Container(
+        alignment: Alignment.topLeft,
+        margin: const EdgeInsets.fromLTRB(60.0, 0.0, 5.0, 5.0),
+        child: Row(
+          children: <Widget>[
+            Container(
+                margin: EdgeInsets.all(5.0),
+                width: 16,
+                height: 16,
+                decoration: BoxDecoration(
+                  color:
+                      model.languageColor?.parseColorFromHex() ?? Colors.black,
+                  shape: BoxShape.circle,
+                )),
+            Text(
+              model.language ?? 'Unknown',
+              textAlign: TextAlign.start,
+              style: TextStyle(
+                color: const Color(0xFF52575C),
+                fontSize: 12,
+                fontFamily: 'RobotoReg',
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -507,7 +511,8 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
   Widget _buildStarsViewHolder(ModelEntity model) {
     return Container(
       alignment: Alignment.topLeft,
-      margin: const EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 5.0),
+      margin: EdgeInsets.fromLTRB(
+          model.language != null ? 5.0 : 60.0, 0.0, 5.0, 5.0),
       child: Row(
         children: <Widget>[
           Container(
