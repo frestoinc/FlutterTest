@@ -11,6 +11,41 @@ abstract class LocationHelper {
   Future<bool> requestLocationPermission();
 }
 
+//SAMPLE USAGE
+// final _locationHelper = getIt<LocationHelper>();
+//
+//void checkLocationPermission() async {
+//    await _locationHelper.isLocationPermissionGranted().then((granted) {
+//      if (granted) {
+//        checkLocationService();
+//      } else {
+//        _locationHelper.requestLocationPermission().then((isGranted) {
+//          if (isGranted) {
+//            checkLocationPermission();
+//          } else {
+//            print(
+//                'user still deny the permission. up to you to do smt about it');
+//          }
+//        });
+//      }
+//    });
+//  }
+//
+//  void checkLocationService() async {
+//    await _locationHelper.isLocationEnabled().then((enabled) {
+//      if (enabled) {
+//        print('all ok and ready to proceed');
+//      } else {
+//        _locationHelper.enableLocationService().then((isEnabled) {
+//          if (isEnabled) {
+//            checkLocationService();
+//          } else {
+//            print('user did not turn on location. up to you to do smt about it');
+//          }
+//        });
+//      }
+//    });
+//  }
 class LocationHelperImpl implements LocationHelper {
   const LocationHelperImpl();
 

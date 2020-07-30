@@ -64,8 +64,7 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
     if (event is CameraCapturedEvent) {
       await directory
           .getLastPictureInDirectory()
-          .then((file) =>
-          add(CameraReadyToCapturedEvent(
+          .then((file) => add(CameraReadyToCapturedEvent(
               controller: event.controller, path: file)))
           .catchError((e) => add(CameraInitErrorEvent(error: e)));
     }

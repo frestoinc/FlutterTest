@@ -97,12 +97,11 @@ class BleBloc extends Bloc<BleEvent, BleState> {
         checkLocationService();
       } else {
         _locationHelper.requestLocationPermission().then((isGranted) {
-          if (isGranted) {
-            checkLocationPermission();
-          } else {
-            print(
-                'user still deny the permission. up to you to do smt about it');
-          }
+          add(isGranted
+              ? BlePreScanningEvent()
+              : BleStatusErrorEvent(
+                  error:
+                      'Location Permission Denied. Returning to previous screen.'));
         });
       }
     });
@@ -114,11 +113,11 @@ class BleBloc extends Bloc<BleEvent, BleState> {
         print('all ok and ready to proceed');
       } else {
         _locationHelper.enableLocationService().then((isEnabled) {
-          if (isEnabled) {
-            checkLocationService();
-          } else {
-            print('user did not turn on location');
-          }
+          add(isEnabled
+              ? BlePreScanningEvent()
+              : BleStatusErrorEvent(
+              error:
+              'Location Service not enabled. Returning to previous screen.'));
         });
       }
     });
