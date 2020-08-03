@@ -16,6 +16,7 @@ import 'package:flutterapp/extension/location_helper.dart';
 //TODO => WHEN STATE IS BLE-ON-STATE ADD BLE-START-SCANNING-EVENT AND OUTPUT BLE-SCANNING-STATE
 //TODO => SCANNING COMPLETE ADD BLE-SCANNING-COMPLETED-EVENT AND OUTPUT BLE-SCANNING-COMPLETED-STATE
 //TODO => FOR NOW OUTPUT THE LIST TO UI
+
 class BleBloc extends Bloc<BleEvent, BleState> {
   FlutterBlue flutterBlue;
   final _locationHelper = getIt<LocationHelper>();
@@ -66,10 +67,8 @@ class BleBloc extends Bloc<BleEvent, BleState> {
       checkLocationPermission();
     }
 
-    //todo refactor
     if (event is BleStartScanningEvent) {
-      var devicesList = <BluetoothDevice>[];
-
+      var devicesList = <ScanResult>[];
       await flutterBlue.setLogLevel(LogLevel.debug);
       await flutterBlue
           .startScan(timeout: Duration(seconds: 5), allowDuplicates: false)
@@ -81,7 +80,7 @@ class BleBloc extends Bloc<BleEvent, BleState> {
       await flutterBlue.scanResults.listen((event) {
         for (var sr in event) {
           print('Device: ${sr.device.name}');
-          devicesList.add(sr.device);
+          devicesList.add(sr);
         }
       });
     }
@@ -110,7 +109,7 @@ class BleBloc extends Bloc<BleEvent, BleState> {
   void checkLocationService() async {
     await _locationHelper.isLocationEnabled().then((enabled) {
       if (enabled) {
-        print('all ok and ready to proceed');
+        add((BleStartScanningEvent()));
       } else {
         _locationHelper.enableLocationService().then((isEnabled) {
           add(isEnabled
@@ -134,6 +133,12 @@ class BleBloc extends Bloc<BleEvent, BleState> {
         break;
       default:
         break;
+    }
+  }
+
+  Future<void> rescan() async {
+    if (state is! BleScanningState) {
+      add(BlePreScanningEvent());
     }
   }
 }
@@ -170,7 +175,7 @@ class BlePreScanningEvent extends BleEvent {}
 class BleStartScanningEvent extends BleEvent {}
 
 class BleScanningCompleteEvent extends BleEvent {
-  final List<BluetoothDevice> list;
+  final List<ScanResult> list;
 
   const BleScanningCompleteEvent({@required this.list});
 
@@ -190,7 +195,7 @@ class BleInitialState extends BleState {}
 class BleScanningState extends BleState {}
 
 class BleScanningCompletedState extends BleState {
-  final List<BluetoothDevice> list;
+  final List<ScanResult> list;
 
   const BleScanningCompletedState({@required this.list});
 

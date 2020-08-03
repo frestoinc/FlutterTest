@@ -68,7 +68,12 @@ class _BleContentState extends State<BleContent> {
           });
         }
       },
-      child: _buildStateView(),
+      child: Container(
+        child: RefreshIndicator(
+          onRefresh: () => _bleBloc.rescan(),
+          child: _buildStateView(),
+        ),
+      ),
     );
   }
 
@@ -97,12 +102,17 @@ class _BleContentState extends State<BleContent> {
     );
   }
 
-  Widget _buildListView(List<BluetoothDevice> list) {
+  Widget _buildListView(List<ScanResult> list) {
     return ListView.builder(
         itemCount: list.length,
         itemBuilder: (context, index) {
           return ListTile(
-            title: Text('${list[index].name}'),
+            leading: Text('Strength: ${list[index].rssi ?? 0}'),
+            title: Text(
+                'Device Name: ${list[index].device.name.isNotEmpty ? list[index].device.name : '(unknown device)'}'),
+            subtitle: Text(
+                'Device ID: ${list[index].device.id.id.isNotEmpty ? list[index].device.id.id : '(unknown id)'}'),
+            dense: true,
           );
         });
   }

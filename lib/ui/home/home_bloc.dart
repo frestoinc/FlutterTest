@@ -87,7 +87,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     yield HomeSuccessState(entities: list);
   }
 
-  Future<Null> fetchData() async {
+  Future<void> fetchData() async {
     if (state is! HomeLoadingState) {
       add(HomeFetchedDataEvent());
     }
