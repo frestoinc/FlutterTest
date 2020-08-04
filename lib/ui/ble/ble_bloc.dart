@@ -8,17 +8,9 @@ import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutterapp/di/inject.dart';
 import 'package:flutterapp/extension/location_helper.dart';
 
-//TODO => FIRST IS BLE-INITIAL-STATE WHERE YOU CHECK WHETHER BLUETOOTH IS AVAILABLE OR NOT
-//TODO => THEN YOU CHECK WHETHER BLUETOOTH IS ON OR OFF
-//TODO => BLUETOOTH ON OUTPUT BLE-ON-STATE
-//TODO => BLUETOOTH OFF OUTPUT BLE-OFF-STATE
-//TODO => WHEN STATE IS BLE-OFF-STATE SHOW SNACKBAR THAT BLUETOOTH IS OFF. IF ANDROID TURN ON BLUETOOTH ADAPTER ELSE NOTHING
-//TODO => WHEN STATE IS BLE-ON-STATE ADD BLE-START-SCANNING-EVENT AND OUTPUT BLE-SCANNING-STATE
-//TODO => SCANNING COMPLETE ADD BLE-SCANNING-COMPLETED-EVENT AND OUTPUT BLE-SCANNING-COMPLETED-STATE
-//TODO => FOR NOW OUTPUT THE LIST TO UI
-
 class BleBloc extends Bloc<BleEvent, BleState> {
   FlutterBlue flutterBlue;
+
   final _locationHelper = getIt<LocationHelper>();
 
   static const _channel = MethodChannel('flutterapp/custom');

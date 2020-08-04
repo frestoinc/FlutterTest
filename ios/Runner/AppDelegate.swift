@@ -1,10 +1,8 @@
 import UIKit
 import Flutter
-
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
-
-  override func application(
+    override func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
@@ -12,19 +10,24 @@ import Flutter
     let nativeChannel = FlutterMethodChannel(
       name: "flutterapp/custom",
       binaryMessenger: controller.binaryMessenger)
-
-    weak var weakSelf = self
-    nativeChannel.methodCallHandler = { call, result in
-     if ("locationSwitch" == call?.method) {
-       if let bundleId = Bundle.main.bundleIdentifier,
-                 let url = URL(string: "\(UIApplication.openSettingsURLString)&path=LOCATION/\(bundleId)") {
-                  UIApplication.shared.open(url, options: [:], completionHandler: nil)
-              }
-       result(bundleId)
-     } else {
-       result(FlutterMethodNotImplemented)
-     }
-    }
+    nativeChannel.setMethodCallHandler({
+      (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
+        switch (call.method) {
+        case "locationSwitch":
+            let bundleId = Bundle.main.bundleIdentifier
+            let url = URL(string: "\(UIApplication.openSettingsURLString)&path=LOCATION/\(String(describing: bundleId))")
+            if #available(iOS 10.0, *) {
+                UIApplication.shared.open(url!, options: [:], completionHandler: nil)
+            } else {
+                print("ios not supported")
+            }
+            result(bundleId)
+            break;
+        default:
+            result(FlutterMethodNotImplemented)
+            break;
+        }
+    })
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
