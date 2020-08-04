@@ -77,7 +77,6 @@ class CustomPlugin : FlutterActivity(), ActivityCallback {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             REQUEST_CODE_FOR_TURN_ON_LOCATION -> parseLocationResult()
             REQUEST_CODE_FOR_SWITCH_ON_WIFI -> parseWifiResult()
