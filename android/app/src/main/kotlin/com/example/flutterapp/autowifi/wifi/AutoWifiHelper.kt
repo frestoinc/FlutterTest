@@ -77,31 +77,6 @@ class AutoWifiHelper(private val appContext: Context, private val activityCallba
                     Log.e("TAG", "onUnavailable")
                     activityCallback.onUnavailable()
                 }
-
-                override fun onLost(network: Network) {
-                    super.onLost(network)
-                    Log.e("TAG", "onLost")
-                }
-
-                override fun onBlockedStatusChanged(network: Network, blocked: Boolean) {
-                    super.onBlockedStatusChanged(network, blocked)
-                    Log.e("TAG", "onBlockedStatusChanged")
-                }
-
-                override fun onCapabilitiesChanged(network: Network, networkCapabilities: NetworkCapabilities) {
-                    super.onCapabilitiesChanged(network, networkCapabilities)
-                    Log.e("TAG", "onCapabilitiesChanged")
-                }
-
-                override fun onLinkPropertiesChanged(network: Network, linkProperties: LinkProperties) {
-                    super.onLinkPropertiesChanged(network, linkProperties)
-                    Log.e("TAG", "onLinkPropertiesChanged")
-                }
-
-                override fun onLosing(network: Network, maxMsToLive: Int) {
-                    super.onLosing(network, maxMsToLive)
-                    Log.e("TAG", "onLosing")
-                }
             }
 
     override fun isWifiEnabled(): Boolean {
