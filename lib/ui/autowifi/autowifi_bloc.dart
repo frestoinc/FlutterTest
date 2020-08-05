@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:equatable/equatable.dart';
+import 'package:fimber/fimber_base.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -47,7 +48,7 @@ class AutoWifiBloc extends Bloc<AutoWifiEvent, AutoWifiState> {
       yield AutoWifiAttemptConnectState();
       var value = {'SSID': event.scanResult.SSID, 'pwd': event.pwd};
       await _channel.invokeMethod<bool>('autoWifiConnect', value).then((value) {
-        print('status return: $value');
+        Fimber.d('status return: $value');
         add(value
             ? AutoWifiSuccessEvent()
             : AutoWifiErrorEvent(error: 'Not able to connect'));

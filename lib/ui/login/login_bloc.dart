@@ -54,7 +54,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   Stream<LoginState> _mapStateOfPasswordEmailChanged(String value) async* {
     _list[1] = !value.isPasswordValid() ? PWD_ERROR : null;
-    print('pwd error: ${_list[1]}');
     yield !value.isPasswordValid()
         ? LoginFailureState(error: _list)
         : LoginEditingState();

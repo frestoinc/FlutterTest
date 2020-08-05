@@ -63,9 +63,44 @@ class _BleContentState extends State<BleContent> {
               ),
             ),
           );
-          Future.delayed(Duration(seconds: 3), () {
+          /*Future.delayed(Duration(seconds: 3), () {
             Navigator.of(context).pop();
-          });
+          });*/
+        }
+
+        if (state is BleServiceDiscoveredState) {
+          final _list = state.services;
+          if (_list.isNotEmpty) {
+            showBottomSheet(
+                context: context,
+                builder: (ctx) {
+                  return Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          state.device.id.id,
+                          textAlign: TextAlign.center,
+                          softWrap: true,
+                          maxLines: 1,
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontFamily: 'RobotBold',
+                            fontSize: 24,
+                          ),
+                        ),
+                      ),
+                      buildSpacer(20.0),
+                      ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: _list.length,
+                          itemBuilder: (ctx, index) {
+                            return _buildExpansionTile(_list[index]);
+                          }),
+                    ],
+                  );
+                });
+          }
         }
       },
       child: Container(
@@ -75,6 +110,104 @@ class _BleContentState extends State<BleContent> {
         ),
       ),
     );
+  }
+
+  Widget _buildExpansionTile(BluetoothService service) {
+    final _list = service.characteristics;
+    return _list.isEmpty
+        ? Container()
+        : Container(
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: Colors.grey)),
+            ),
+            child: ExpansionTile(
+                key: ValueKey(service),
+                title: Text(
+                  service.uuid.toString(),
+                ),
+                children: <Widget>[
+                  ..._buildChildTile(service.characteristics)
+                ]),
+          );
+  }
+
+  List<Widget> _buildChildTile(List<BluetoothCharacteristic> characteristics) {
+    var group = <Widget>[];
+    characteristics.forEach((characteristic) {
+      group.add(
+        Container(
+          alignment: Alignment.centerLeft,
+          padding: EdgeInsets.all(10),
+          child: Column(
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Text(characteristic.uuid.toString()),
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  ..._buildButton(characteristic),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    });
+    return group;
+  }
+
+  List<Widget> _buildButton(BluetoothCharacteristic characteristic) {
+    var group = <Widget>[];
+    if (characteristic.properties.read) {
+      group.add(
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: RaisedButton(
+            color: Colors.blue,
+            child: Text(
+              'READ',
+              style: TextStyle(color: Colors.white),
+            ),
+            onPressed: () {},
+          ),
+        ),
+      );
+    }
+
+    if (characteristic.properties.write) {
+      group.add(
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: RaisedButton(
+            color: Colors.blue,
+            child: Text(
+              'WRITE',
+              style: TextStyle(color: Colors.white),
+            ),
+            onPressed: () {},
+          ),
+        ),
+      );
+    }
+
+    if (characteristic.properties.notify) {
+      group.add(
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: RaisedButton(
+            color: Colors.blue,
+            child: Text(
+              'NOTIFY',
+              style: TextStyle(color: Colors.white),
+            ),
+            onPressed: () {},
+          ),
+        ),
+      );
+    }
+    return group;
   }
 
   Widget _buildStateView() {
@@ -106,11 +239,14 @@ class _BleContentState extends State<BleContent> {
     return ListView.builder(
         itemCount: list.length,
         itemBuilder: (context, index) {
-          return ListTile(
-            leading: _buildAvatarViewHolder(list[index]),
-            title: _buildDeviceName(list[index]),
-            subtitle: _buildDeviceId(list[index]),
-            onTap: () {},
+          return Container(
+            child: ListTile(
+              leading: _buildAvatarViewHolder(list[index]),
+              title: _buildDeviceName(list[index]),
+              subtitle: _buildDeviceId(list[index]),
+              onTap: () =>
+                  _bleBloc.add(BleAttemptConnectEvent(result: list[index])),
+            ),
           );
         });
   }
@@ -230,10 +366,11 @@ class _BleContentState extends State<BleContent> {
               fontFamily: 'RobotoBold',
             ),
           ),
-          onPressed: () => {
-                FocusScope.of(context).unfocus(),
-                _bleBloc.add(BleStartScanningEvent()),
-              }),
+          onPressed: () =>
+          {
+            FocusScope.of(context).unfocus(),
+            _bleBloc.add(BlePreScanningEvent()),
+          }),
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:fimber/fimber.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,7 +26,7 @@ class DrawerItem {
 
 final _drawerItemList = [
   DrawerItem('Camera', Icons.camera_alt),
-  DrawerItem('Bluetooth (WIP)', Icons.bluetooth),
+  DrawerItem('Bluetooth LE (WIP)', Icons.bluetooth),
   DrawerItem('AutoWifi (WIP)', Icons.wifi),
 ];
 
@@ -55,7 +56,7 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
 
   @override
   void onNegativeButtonClicked(DialogType type, dynamic t) {
-    print('onNegativeButtonClicked: $type, $t');
+    Fimber.d('onNegativeButtonClicked: $type, $t');
   }
 
   @override
@@ -323,19 +324,19 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
     return _data.isEmpty
         ? _buildError(false)
         : Scaffold(
-            backgroundColor: Colors.white,
-            body: ReorderableListView(
-              onReorder: (a, b) => _homeBloc.onReorder(a, b),
-              children: _getItemList(_data),
-            ),
-          );
+      backgroundColor: Colors.white,
+      body: ReorderableListView(
+        onReorder: (a, b) => _homeBloc.onReorder(a, b),
+        children: _getItemList(_data),
+      ),
+    );
   }
 
   List<Widget> _getItemList(List<ModelEntity> list) {
     return list
         .asMap()
         .map((index, value) =>
-            MapEntry(index, _buildDismissibleList(index, value)))
+        MapEntry(index, _buildDismissibleList(index, value)))
         .values
         .toList();
   }
@@ -484,7 +485,7 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
                 height: 16,
                 decoration: BoxDecoration(
                   color:
-                      model.languageColor?.parseColorFromHex() ?? Colors.black,
+                  model.languageColor?.parseColorFromHex() ?? Colors.black,
                   shape: BoxShape.circle,
                 )),
             Text(
@@ -621,9 +622,9 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
             ),
           ),
           onPressed: () => {
-                FocusScope.of(context).unfocus(),
-                _homeBloc.fetchData(),
-              }),
+            FocusScope.of(context).unfocus(),
+            _homeBloc.fetchData(),
+          }),
     );
   }
 }

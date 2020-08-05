@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:io' show Platform;
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:fimber/fimber.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_blue/flutter_blue.dart';
@@ -9,9 +11,12 @@ import 'package:flutterapp/di/inject.dart';
 import 'package:flutterapp/extension/location_helper.dart';
 
 class BleBloc extends Bloc<BleEvent, BleState> {
-  FlutterBlue flutterBlue;
+  FlutterBlue _flutterBlue;
 
   final _locationHelper = getIt<LocationHelper>();
+
+  final _scanResult = <ScanResult>[];
+  var _scanComplete = false;
 
   static const _channel = MethodChannel('flutterapp/custom');
 
@@ -20,22 +25,18 @@ class BleBloc extends Bloc<BleEvent, BleState> {
   @override
   Stream<BleState> mapEventToState(BleEvent event) async* {
     if (event is BleCheckStateEvent) {
-      flutterBlue ??= FlutterBlue.instance;
-      await flutterBlue.isAvailable.then((isAvailable) {
+      _flutterBlue ??= FlutterBlue.instance;
+      await _flutterBlue.isAvailable.then((isAvailable) {
         if (!isAvailable) {
           add(BleStatusErrorEvent(
               error:
                   'Bluetooth not available on device. Returning to previous screen.'));
         } else {
-          flutterBlue.state.listen((event) {
-            _listenToBluetoothState(event);
+          _flutterBlue.state.listen((state) {
+            _listenToBluetoothState(state);
           });
         }
       }).catchError((e) => add(BleStatusErrorEvent(error: e.toString())));
-    }
-
-    if (event is BleStatusErrorEvent) {
-      yield BleErrorState(error: event.error);
     }
 
     if (event is BleStatusOffEvent) {
@@ -60,26 +61,75 @@ class BleBloc extends Bloc<BleEvent, BleState> {
     }
 
     if (event is BleStartScanningEvent) {
+      _scanComplete = false;
       var devicesList = <ScanResult>[];
-      await flutterBlue.setLogLevel(LogLevel.debug);
-      await flutterBlue
-          .startScan(timeout: Duration(seconds: 5), allowDuplicates: false)
+      await _flutterBlue
+          .startScan(
+          scanMode: ScanMode.balanced,
+          timeout: Duration(seconds: 5),
+          allowDuplicates: false)
           .catchError((e) => add(BleStatusErrorEvent(error: e.toString())))
           .whenComplete(() {
-        flutterBlue.stopScan();
+        _flutterBlue.stopScan();
         add(BleScanningCompleteEvent(list: devicesList));
       });
 
-      await flutterBlue.scanResults.listen((event) {
+      await _flutterBlue.scanResults.listen((event) {
         for (var sr in event) {
-          print('Device: ${sr.device.name}');
+          Fimber.d(
+              'id: ${sr.device.id.id}, type: ${sr.device.type.toString()}');
           devicesList.add(sr);
         }
       });
     }
 
     if (event is BleScanningCompleteEvent) {
+      _scanResult.clear();
+      _scanResult.addAll(event.list);
+      _scanComplete = true;
       yield BleScanningCompletedState(list: event.list);
+    }
+
+    if (event is BleAttemptConnectEvent) {
+      yield (BleScanningState());
+
+      final device = event.result.device;
+
+      await device.connect(autoConnect: false).timeout(Duration(seconds: 5),
+          onTimeout: () {
+            throw TimeoutException('timeout after 5 seconds');
+          }).catchError((e) => add(BleStatusErrorEvent(error: e.toString())));
+
+      await device.state.listen((event) {
+        switch (event) {
+          case BluetoothDeviceState.connected:
+            device
+                .discoverServices()
+                .then((services) =>
+                add(BleServiceDiscoveredEvent(
+                    device: device, services: services)))
+                .catchError(
+                    (e) => add(BleStatusErrorEvent(error: e.toString())));
+            break;
+          default:
+            break;
+        }
+      });
+    }
+
+    if (event is BleServiceDiscoveredEvent) {
+      yield BleServiceDiscoveredState(
+          device: event.device, services: event.services);
+      if (_scanComplete) {
+        yield BleScanningCompletedState(list: _scanResult);
+      }
+    }
+
+    if (event is BleStatusErrorEvent) {
+      yield BleErrorState(error: event.error);
+      if (_scanComplete) {
+        yield BleScanningCompletedState(list: _scanResult);
+      }
     }
   }
 
@@ -92,8 +142,8 @@ class BleBloc extends Bloc<BleEvent, BleState> {
           add(isGranted
               ? BlePreScanningEvent()
               : BleStatusErrorEvent(
-                  error:
-                      'Location Permission Denied. Returning to previous screen.'));
+              error:
+              'Location Permission Denied. Returning to previous screen.'));
         }).catchError((e) => add(BleStatusErrorEvent(error: e.toString())));
       }
     });
@@ -176,6 +226,26 @@ class BleScanningCompleteEvent extends BleEvent {
   List<Object> get props => [list];
 }
 
+class BleAttemptConnectEvent extends BleEvent {
+  final ScanResult result;
+
+  const BleAttemptConnectEvent({@required this.result});
+
+  @override
+  List<Object> get props => [result];
+}
+
+class BleServiceDiscoveredEvent extends BleEvent {
+  final BluetoothDevice device;
+  final List<BluetoothService> services;
+
+  const BleServiceDiscoveredEvent(
+      {@required this.device, @required this.services});
+
+  @override
+  List<Object> get props => [services];
+}
+
 abstract class BleState extends Equatable {
   const BleState();
 
@@ -205,4 +275,15 @@ class BleErrorState extends BleState {
 
   @override
   List<Object> get props => [error];
+}
+
+class BleServiceDiscoveredState extends BleState {
+  final BluetoothDevice device;
+  final List<BluetoothService> services;
+
+  const BleServiceDiscoveredState(
+      {@required this.device, @required this.services});
+
+  @override
+  List<Object> get props => [services];
 }

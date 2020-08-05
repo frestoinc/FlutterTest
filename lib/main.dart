@@ -1,3 +1,4 @@
+import 'package:fimber/fimber.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterapp/ui/splash/splash_page.dart';
@@ -11,25 +12,25 @@ import 'ui/login/login_page.dart';
 class CustomBlocObserver extends BlocObserver {
   @override
   void onEvent(Bloc bloc, Object event) {
-    print('bloc: $bloc, event: $event');
+    Fimber.d('bloc: $bloc, event: $event');
     super.onEvent(bloc, event);
   }
 
   @override
   void onChange(Cubit cubit, Change change) {
-    print('change: $change');
+    Fimber.d('change: $change');
     super.onChange(cubit, change);
   }
 
   @override
   void onTransition(Bloc bloc, Transition transition) {
-    print('bloc: $bloc, transition: $transition');
+    Fimber.d('bloc: $bloc, transition: $transition');
     super.onTransition(bloc, transition);
   }
 
   @override
   void onError(Cubit cubit, Object error, StackTrace stackTrace) {
-    print('error: $error');
+    Fimber.e('onError', ex: error, stacktrace: stackTrace);
     super.onError(cubit, error, stackTrace);
   }
 }
@@ -38,7 +39,7 @@ void main(/*[ExternalApplicationCommandInvoker _invoker]*/) {
   Bloc.observer = CustomBlocObserver();
   setInjection();
   WidgetsFlutterBinding.ensureInitialized();
-
+  Fimber.plantTree(DebugTree());
   /* _invoker?.addCommandHandler(
     ExternalApplicationCommand.reset,
     () async {
