@@ -9,6 +9,8 @@ const val REQUEST_CODE_FOR_LOCATION_PERMISSION = 0x98
 
 const val REQUEST_CODE_FOR_TURN_ON_LOCATION = 0x97
 
+const val REQUEST_CODE_FOR_TURN_ON_BLUETOOTH = 0x96
+
 fun isAndroidQorLater(): Boolean {
     return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 }

@@ -8,10 +8,7 @@ import android.os.Handler
 import android.provider.Settings
 import androidx.annotation.NonNull
 import com.example.flutterapp.autowifi.ActivityCallback
-import com.example.flutterapp.autowifi.domain.REQUEST_CODE_FOR_LOCATION_PERMISSION
-import com.example.flutterapp.autowifi.domain.REQUEST_CODE_FOR_SWITCH_ON_WIFI
-import com.example.flutterapp.autowifi.domain.REQUEST_CODE_FOR_TURN_ON_LOCATION
-import com.example.flutterapp.autowifi.domain.isAndroidQorLater
+import com.example.flutterapp.autowifi.domain.*
 import com.example.flutterapp.autowifi.location.AutoWifiLocationHelper
 import com.example.flutterapp.autowifi.wifi.AutoWifiHelper
 import com.google.gson.Gson
@@ -80,6 +77,7 @@ class CustomPlugin : FlutterActivity(), ActivityCallback {
         when (requestCode) {
             REQUEST_CODE_FOR_TURN_ON_LOCATION -> parseLocationResult()
             REQUEST_CODE_FOR_SWITCH_ON_WIFI -> parseWifiResult()
+            REQUEST_CODE_FOR_TURN_ON_BLUETOOTH -> parseBluetoothResult()
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
@@ -90,13 +88,21 @@ class CustomPlugin : FlutterActivity(), ActivityCallback {
     }
 
     private fun turnOnBluetooth() {
-        try {
-            val adapter = BluetoothAdapter.getDefaultAdapter()
-            adapter.enable()
-            onSuccess(true)
-        } catch (e: Exception) {
-            result.notImplemented()
+        val adapter = BluetoothAdapter.getDefaultAdapter()
+        if (!adapter.isEnabled) {
+            val intent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+            startActivityForResult(intent, REQUEST_CODE_FOR_TURN_ON_BLUETOOTH)
         }
+    }
+
+    private fun parseBluetoothResult() {
+        val adapter = BluetoothAdapter.getDefaultAdapter()
+        if (adapter.isEnabled) {
+            onSuccess(true)
+        } else {
+            onFailed("BluetoothException", "bluetooth service disabled", "")
+        }
+
     }
 
     private fun turnOnLocation() {

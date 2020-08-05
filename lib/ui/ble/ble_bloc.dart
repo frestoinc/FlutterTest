@@ -69,6 +69,7 @@ class BleBloc extends Bloc<BleEvent, BleState> {
         flutterBlue.stopScan();
         add(BleScanningCompleteEvent(list: devicesList));
       });
+
       await flutterBlue.scanResults.listen((event) {
         for (var sr in event) {
           print('Device: ${sr.device.name}');
@@ -93,7 +94,7 @@ class BleBloc extends Bloc<BleEvent, BleState> {
               : BleStatusErrorEvent(
                   error:
                       'Location Permission Denied. Returning to previous screen.'));
-        });
+        }).catchError((e) => add(BleStatusErrorEvent(error: e.toString())));
       }
     });
   }
@@ -107,9 +108,9 @@ class BleBloc extends Bloc<BleEvent, BleState> {
           add(isEnabled
               ? BlePreScanningEvent()
               : BleStatusErrorEvent(
-                  error:
-                      'Location Service not enabled. Returning to previous screen.'));
-        });
+              error:
+              'Location Service not enabled. Returning to previous screen.'));
+        }).catchError((e) => add(BleStatusErrorEvent(error: e.toString())));
       }
     });
   }

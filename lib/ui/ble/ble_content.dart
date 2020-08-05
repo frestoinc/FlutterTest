@@ -107,14 +107,52 @@ class _BleContentState extends State<BleContent> {
         itemCount: list.length,
         itemBuilder: (context, index) {
           return ListTile(
-            leading: Text('Strength: ${list[index].rssi ?? 0}'),
-            title: Text(
-                'Device Name: ${list[index].device.name.isNotEmpty ? list[index].device.name : '(unknown device)'}'),
-            subtitle: Text(
-                'Device ID: ${list[index].device.id.id.isNotEmpty ? list[index].device.id.id : '(unknown id)'}'),
-            dense: true,
+            leading: _buildAvatarViewHolder(list[index]),
+            title: _buildDeviceName(list[index]),
+            subtitle: _buildDeviceId(list[index]),
+            onTap: () {},
           );
         });
+  }
+
+  Widget _buildAvatarViewHolder(ScanResult result) {
+    return CircleAvatar(
+      radius: MediaQuery.of(context).size.height * 0.025,
+      backgroundColor: Colors.green,
+      child: Text('${result.rssi ?? 0}'),
+    );
+  }
+
+  Widget _buildDeviceName(ScanResult result) {
+    return Container(
+      alignment: Alignment.topLeft,
+      child: Text(
+        '${result.device.name.isNotEmpty ? result.device.name : '(unknown device)'}',
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(
+            color: const Color(0xFF52575C),
+            fontSize: 12,
+            fontFamily: 'RobotoReg'),
+      ),
+    );
+  }
+
+  Widget _buildDeviceId(ScanResult result) {
+    return Container(
+      alignment: Alignment.topLeft,
+      margin: const EdgeInsets.fromLTRB(0.0, 5.0, 5.0, 5.0),
+      child: Text(
+        '${result.device.id.id.isNotEmpty ? result.device.id.id : '(unknown id)'}',
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        textAlign: TextAlign.start,
+        style: TextStyle(
+            color: const Color(0xFF52575C),
+            fontSize: 16,
+            fontFamily: 'RobotoReg'),
+      ),
+    );
   }
 
   Widget _buildError(bool isError) {
