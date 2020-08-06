@@ -13,6 +13,7 @@ import 'package:flutterapp/ui/ble/ble_page.dart';
 import 'package:flutterapp/ui/camera/camera_page.dart';
 import 'package:flutterapp/ui/extension/app_theme.dart';
 import 'package:flutterapp/ui/extension/widget_extension.dart';
+import 'package:flutterapp/ui/tabs/tab_page.dart';
 import 'package:flutterapp/ui/webview.dart';
 
 import 'home_bloc.dart';
@@ -28,6 +29,7 @@ final _drawerItemList = [
   DrawerItem('Camera', Icons.camera_alt),
   DrawerItem('Bluetooth LE (WIP)', Icons.bluetooth),
   DrawerItem('AutoWifi (WIP)', Icons.wifi),
+  DrawerItem('Tabs/ViewPager (WIP)', Icons.wifi),
 ];
 
 class HomeContent extends StatefulWidget {
@@ -83,6 +85,8 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
         return BlePage();
       case 2:
         return AutoWifiPage();
+      case 3:
+        return TabPage();
       default:
         return Container(
           child: Text('jkl'),
