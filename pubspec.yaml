@@ -81,6 +81,9 @@ dependencies:
   #logging
   fimber: ^0.4.4
 
+  #persistence
+  moor_flutter: ^3.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -88,6 +91,7 @@ dev_dependencies:
     sdk: flutter
   test: any
   build_runner: ^1.10.0
+  moor_generator: ^3.3.0
   bloc_test: ^7.0.0
 
 
