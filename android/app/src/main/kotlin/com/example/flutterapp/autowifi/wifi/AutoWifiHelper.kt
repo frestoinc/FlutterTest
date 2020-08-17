@@ -164,6 +164,7 @@ class AutoWifiHelper(private val appContext: Context, private val activityCallba
 
         if (i == -1) {
             activityCallback.onFailed("WifiException", "Unable to add configuration", "")
+            return
         }
 
         Log.e("autoWifiConnectQ", "configuration id: $i")
