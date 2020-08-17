@@ -328,12 +328,12 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
     return _data.isEmpty
         ? _buildError(false)
         : Scaffold(
-      backgroundColor: Colors.white,
-      body: ReorderableListView(
-        onReorder: (a, b) => _homeBloc.onReorder(a, b),
-        children: _getItemList(_data),
-      ),
-    );
+            backgroundColor: Colors.white,
+            body: ReorderableListView(
+              onReorder: (a, b) => _homeBloc.onReorder(a, b),
+              children: _getItemList(_data),
+            ),
+          );
   }
 
   List<Widget> _getItemList(List<ModelEntity> list) {
@@ -625,7 +625,8 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
               fontFamily: 'RobotoBold',
             ),
           ),
-          onPressed: () => {
+          onPressed: () =>
+          {
             FocusScope.of(context).unfocus(),
             _homeBloc.fetchData(),
           }),

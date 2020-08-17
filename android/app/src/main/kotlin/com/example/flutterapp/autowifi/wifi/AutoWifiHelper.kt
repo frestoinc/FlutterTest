@@ -129,7 +129,7 @@ class AutoWifiHelper(private val appContext: Context, private val activityCallba
     }
 
     override fun buildAutoWifiConnection(result: ScanResult, pwd: String?) {
-        Log.e("TAG", "START AutoWifiConnection")
+        Log.e("TAG", "START AutoWifiConnection with ${result.SSID} | $pwd")
         if (isAndroidQorLater()) {
             autoWifiConnectQOrLater(result, pwd)
         } else {
@@ -146,10 +146,12 @@ class AutoWifiHelper(private val appContext: Context, private val activityCallba
     @SuppressLint("MissingPermission")
     private fun autoWifiConnectPreQ(result: ScanResult, pwd: String?) {
         var configuration: WifiConfiguration? = null
+        var i = -1
         for (configured in wifiManager.configuredNetworks) {
-            if (result.SSID == configured.SSID) {
-                Log.e("autoWifiConnectQ", "getting save configuration")
+            if (configured.SSID == convertToQuotedString(result.SSID)) {
+                Log.e("autoWifiConnectQ", "getting saved configuration")
                 configuration = configured
+                i = configured.networkId;
                 break
             }
         }
@@ -157,15 +159,19 @@ class AutoWifiHelper(private val appContext: Context, private val activityCallba
         if (null == configuration) {
             Log.e("autoWifiConnectQ", "setting up configuration")
             configuration = getConfiguration(result, pwd)
-
+            i = wifiManager.addNetwork(configuration)
         }
 
-        val i = wifiManager.addNetwork(configuration)
-        Log.e("TAG", "addNetwork status: $i")
+        if (i == -1) {
+            activityCallback.onFailed("WifiException", "Unable to add configuration", "")
+        }
+
+        Log.e("autoWifiConnectQ", "configuration id: $i")
 
         wifiManager.disconnect()
         wifiManager.enableNetwork(i, true)
         wifiManager.reconnect()
+
         Handler().postDelayed({
             if (doesSSIDMatch(result.SSID)) {
                 activityCallback.onSuccess(true)
