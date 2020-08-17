@@ -6,7 +6,7 @@ import 'package:camera/camera.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'file:///C:/Users/r00t/Documents/Android/Projects/FlutterTest/lib/data/repository/local/directory.dart';
+import 'package:flutterapp/data/repository/local/directory.dart';
 import 'package:flutterapp/di/inject.dart';
 
 class CameraBloc extends Bloc<CameraEvent, CameraState> {

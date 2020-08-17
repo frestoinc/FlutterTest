@@ -1,7 +1,4 @@
-import 'package:flutterapp/data/repository/local/entities/entities_database.dart';
-import 'package:flutterapp/extension/response.dart';
-import 'package:moor_flutter/moor_flutter.dart';
-
+/*
 @UseDao(tables: [])
 class EntitiesDao extends DatabaseAccessor<EntitiesDatabase>
     with _$EntitiesDaoMixin {
@@ -38,4 +35,4 @@ class EntitiesDao extends DatabaseAccessor<EntitiesDatabase>
       .
 
   delete(task);
-}
+}*/

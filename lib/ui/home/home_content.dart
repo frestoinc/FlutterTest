@@ -340,7 +340,7 @@ class _HomeContentState extends State<HomeContent> implements DialogListener {
     return list
         .asMap()
         .map((index, value) =>
-        MapEntry(index, _buildDismissibleList(index, value)))
+            MapEntry(index, _buildDismissibleList(index, value)))
         .values
         .toList();
   }

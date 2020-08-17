@@ -1,5 +1,5 @@
 import 'package:flutterapp/data/entities/user.dart';
-import 'file:///C:/Users/r00t/Documents/Android/Projects/FlutterTest/lib/data/repository/local/local_preference.dart';
+import 'package:flutterapp/data/repository/local/local_preference.dart';
 import 'package:flutterapp/data/repository/remote/remote_repository.dart';
 import 'package:flutterapp/extension/response.dart';
 

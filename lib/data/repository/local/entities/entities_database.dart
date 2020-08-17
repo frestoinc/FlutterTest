@@ -1,5 +1,4 @@
-import 'package:moor_flutter/moor_flutter.dart';
-
+/*
 @UseMoor(tables: [], daos: [])
 class EntitiesDatabase extends _$EntitiesDatabase {
 
@@ -11,4 +10,4 @@ class EntitiesDatabase extends _$EntitiesDatabase {
   int get schemaVersion => 1;
 
 
-}
+}*/
